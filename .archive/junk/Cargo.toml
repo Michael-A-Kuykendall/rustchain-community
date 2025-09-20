@@ -27,6 +27,10 @@ name = "rustchain-pretty"
 path = "src/bin/rustchain-pretty.rs"
 required-features = ["cli"]
 
+[[bin]]
+name = "inspect_constraints"
+path = "inspect_constraints.rs"
+required-features = ["smt"]
 
 [features]
 # Default: minimal library + CLI

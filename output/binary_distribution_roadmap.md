@@ -1,1 +1,0 @@
-{plan_implementation_result}

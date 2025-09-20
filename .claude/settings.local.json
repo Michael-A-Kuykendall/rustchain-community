@@ -169,7 +169,8 @@
       "Bash(git remote get-url:*)",
       "Bash(convert:*)",
       "Bash(magick:*)",
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": [],
