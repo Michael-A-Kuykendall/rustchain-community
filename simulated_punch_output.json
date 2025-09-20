@@ -1,0 +1,36 @@
+{
+  "tool": "punch-systems",
+  "version": "2.0.0-test",
+  "analysis_type": "rust_comprehensive",
+  "project_path": "${project_path}",
+  "timestamp": "2025-09-11T16:25:00Z",
+  "components_analyzed": 15,
+  "results": {
+    "lifetimes_analysis": {
+      "complex_lifetimes": 3,
+      "lifetime_elisions": 8,
+      "potential_optimizations": 2
+    },
+    "ownership_analysis": {
+      "unnecessary_clones": 5,
+      "borrow_checker_efficiency": 92,
+      "smart_pointer_usage": "optimal"
+    },
+    "performance_analysis": {
+      "allocation_hotspots": 2,
+      "zero_cost_abstractions": 87,
+      "async_performance_score": 84
+    },
+    "async_safety_analysis": {
+      "deadlock_risks": 0,
+      "race_conditions": 1,
+      "async_patterns_score": 91
+    },
+    "patterns_analysis": {
+      "idiomatic_rust_score": 88,
+      "architectural_patterns": ["RAII", "Builder", "Iterator"],
+      "anti_patterns_detected": 1
+    }
+  },
+  "overall_quality_score": 87
+}

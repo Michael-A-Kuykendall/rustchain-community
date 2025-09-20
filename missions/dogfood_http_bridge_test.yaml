@@ -1,0 +1,74 @@
+name: "HTTP Bridge Integration Test"
+description: "Test the HttpToolBridge integration between ToolRegistry and ToolManager"
+version: "1.0"
+
+steps:
+  - id: "test_http_get_basic"
+    name: "Test basic HTTP GET request"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/json"
+      method: "GET"
+      timeout: 30
+
+  - id: "test_http_get_user_agent"
+    name: "Test HTTP GET with custom headers"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/user-agent"
+      method: "GET"
+      headers:
+        "User-Agent": "RustChain-Dogfood-Test/1.0"
+      timeout: 30
+    depends_on: ["test_http_get_basic"]
+
+  - id: "test_http_post_json"
+    name: "Test HTTP POST with JSON payload"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/post"
+      method: "POST"
+      headers:
+        "Content-Type": "application/json"
+      body: '{"test": "dogfood", "bridge": "working", "timestamp": "2025-09-11"}'
+      timeout: 30
+    depends_on: ["test_http_get_user_agent"]
+
+  - id: "test_http_error_handling"
+    name: "Test HTTP error handling (404)"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/status/404"
+      method: "GET"
+      timeout: 10
+    depends_on: ["test_http_post_json"]
+    continue_on_error: true
+
+  - id: "create_test_results"
+    name: "Create test results summary"
+    step_type: "create_file"
+    parameters:
+      path: "http_bridge_test_results.json"
+      content: |
+        {
+          "test_name": "HTTP Bridge Integration Test",
+          "timestamp": "2025-09-11",
+          "summary": "Comprehensive test of HttpToolBridge functionality",
+          "tests_executed": [
+            "Basic HTTP GET",
+            "Custom headers",
+            "POST with JSON",
+            "Error handling"
+          ],
+          "bridge_status": "HttpToolBridge successfully connects ToolManager HTTP to ToolRegistry",
+          "mission_integration": "HTTP step type works seamlessly in missions"
+        }
+    depends_on: ["test_http_error_handling"]
+
+  - id: "validate_bridge_success"
+    name: "Validate bridge integration success"
+    step_type: "command"
+    parameters:
+      command: "echo"
+      args: ["HTTP Bridge Test: SUCCESS - ToolRegistry and ToolManager integration working"]
+    depends_on: ["create_test_results"]

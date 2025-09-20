@@ -1,0 +1,1 @@
+{generate_trait_implementation}

@@ -1,0 +1,84 @@
+name: "Coverage Mission 02 - Tools Module"
+description: "Improve test coverage for src/core/tools.rs module"
+version: "1.0"
+
+steps:
+  - id: "analyze_tools_coverage"
+    name: "Analyze Current Tools Module Coverage"
+    step_type: "create_file"
+    parameters:
+      path: "tools_coverage_analysis.md"
+      content: |
+        # Tools Module Coverage Analysis
+        
+        Target file: src/core/tools.rs
+        Current test count: 22 tests
+        
+        Areas needing coverage:
+        1. Tool registration error handling
+        2. Tool execution timeout scenarios
+        3. Tool parameter validation edge cases
+        4. Concurrent tool execution
+        5. Tool registry lookup failures
+        
+        Goal: Add 3-5 targeted test cases for error conditions
+  
+  - id: "create_tools_tests"
+    name: "Create Additional Tools Tests"
+    step_type: "create_file"
+    parameters:
+      path: "additional_tools_tests.rs"
+      content: |
+        #[tokio::test]
+        async fn test_tool_execution_timeout() {
+            let mut registry = ToolRegistry::new();
+            
+            // Mock tool that takes too long
+            let slow_tool = Box::new(MockTool {
+                name: "slow_tool".to_string(),
+                execution_time: Duration::from_secs(10),
+            });
+            registry.register_tool("slow_tool", slow_tool);
+            
+            let call = ToolCall {
+                tool_name: "slow_tool".to_string(),
+                parameters: json!({}),
+                timeout_ms: Some(100), // 100ms timeout
+            };
+            
+            let result = registry.execute_tool(call).await;
+            assert!(result.is_err());
+            assert!(result.unwrap_err().to_string().contains("timeout"));
+        }
+        
+        #[tokio::test]
+        async fn test_tool_registration_duplicate_name() {
+            let mut registry = ToolRegistry::new();
+            
+            let tool1 = Box::new(MockTool::new("duplicate"));
+            let tool2 = Box::new(MockTool::new("duplicate"));
+            
+            registry.register_tool("test_tool", tool1);
+            let result = registry.register_tool("test_tool", tool2);
+            
+            assert!(result.is_err());
+            assert!(result.unwrap_err().to_string().contains("already registered"));
+        }
+        
+        #[tokio::test]
+        async fn test_tool_parameter_validation_failure() {
+            let mut registry = ToolRegistry::new();
+            
+            let strict_tool = Box::new(StrictParameterTool::new());
+            registry.register_tool("strict_tool", strict_tool);
+            
+            let call = ToolCall {
+                tool_name: "strict_tool".to_string(),
+                parameters: json!({"invalid": "parameter"}),
+                timeout_ms: None,
+            };
+            
+            let result = registry.execute_tool(call).await;
+            assert!(result.is_err());
+            assert!(result.unwrap_err().to_string().contains("invalid parameter"));
+        }

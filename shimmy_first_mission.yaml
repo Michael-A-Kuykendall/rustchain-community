@@ -1,0 +1,32 @@
+version: "1.0"
+name: "shimmy_model_setup_mission"
+description: "Get shimmy working end-to-end with model infrastructure"
+
+steps:
+  - id: "create_model_directory"
+    name: "Create models directory"
+    step_type: "command"
+    parameters:
+      command: "cd ../shimmy && mkdir -p models"
+      
+  - id: "verify_env_vars"
+    name: "Check environment variables"
+    step_type: "command"
+    parameters:
+      command: "echo 'SHIMMY_BASE_GGUF environment check:' && echo $SHIMMY_BASE_GGUF"
+      
+  - id: "test_basic_build"
+    name: "Build shimmy with llama features"
+    step_type: "command"
+    parameters:
+      command: "cd ../shimmy && cargo build --features llama"
+      
+  - id: "validate_cli"
+    name: "Test shimmy list command"
+    step_type: "command"
+    parameters:
+      command: "cd ../shimmy && cargo run --features llama -- list"
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 300

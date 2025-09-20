@@ -1,0 +1,57 @@
+name: "Shimmy Integration Test"
+description: "Test RustChain Agent API compatibility with Shimmy TUI"
+version: "1.0"
+steps:
+  - id: "verify_openai_endpoint"
+    name: "Test OpenAI-Compatible Endpoint"
+    step_type: "http"
+    parameters:
+      method: "POST"
+      url: "http://127.0.0.1:8080/v1/chat/completions"
+      headers:
+        Content-Type: "application/json"
+      body: |
+        {
+          "model": "rustchain-agent",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Hello from Shimmy integration test!"
+            }
+          ],
+          "temperature": 0.7,
+          "max_tokens": 100
+        }
+      
+  - id: "verify_agent_message_endpoint"
+    name: "Test Native Agent Endpoint"
+    step_type: "http"
+    parameters:
+      method: "POST"
+      url: "http://127.0.0.1:8080/agent/message"
+      headers:
+        Content-Type: "application/json"
+      body: |
+        {
+          "message": "Test native agent endpoint",
+          "context": {
+            "session_id": "test-session-123"
+          }
+        }
+        
+  - id: "verify_tool_execution"
+    name: "Test Tool Execution API"
+    step_type: "http"
+    parameters:
+      method: "POST"
+      url: "http://127.0.0.1:8080/agent/tool"
+      headers:
+        Content-Type: "application/json"
+      body: |
+        {
+          "tool": "file_create",
+          "parameters": {
+            "path": "/tmp/shimmy_test.txt",
+            "content": "Hello from RustChain Agent API!"
+          }
+        }

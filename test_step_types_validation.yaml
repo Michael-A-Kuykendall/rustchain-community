@@ -1,0 +1,117 @@
+name: "Comprehensive Step Types Validation"
+description: "Test all 43+ new step types to validate complete implementation"
+version: "1.0"
+
+steps:
+  # File Operations (8 types)
+  - id: "test_copy_file"
+    name: "Test CopyFile step type"
+    step_type: "copy_file"
+    parameters:
+      source: "Cargo.toml"
+      destination: "test_copy.toml"
+      
+  - id: "test_move_file"
+    name: "Test MoveFile step type" 
+    step_type: "move_file"
+    parameters:
+      source: "test_copy.toml"
+      destination: "test_moved.toml"
+      
+  - id: "test_read_file"
+    name: "Test ReadFile step type"
+    step_type: "read_file"
+    parameters:
+      path: "Cargo.toml"
+      
+  - id: "test_list_directory"
+    name: "Test ListDirectory step type"
+    step_type: "list_directory"
+    parameters:
+      path: "."
+      
+  # Data Processing (5 types)
+  - id: "test_parse_json"
+    name: "Test ParseJson step type"
+    step_type: "parse_json"
+    parameters:
+      content: '{"test": "value", "number": 42, "array": [1,2,3]}'
+      
+  - id: "test_parse_yaml"
+    name: "Test ParseYaml step type"
+    step_type: "parse_yaml"
+    parameters:
+      content: |
+        test: value
+        number: 42
+        nested:
+          key: value
+          
+  - id: "test_parse_xml"
+    name: "Test ParseXml step type"
+    step_type: "parse_xml"
+    parameters:
+      content: '<root><item>value1</item><nested><child>value2</child></nested></root>'
+      
+  - id: "test_csv_process"
+    name: "Test CsvProcess step type"
+    step_type: "csv_process"
+    parameters:
+      content: "name,age,city\nJohn,30,NYC\nJane,25,SF\nBob,35,LA"
+      
+  # System Operations (5 types)
+  - id: "test_monitor_resources"
+    name: "Test MonitorResources step type"
+    step_type: "monitor_resources"
+    parameters: {}
+    
+  - id: "test_service_health"
+    name: "Test ServiceHealth step type" 
+    step_type: "service_health"
+    parameters:
+      service: "test_service"
+      port: 9999
+      
+  - id: "test_compress_tar"
+    name: "Test Compress step type with tar"
+    step_type: "compress"
+    parameters:
+      source: "src"
+      destination: "test_archive.tar"
+      format: "tar"
+      
+  # Git Operations (5 types)
+  - id: "test_git_status"
+    name: "Test GitStatus step type"
+    step_type: "git_status"
+    parameters:
+      path: "."
+      
+  - id: "test_git_diff"
+    name: "Test GitDiff step type"
+    step_type: "git_diff" 
+    parameters:
+      path: "."
+      
+  # Code Development (6 types)
+  - id: "test_compile_rust"
+    name: "Test CompileCode step type"
+    step_type: "compile_code"
+    parameters:
+      language: "rust"
+      path: "."
+      
+  - id: "test_run_tests"
+    name: "Test RunTests step type"
+    step_type: "run_tests"
+    parameters:
+      language: "rust"
+      path: "."
+      
+  # Network Operations (5 types) 
+  - id: "test_ping_localhost"
+    name: "Test PingHost step type"
+    step_type: "ping_host"
+    parameters:
+      host: "127.0.0.1"
+      count: 1

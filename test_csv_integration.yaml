@@ -1,0 +1,35 @@
+name: "CSV Loader Integration Test"
+description: "Test CSV document loader through mission execution system"
+version: "1.0"
+
+steps:
+  - id: "load_csv_data"
+    name: "Load CSV file through mission system"
+    step_type: "tool"
+    parameters:
+      tool: "csv_loader"
+      parameters:
+        file_path: "test_integration.csv"
+        delimiter: ","
+        has_headers: true
+    timeout_seconds: 30
+
+  - id: "verify_csv_content"
+    name: "Verify CSV content was loaded correctly"
+    step_type: "create_file"
+    parameters:
+      path: "csv_integration_result.txt"
+      content: |
+        CSV Integration Test Results:
+        
+        Step: {load_csv_data.step_id}
+        Status: {load_csv_data.status}
+        
+        Content loaded successfully: {load_csv_data.result}
+    depends_on:
+      - "load_csv_data"
+
+config:
+  max_parallel_steps: 1
+  fail_fast: true
+  timeout_seconds: 120

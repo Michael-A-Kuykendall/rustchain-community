@@ -1,0 +1,24 @@
+version: "1.0"
+name: "Variable Test"
+description: "Test variable substitution"
+
+steps:
+  - id: "step1"
+    name: "Generate content"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "phi3:mini"
+      prompt: "Say: Hello from step 1"
+      temperature: 0.1
+
+  - id: "step2"
+    name: "Use variable"
+    step_type: "create_file"
+    parameters:
+      path: "var_output.md"
+      content: "Result: {step1}"
+
+dependencies:
+  - from: "step1"
+    to: "step2"

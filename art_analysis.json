@@ -1,0 +1,1557 @@
+🔍 Analyzing test coverage for: src/art
+Language: rust, Target: 85.0%
+🔍 Analyzing coverage for rust project
+Warning: cargo coverage not available: cargo coverage integration not yet implemented
+✅ Analysis complete: 0.0% coverage (target: 85.0%)
+📊 Found 7 source files, 1 test files, 54 gaps
+{
+  "analysis_type": "real_rust_analysis",
+  "coverage_gaps": [
+    {
+      "function_name": "default",
+      "file_path": "mod.rs",
+      "line_number": 49,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for default",
+        "Test default with valid inputs",
+        "Test default with edge cases",
+        "Consider property-based testing for default"
+      ]
+    },
+    {
+      "function_name": "default",
+      "file_path": "performance.rs",
+      "line_number": 27,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for default",
+        "Test default with valid inputs",
+        "Test default with edge cases",
+        "Consider property-based testing for default"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "ruler.rs",
+      "line_number": 37,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for new",
+        "Test new with valid inputs",
+        "Test new with edge cases",
+        "Consider property-based testing for new"
+      ]
+    },
+    {
+      "function_name": "calculate_reward",
+      "file_path": "ruler.rs",
+      "line_number": 44,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_reward",
+        "Test calculate_reward with valid inputs",
+        "Test calculate_reward with edge cases",
+        "Consider property-based testing for calculate_reward"
+      ]
+    },
+    {
+      "function_name": "calculate_efficiency_score",
+      "file_path": "ruler.rs",
+      "line_number": 76,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_efficiency_score",
+        "Test calculate_efficiency_score with valid inputs",
+        "Test calculate_efficiency_score with edge cases",
+        "Consider property-based testing for calculate_efficiency_score"
+      ]
+    },
+    {
+      "function_name": "calculate_tool_score",
+      "file_path": "ruler.rs",
+      "line_number": 89,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_tool_score",
+        "Test calculate_tool_score with valid inputs",
+        "Test calculate_tool_score with edge cases",
+        "Consider property-based testing for calculate_tool_score"
+      ]
+    },
+    {
+      "function_name": "calculate_reasoning_score",
+      "file_path": "ruler.rs",
+      "line_number": 102,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_reasoning_score",
+        "Test calculate_reasoning_score with valid inputs",
+        "Test calculate_reasoning_score with edge cases",
+        "Consider property-based testing for calculate_reasoning_score"
+      ]
+    },
+    {
+      "function_name": "assess_reasoning_coherence",
+      "file_path": "ruler.rs",
+      "line_number": 136,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for assess_reasoning_coherence",
+        "Test assess_reasoning_coherence with valid inputs",
+        "Test assess_reasoning_coherence with edge cases",
+        "Consider property-based testing for assess_reasoning_coherence"
+      ]
+    },
+    {
+      "function_name": "assess_problem_decomposition",
+      "file_path": "ruler.rs",
+      "line_number": 153,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for assess_problem_decomposition",
+        "Test assess_problem_decomposition with valid inputs",
+        "Test assess_problem_decomposition with edge cases",
+        "Consider property-based testing for assess_problem_decomposition"
+      ]
+    },
+    {
+      "function_name": "assess_context_awareness",
+      "file_path": "ruler.rs",
+      "line_number": 170,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for assess_context_awareness",
+        "Test assess_context_awareness with valid inputs",
+        "Test assess_context_awareness with edge cases",
+        "Consider property-based testing for assess_context_awareness"
+      ]
+    },
+    {
+      "function_name": "assess_error_recovery",
+      "file_path": "ruler.rs",
+      "line_number": 188,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for assess_error_recovery",
+        "Test assess_error_recovery with valid inputs",
+        "Test assess_error_recovery with edge cases",
+        "Consider property-based testing for assess_error_recovery"
+      ]
+    },
+    {
+      "function_name": "assess_strategic_planning",
+      "file_path": "ruler.rs",
+      "line_number": 221,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for assess_strategic_planning",
+        "Test assess_strategic_planning with valid inputs",
+        "Test assess_strategic_planning with edge cases",
+        "Consider property-based testing for assess_strategic_planning"
+      ]
+    },
+    {
+      "function_name": "generate_feedback",
+      "file_path": "ruler.rs",
+      "line_number": 258,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for generate_feedback",
+        "Test generate_feedback with valid inputs",
+        "Test generate_feedback with edge cases",
+        "Consider property-based testing for generate_feedback"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "ruler.rs",
+      "line_number": 270,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for new",
+        "Test new with valid inputs",
+        "Test new with edge cases",
+        "Consider property-based testing for new"
+      ]
+    },
+    {
+      "function_name": "add_score",
+      "file_path": "ruler.rs",
+      "line_number": 277,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for add_score",
+        "Test add_score with valid inputs",
+        "Test add_score with edge cases",
+        "Consider property-based testing for add_score"
+      ]
+    },
+    {
+      "function_name": "update_average",
+      "file_path": "ruler.rs",
+      "line_number": 282,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for update_average",
+        "Test update_average with valid inputs",
+        "Test update_average with edge cases",
+        "Consider property-based testing for update_average"
+      ]
+    },
+    {
+      "function_name": "default",
+      "file_path": "ruler.rs",
+      "line_number": 294,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for default",
+        "Test default with valid inputs",
+        "Test default with edge cases",
+        "Consider property-based testing for default"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "session.rs",
+      "line_number": 48,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for new",
+        "Test new with valid inputs",
+        "Test new with edge cases",
+        "Consider property-based testing for new"
+      ]
+    },
+    {
+      "function_name": "add_trajectory",
+      "file_path": "session.rs",
+      "line_number": 62,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for add_trajectory",
+        "Test add_trajectory with valid inputs",
+        "Test add_trajectory with edge cases",
+        "Consider property-based testing for add_trajectory"
+      ]
+    },
+    {
+      "function_name": "complete",
+      "file_path": "session.rs",
+      "line_number": 68,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for complete",
+        "Test complete with valid inputs",
+        "Test complete with edge cases",
+        "Consider property-based testing for complete"
+      ]
+    },
+    {
+      "function_name": "update_metrics",
+      "file_path": "session.rs",
+      "line_number": 74,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for update_metrics",
+        "Test update_metrics with valid inputs",
+        "Test update_metrics with edge cases",
+        "Consider property-based testing for update_metrics"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "session.rs",
+      "line_number": 99,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for new",
+        "Test new with valid inputs",
+        "Test new with edge cases",
+        "Consider property-based testing for new"
+      ]
+    },
+    {
+      "function_name": "start_session",
+      "file_path": "session.rs",
+      "line_number": 107,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for start_session",
+        "Test start_session with valid inputs",
+        "Test start_session with edge cases",
+        "Consider property-based testing for start_session"
+      ]
+    },
+    {
+      "function_name": "add_trajectory_to_session",
+      "file_path": "session.rs",
+      "line_number": 114,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for add_trajectory_to_session",
+        "Test add_trajectory_to_session with valid inputs",
+        "Test add_trajectory_to_session with edge cases",
+        "Consider property-based testing for add_trajectory_to_session"
+      ]
+    },
+    {
+      "function_name": "complete_session",
+      "file_path": "session.rs",
+      "line_number": 123,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for complete_session",
+        "Test complete_session with valid inputs",
+        "Test complete_session with edge cases",
+        "Consider property-based testing for complete_session"
+      ]
+    },
+    {
+      "function_name": "get_session_metrics",
+      "file_path": "session.rs",
+      "line_number": 133,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for get_session_metrics",
+        "Test get_session_metrics with valid inputs",
+        "Test get_session_metrics with edge cases",
+        "Consider property-based testing for get_session_metrics"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "session.rs",
+      "line_number": 145,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for new",
+        "Test new with valid inputs",
+        "Test new with edge cases",
+        "Consider property-based testing for new"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "tracker.rs",
+      "line_number": 14,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for new",
+        "Test new with valid inputs",
+        "Test new with edge cases",
+        "Consider property-based testing for new"
+      ]
+    },
+    {
+      "function_name": "start_trajectory",
+      "file_path": "tracker.rs",
+      "line_number": 21,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for start_trajectory",
+        "Test start_trajectory with valid inputs",
+        "Test start_trajectory with edge cases",
+        "Consider property-based testing for start_trajectory"
+      ]
+    },
+    {
+      "function_name": "add_step",
+      "file_path": "tracker.rs",
+      "line_number": 44,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for add_step",
+        "Test add_step with valid inputs",
+        "Test add_step with edge cases",
+        "Consider property-based testing for add_step"
+      ]
+    },
+    {
+      "function_name": "complete_trajectory",
+      "file_path": "tracker.rs",
+      "line_number": 50,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for complete_trajectory",
+        "Test complete_trajectory with valid inputs",
+        "Test complete_trajectory with edge cases",
+        "Consider property-based testing for complete_trajectory"
+      ]
+    },
+    {
+      "function_name": "calculate_performance_metrics",
+      "file_path": "tracker.rs",
+      "line_number": 64,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_performance_metrics",
+        "Test calculate_performance_metrics with valid inputs",
+        "Test calculate_performance_metrics with edge cases",
+        "Consider property-based testing for calculate_performance_metrics"
+      ]
+    },
+    {
+      "function_name": "calculate_reasoning_quality",
+      "file_path": "tracker.rs",
+      "line_number": 88,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_reasoning_quality",
+        "Test calculate_reasoning_quality with valid inputs",
+        "Test calculate_reasoning_quality with edge cases",
+        "Consider property-based testing for calculate_reasoning_quality"
+      ]
+    },
+    {
+      "function_name": "calculate_memory_efficiency",
+      "file_path": "tracker.rs",
+      "line_number": 181,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_memory_efficiency",
+        "Test calculate_memory_efficiency with valid inputs",
+        "Test calculate_memory_efficiency with edge cases",
+        "Consider property-based testing for calculate_memory_efficiency"
+      ]
+    },
+    {
+      "function_name": "calculate_information_reuse_efficiency",
+      "file_path": "tracker.rs",
+      "line_number": 213,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_information_reuse_efficiency",
+        "Test calculate_information_reuse_efficiency with valid inputs",
+        "Test calculate_information_reuse_efficiency with edge cases",
+        "Consider property-based testing for calculate_information_reuse_efficiency"
+      ]
+    },
+    {
+      "function_name": "calculate_context_utilization_efficiency",
+      "file_path": "tracker.rs",
+      "line_number": 253,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_context_utilization_efficiency",
+        "Test calculate_context_utilization_efficiency with valid inputs",
+        "Test calculate_context_utilization_efficiency with edge cases",
+        "Consider property-based testing for calculate_context_utilization_efficiency"
+      ]
+    },
+    {
+      "function_name": "detect_memory_inefficiencies",
+      "file_path": "tracker.rs",
+      "line_number": 269,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for detect_memory_inefficiencies",
+        "Test detect_memory_inefficiencies with valid inputs",
+        "Test detect_memory_inefficiencies with edge cases",
+        "Consider property-based testing for detect_memory_inefficiencies"
+      ]
+    },
+    {
+      "function_name": "calculate_redundancy_penalty",
+      "file_path": "tracker.rs",
+      "line_number": 300,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_redundancy_penalty",
+        "Test calculate_redundancy_penalty with valid inputs",
+        "Test calculate_redundancy_penalty with edge cases",
+        "Consider property-based testing for calculate_redundancy_penalty"
+      ]
+    },
+    {
+      "function_name": "calculate_resource_conservation_score",
+      "file_path": "tracker.rs",
+      "line_number": 331,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_resource_conservation_score",
+        "Test calculate_resource_conservation_score with valid inputs",
+        "Test calculate_resource_conservation_score with edge cases",
+        "Consider property-based testing for calculate_resource_conservation_score"
+      ]
+    },
+    {
+      "function_name": "calculate_text_similarity",
+      "file_path": "tracker.rs",
+      "line_number": 349,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit",
+        "property"
+      ],
+      "suggestions": [
+        "Create a basic unit test for calculate_text_similarity",
+        "Test calculate_text_similarity with valid inputs",
+        "Test calculate_text_similarity with edge cases",
+        "Consider property-based testing for calculate_text_similarity"
+      ]
+    },
+    {
+      "function_name": "store_trajectory",
+      "file_path": "tracker.rs",
+      "line_number": 371,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for store_trajectory",
+        "Test store_trajectory with valid inputs",
+        "Test store_trajectory with edge cases",
+        "Consider property-based testing for store_trajectory"
+      ]
+    },
+    {
+      "function_name": "compress_trajectory_data",
+      "file_path": "tracker.rs",
+      "line_number": 441,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for compress_trajectory_data",
+        "Test compress_trajectory_data with valid inputs",
+        "Test compress_trajectory_data with edge cases",
+        "Consider property-based testing for compress_trajectory_data"
+      ]
+    },
+    {
+      "function_name": "update_trajectory_index",
+      "file_path": "tracker.rs",
+      "line_number": 451,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for update_trajectory_index",
+        "Test update_trajectory_index with valid inputs",
+        "Test update_trajectory_index with edge cases",
+        "Consider property-based testing for update_trajectory_index"
+      ]
+    },
+    {
+      "function_name": "update_analytics_summary",
+      "file_path": "tracker.rs",
+      "line_number": 498,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for update_analytics_summary",
+        "Test update_analytics_summary with valid inputs",
+        "Test update_analytics_summary with edge cases",
+        "Consider property-based testing for update_analytics_summary"
+      ]
+    },
+    {
+      "function_name": "create_empty_analytics",
+      "file_path": "tracker.rs",
+      "line_number": 530,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for create_empty_analytics",
+        "Test create_empty_analytics with valid inputs",
+        "Test create_empty_analytics with edge cases",
+        "Consider property-based testing for create_empty_analytics"
+      ]
+    },
+    {
+      "function_name": "update_running_averages",
+      "file_path": "tracker.rs",
+      "line_number": 551,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for update_running_averages",
+        "Test update_running_averages with valid inputs",
+        "Test update_running_averages with edge cases",
+        "Consider property-based testing for update_running_averages"
+      ]
+    },
+    {
+      "function_name": "update_agent_performance_tracking",
+      "file_path": "tracker.rs",
+      "line_number": 580,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for update_agent_performance_tracking",
+        "Test update_agent_performance_tracking with valid inputs",
+        "Test update_agent_performance_tracking with edge cases",
+        "Consider property-based testing for update_agent_performance_tracking"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "training.rs",
+      "line_number": 50,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for new",
+        "Test new with valid inputs",
+        "Test new with edge cases",
+        "Consider property-based testing for new"
+      ]
+    },
+    {
+      "function_name": "add_trajectory",
+      "file_path": "training.rs",
+      "line_number": 58,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for add_trajectory",
+        "Test add_trajectory with valid inputs",
+        "Test add_trajectory with edge cases",
+        "Consider property-based testing for add_trajectory"
+      ]
+    },
+    {
+      "function_name": "start_training_run",
+      "file_path": "training.rs",
+      "line_number": 72,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for start_training_run",
+        "Test start_training_run with valid inputs",
+        "Test start_training_run with edge cases",
+        "Consider property-based testing for start_training_run"
+      ]
+    },
+    {
+      "function_name": "trajectory_to_training_example",
+      "file_path": "training.rs",
+      "line_number": 91,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for trajectory_to_training_example",
+        "Test trajectory_to_training_example with valid inputs",
+        "Test trajectory_to_training_example with edge cases",
+        "Consider property-based testing for trajectory_to_training_example"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "training.rs",
+      "line_number": 105,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for new",
+        "Test new with valid inputs",
+        "Test new with edge cases",
+        "Consider property-based testing for new"
+      ]
+    },
+    {
+      "function_name": "default",
+      "file_path": "training.rs",
+      "line_number": 115,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for default",
+        "Test default with valid inputs",
+        "Test default with edge cases",
+        "Consider property-based testing for default"
+      ]
+    },
+    {
+      "function_name": "default",
+      "file_path": "trajectory.rs",
+      "line_number": 60,
+      "reason": "Function has no tests",
+      "severity": "medium",
+      "suggested_test_types": [
+        "unit"
+      ],
+      "suggestions": [
+        "Create a basic unit test for default",
+        "Test default with valid inputs",
+        "Test default with edge cases",
+        "Consider property-based testing for default"
+      ]
+    }
+  ],
+  "current_coverage": 0,
+  "function_coverage": [
+    {
+      "function_name": "default",
+      "file_path": "mod.rs",
+      "line_number": 49,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "default",
+      "file_path": "performance.rs",
+      "line_number": 27,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "ruler.rs",
+      "line_number": 37,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_reward",
+      "file_path": "ruler.rs",
+      "line_number": 44,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_efficiency_score",
+      "file_path": "ruler.rs",
+      "line_number": 76,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_tool_score",
+      "file_path": "ruler.rs",
+      "line_number": 89,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_reasoning_score",
+      "file_path": "ruler.rs",
+      "line_number": 102,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "assess_reasoning_coherence",
+      "file_path": "ruler.rs",
+      "line_number": 136,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "assess_problem_decomposition",
+      "file_path": "ruler.rs",
+      "line_number": 153,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "assess_context_awareness",
+      "file_path": "ruler.rs",
+      "line_number": 170,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "assess_error_recovery",
+      "file_path": "ruler.rs",
+      "line_number": 188,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "assess_strategic_planning",
+      "file_path": "ruler.rs",
+      "line_number": 221,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "generate_feedback",
+      "file_path": "ruler.rs",
+      "line_number": 258,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "ruler.rs",
+      "line_number": 270,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "add_score",
+      "file_path": "ruler.rs",
+      "line_number": 277,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "update_average",
+      "file_path": "ruler.rs",
+      "line_number": 282,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "default",
+      "file_path": "ruler.rs",
+      "line_number": 294,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "session.rs",
+      "line_number": 48,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "add_trajectory",
+      "file_path": "session.rs",
+      "line_number": 62,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "complete",
+      "file_path": "session.rs",
+      "line_number": 68,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "update_metrics",
+      "file_path": "session.rs",
+      "line_number": 74,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "session.rs",
+      "line_number": 99,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "start_session",
+      "file_path": "session.rs",
+      "line_number": 107,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "add_trajectory_to_session",
+      "file_path": "session.rs",
+      "line_number": 114,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "complete_session",
+      "file_path": "session.rs",
+      "line_number": 123,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "get_session_metrics",
+      "file_path": "session.rs",
+      "line_number": 133,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "session.rs",
+      "line_number": 145,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "tracker.rs",
+      "line_number": 14,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "start_trajectory",
+      "file_path": "tracker.rs",
+      "line_number": 21,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "add_step",
+      "file_path": "tracker.rs",
+      "line_number": 44,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "complete_trajectory",
+      "file_path": "tracker.rs",
+      "line_number": 50,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_performance_metrics",
+      "file_path": "tracker.rs",
+      "line_number": 64,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_reasoning_quality",
+      "file_path": "tracker.rs",
+      "line_number": 88,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_memory_efficiency",
+      "file_path": "tracker.rs",
+      "line_number": 181,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_information_reuse_efficiency",
+      "file_path": "tracker.rs",
+      "line_number": 213,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_context_utilization_efficiency",
+      "file_path": "tracker.rs",
+      "line_number": 253,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "detect_memory_inefficiencies",
+      "file_path": "tracker.rs",
+      "line_number": 269,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_redundancy_penalty",
+      "file_path": "tracker.rs",
+      "line_number": 300,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_resource_conservation_score",
+      "file_path": "tracker.rs",
+      "line_number": 331,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "calculate_text_similarity",
+      "file_path": "tracker.rs",
+      "line_number": 349,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "store_trajectory",
+      "file_path": "tracker.rs",
+      "line_number": 371,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "compress_trajectory_data",
+      "file_path": "tracker.rs",
+      "line_number": 441,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "update_trajectory_index",
+      "file_path": "tracker.rs",
+      "line_number": 451,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "update_analytics_summary",
+      "file_path": "tracker.rs",
+      "line_number": 498,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "create_empty_analytics",
+      "file_path": "tracker.rs",
+      "line_number": 530,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "update_running_averages",
+      "file_path": "tracker.rs",
+      "line_number": 551,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "update_agent_performance_tracking",
+      "file_path": "tracker.rs",
+      "line_number": 580,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "training.rs",
+      "line_number": 50,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "add_trajectory",
+      "file_path": "training.rs",
+      "line_number": 58,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "start_training_run",
+      "file_path": "training.rs",
+      "line_number": 72,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "trajectory_to_training_example",
+      "file_path": "training.rs",
+      "line_number": 91,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "new",
+      "file_path": "training.rs",
+      "line_number": 105,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "default",
+      "file_path": "training.rs",
+      "line_number": 115,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    },
+    {
+      "function_name": "default",
+      "file_path": "trajectory.rs",
+      "line_number": 60,
+      "is_tested": false,
+      "test_count": 0,
+      "test_types": [],
+      "coverage_gaps": [
+        "No tests found"
+      ]
+    }
+  ],
+  "gaps_found": 54,
+  "language": "rust",
+  "module_coverage": {
+    ".": {
+      "module_name": "root",
+      "file_path": ".",
+      "test_count": 1,
+      "functions": [
+        "default",
+        "default",
+        "new",
+        "calculate_reward",
+        "calculate_efficiency_score",
+        "calculate_tool_score",
+        "calculate_reasoning_score",
+        "assess_reasoning_coherence",
+        "assess_problem_decomposition",
+        "assess_context_awareness",
+        "assess_error_recovery",
+        "assess_strategic_planning",
+        "generate_feedback",
+        "new",
+        "add_score",
+        "update_average",
+        "default",
+        "new",
+        "add_trajectory",
+        "complete",
+        "update_metrics",
+        "new",
+        "start_session",
+        "add_trajectory_to_session",
+        "complete_session",
+        "get_session_metrics",
+        "new",
+        "new",
+        "start_trajectory",
+        "add_step",
+        "complete_trajectory",
+        "calculate_performance_metrics",
+        "calculate_reasoning_quality",
+        "calculate_memory_efficiency",
+        "calculate_information_reuse_efficiency",
+        "calculate_context_utilization_efficiency",
+        "detect_memory_inefficiencies",
+        "calculate_redundancy_penalty",
+        "calculate_resource_conservation_score",
+        "calculate_text_similarity",
+        "store_trajectory",
+        "compress_trajectory_data",
+        "update_trajectory_index",
+        "update_analytics_summary",
+        "create_empty_analytics",
+        "update_running_averages",
+        "update_agent_performance_tracking",
+        "new",
+        "add_trajectory",
+        "start_training_run",
+        "trajectory_to_training_example",
+        "new",
+        "default",
+        "default"
+      ],
+      "test_complexity": 0,
+      "assertion_count": 2,
+      "ignored_tests": 0
+    }
+  },
+  "project_path": "src/art",
+  "target_coverage": 85,
+  "timestamp": "2025-09-06T16:48:09.6070294-05:00",
+  "total_source_files": 7,
+  "total_test_files": 1
+}

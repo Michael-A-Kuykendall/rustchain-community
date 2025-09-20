@@ -1,0 +1,94 @@
+name: "Generate Test Coverage for Git Operations"
+description: "Use RustChain to generate comprehensive test coverage for all git operation step types"
+version: "1.0"
+
+steps:
+  - id: "analyze_git_ops_coverage"
+    name: "Analyze current test coverage for git operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 2000
+      prompt: |
+        You are a Rust test coverage specialist. Analyze the git operation step types in RustChain and generate comprehensive unit tests.
+        
+        Git Operation Step Types to Test:
+        1. GitCommit - creates commits with message and optional author
+        2. GitBranch - creates, switches, or lists branches
+        3. GitMerge - merges branches with conflict resolution
+        4. GitStatus - gets repository status information
+        5. GitDiff - shows differences between commits, branches, or working tree
+        
+        Generate Rust unit tests that cover:
+        - Repository initialization and cleanup
+        - Branch operations (create, switch, delete, list)
+        - Commit creation with various scenarios (empty, large, binary files)
+        - Merge operations including conflict scenarios
+        - Status parsing for different repository states
+        - Diff output parsing for various change types
+        
+        Format as complete Rust test module with proper imports and test functions.
+        Use tokio::test for async tests and tempfile for creating test repositories.
+        Use git2 crate for repository setup and verification where needed.
+        
+        Focus on the step execution logic in src/engine/mod.rs around lines 2789-2925.
+
+  - id: "create_git_ops_tests"
+    name: "Create git operations test file"
+    step_type: "create_file"
+    parameters:
+      path: "src/engine/tests/test_git_operations.rs"
+      content: "{analyze_git_ops_coverage_result}"
+
+  - id: "analyze_git_edge_cases"
+    name: "Generate git edge case tests"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 1500
+      prompt: |
+        Generate additional edge case tests for git operations focusing on:
+        
+        1. **Repository States**: Bare repos, worktrees, submodules, LFS
+        2. **Merge Conflicts**: Text conflicts, binary conflicts, rename conflicts
+        3. **Branch Scenarios**: Orphan branches, remote tracking, upstream configs
+        4. **Security**: Malicious commit messages, large diffs, binary content
+        5. **Performance**: Large repositories, deep history, many branches
+        
+        Create test functions that validate:
+        - Proper error handling for git command failures
+        - Correct parsing of git output in various locales
+        - Safe handling of special characters in paths and messages
+        - Cleanup of temporary files and repositories
+        
+        Use descriptive names like test_git_merge_handles_binary_conflicts().
+        Include proper repository teardown in test cleanup.
+
+  - id: "append_git_edge_tests"
+    name: "Append git edge case tests to file"
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_git_operations.rs"
+      operation: "append"
+      content: "\n\n// Git Edge Case Tests\n{analyze_git_edge_cases_result}"
+
+  - id: "run_git_ops_tests"
+    name: "Run git operations tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--test", "test_git_operations", "--", "--nocapture"]
+      working_dir: "."
+
+  - id: "coverage_report_git_ops"
+    name: "Generate coverage report for git operations"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["tarpaulin", "--out", "html", "--output-dir", "coverage/git_operations", "--include-tests", "--skip-clean"]
+      working_dir: "."
+      timeout: 300

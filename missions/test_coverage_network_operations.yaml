@@ -1,0 +1,154 @@
+name: "Generate Test Coverage for Network Operations"  
+description: "Use RustChain to generate comprehensive test coverage for all network operation step types"
+version: "1.0"
+
+steps:
+  - id: "analyze_network_ops_coverage"
+    name: "Analyze current test coverage for network operations"
+    step_type: "llm" 
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 3000
+      prompt: |
+        You are a Rust test coverage specialist. Generate comprehensive unit tests for RustChain's network operation step types.
+        
+        Network Operation Step Types to Test:
+        1. WebsocketConnect - establishes WebSocket connections with tokio-tungstenite
+        2. FtpUpload - uploads files via FTP with authentication
+        3. FtpDownload - downloads files via FTP with authentication  
+        4. SshExecute - executes commands via SSH with openssh crate
+        5. PingHost - pings hosts using system ping command
+        
+        Generate Rust unit tests covering:
+        - Connection establishment (success/failure scenarios)
+        - Authentication handling (valid/invalid credentials)
+        - File transfer operations (upload/download various file types)
+        - Network timeouts and error recovery
+        - Protocol-specific edge cases
+        - Feature flag conditional compilation (#[cfg(feature = "...")])
+        
+        Testing Challenges & Solutions:
+        - Mock external network services for reliable testing
+        - Use localhost servers for integration tests
+        - Test both enabled and disabled feature scenarios
+        - Handle platform differences (Windows vs Unix ping)
+        
+        Requirements:
+        - Async tests with tokio::test
+        - Proper error handling and cleanup
+        - Mock servers where possible
+        - Feature-gated test compilation
+        - Timeout handling for network operations
+        
+        Focus on implementation in src/engine/mod.rs lines 3008-3187.
+  
+  - id: "create_network_ops_tests"
+    name: "Create network operations test file"
+    step_type: "create_file"
+    parameters:
+      path: "src/engine/tests/test_network_operations.rs"
+      content: "{analyze_network_ops_coverage_result}"
+  
+  - id: "generate_mock_network_servers"
+    name: "Generate mock network servers for testing"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 2000
+      prompt: |
+        Create mock network servers and helpers for testing network operations:
+        
+        1. **Mock WebSocket Server**:
+        - Simple echo server for WebSocket connection tests
+        - Message handling and connection lifecycle testing
+        - Error scenario simulation (connection refused, timeout)
+        
+        2. **Mock FTP Server**:
+        - Basic FTP server for upload/download testing
+        - Authentication simulation (valid/invalid credentials)
+        - File transfer verification helpers
+        
+        3. **Mock SSH Server** (if feasible):
+        - Command execution simulation
+        - Authentication testing
+        - Or use system commands for integration testing
+        
+        4. **Network Testing Utilities**:
+        - Random port allocation for test servers
+        - Server lifecycle management (start/stop)
+        - Connection testing helpers
+        - Timeout and error simulation
+        
+        5. **Platform-Specific Helpers**:
+        - Ping command detection (Unix vs Windows)
+        - Network interface enumeration for testing
+        - Localhost connectivity validation
+        
+        Format as Rust helper module with proper async/await and error handling.
+        Use minimal dependencies to avoid test complexity.
+  
+  - id: "append_mock_servers"
+    name: "Append mock servers to test file"
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_network_operations.rs"
+      operation: "append"
+      content: "\n\n// Mock Network Servers and Helpers\n{generate_mock_network_servers_result}"
+  
+  - id: "generate_integration_tests"
+    name: "Generate integration tests for network operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 1500
+      prompt: |
+        Create integration tests that test network operations end-to-end:
+        
+        1. **Full WebSocket Workflow**:
+        - Start mock WebSocket server
+        - Test connection establishment
+        - Send/receive messages
+        - Handle connection closure
+        - Clean up resources
+        
+        2. **FTP Transfer Workflow**:
+        - Create test files for upload/download
+        - Test complete transfer cycles
+        - Verify file integrity after transfer
+        - Test error recovery scenarios
+        
+        3. **SSH Command Execution**:
+        - Test simple command execution
+        - Verify output capture
+        - Test command failures
+        - Handle connection errors
+        
+        4. **Network Health Checks**:
+        - Ping localhost and external hosts
+        - Test various ping counts
+        - Handle network unavailability
+        
+        Focus on realistic workflows and proper cleanup.
+        Use tempfile for test file management.
+  
+  - id: "append_integration_tests"
+    name: "Append integration tests to test file" 
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_network_operations.rs"
+      operation: "append"
+      content: "\n\n// Integration Tests\n{generate_integration_tests_result}"
+  
+  - id: "run_network_ops_tests"
+    name: "Run network operations tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--test", "test_network_operations", "--features", "tokio-tungstenite,ftp,openssh", "--", "--nocapture"]
+      working_dir: "."

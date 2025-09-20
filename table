@@ -1,0 +1,15 @@
+Vulnerability Scan Report
+=========================
+
+Project: C:\Users\micha\repos\rustchain-community
+Scan Type: full
+Generated: 2025-09-19 08:52:27
+Duration: 0s
+
+Summary:
+  Total Vulnerabilities: 6
+  Critical: 0
+  High: 3
+  Dependencies: 2
+  Code Issues: 2
+  Risk Score: 69.0/100

@@ -1,0 +1,71 @@
+name: "Coverage Mission 01 - Memory Module (Bash-Based)"
+description: "AI-driven coverage improvement using bash commands"
+version: "1.0"
+
+steps:
+  - id: "generate_memory_test"
+    name: "Generate Memory Test Code"
+    step_type: "create_file"
+    parameters:
+      path: "new_memory_test.rs"
+      content: |
+        #[tokio::test]
+        async fn test_memory_store_ttl_boundary_conditions() {
+            use std::time::Duration;
+            let mut store = InMemoryStore::new(1);
+            
+            store.store("boundary_key", "boundary_value").await.unwrap();
+            assert!(store.retrieve("boundary_key").await.unwrap().is_some());
+            
+            tokio::time::sleep(Duration::from_millis(1100)).await;
+            assert!(store.retrieve("boundary_key").await.unwrap().is_none());
+        }
+        
+        #[tokio::test]
+        async fn test_memory_store_capacity_lru_eviction() {
+            let mut store = InMemoryStore::with_capacity(2, 3600);
+            
+            store.store("oldest", "1").await.unwrap();
+            store.store("middle", "2").await.unwrap();
+            store.store("newest", "3").await.unwrap();
+            
+            assert!(store.retrieve("oldest").await.unwrap().is_none());
+            assert!(store.retrieve("middle").await.unwrap().is_some());
+            assert!(store.retrieve("newest").await.unwrap().is_some());
+        }
+
+  - id: "append_to_memory_module"
+    name: "Append Tests to Memory Module"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "echo '' >> src/core/memory.rs && cat new_memory_test.rs >> src/core/memory.rs"]
+      working_dir: "."
+
+  - id: "validate_compilation"
+    name: "Validate Tests Compile"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["check", "--lib"]
+      working_dir: "."
+
+  - id: "run_memory_tests"
+    name: "Run Memory Module Tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--lib", "core::memory::tests", "--", "--test-threads=1"]
+      working_dir: "."
+
+  - id: "cleanup"
+    name: "Remove Temporary Files"
+    step_type: "command"
+    parameters:
+      command: "rm"
+      args: ["-f", "new_memory_test.rs"]
+      working_dir: "."
+
+config:
+  timeout_seconds: 120
+  fail_fast: true

@@ -1,0 +1,12 @@
+name: "HTTP Step Test - Fixed"
+description: "Test HTTP step with ToolRegistry bridge"
+version: "1.0"
+
+steps:
+  - id: "test_http_get"
+    name: "Test HTTP GET request"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/json"
+      method: "GET"
+      timeout: 30

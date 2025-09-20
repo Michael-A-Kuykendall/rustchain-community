@@ -1,0 +1,93 @@
+version: "1.0"
+name: "shimmy_advanced_features_stack"
+description: "Advanced shimmy features - SafeTensors, performance optimization, monitoring"
+
+missions:
+  - id: "008_safetensors_integration"
+    name: "Complete SafeTensors Adapter Integration"
+    description: "Wire up the SafeTensors conversion system"
+    steps:
+      - id: "analyze_safetensors_adapter"
+        step_type: "read_file"
+        parameters:
+          path: "../shimmy/src/safetensors_adapter.rs"
+          
+      - id: "plan_safetensors_wiring"
+        step_type: "llm"
+        parameters:
+          prompt: "I have a complete SafeTensors adapter with conversion functions but it's unused. How should I integrate SafeTensors support into the discovery system and model loading pipeline?"
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 400
+          
+      - id: "wire_safetensors_to_discovery"
+        step_type: "edit_file"
+        parameters:
+          path: "../shimmy/src/discovery.rs"
+          
+      - id: "test_safetensors_detection"
+        step_type: "shell"
+        parameters:
+          command: "cd ../shimmy && cargo build --features llama"
+
+  - id: "009_performance_optimization"
+    name: "Performance Analysis and Optimization"
+    description: "Use Punch analysis for performance improvements"
+    depends_on: ["008_safetensors_integration"]
+    steps:
+      - id: "run_punch_quality_analysis"
+        step_type: "shell"
+        parameters:
+          command: "cd ../punch-discovery && ./punch.exe quality ../shimmy --verbose --format json"
+          
+      - id: "analyze_performance_bottlenecks"
+        step_type: "llm"
+        parameters:
+          prompt: "Based on Punch analysis, what are the main performance bottlenecks in shimmy's architecture? Focus on token generation pipeline and memory usage."
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 400
+          
+      - id: "optimize_critical_paths"
+        step_type: "edit_file"
+        parameters:
+          path: "../shimmy/src/engine/llama.rs"
+          
+      - id: "verify_optimizations"
+        step_type: "shell"
+        parameters:
+          command: "cd ../shimmy && cargo build --features llama --release"
+
+  - id: "010_monitoring_and_observability"
+    name: "Advanced Monitoring and Observability"
+    description: "Comprehensive monitoring with Punch integration"
+    depends_on: ["009_performance_optimization"]
+    steps:
+      - id: "design_monitoring_architecture"
+        step_type: "llm"
+        parameters:
+          prompt: "Design a monitoring system for shimmy that integrates with Punch for real-time code analysis and performance tracking. Include metrics for token generation, memory usage, and request patterns."
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 450
+          
+      - id: "implement_advanced_metrics"
+        step_type: "edit_file"
+        parameters:
+          path: "../shimmy/src/metrics.rs"
+          
+      - id: "add_punch_integration"
+        step_type: "create_file"
+        parameters:
+          path: "../shimmy/src/punch_integration.rs"
+          content: "// Punch integration for real-time code analysis"
+          
+      - id: "verify_monitoring"
+        step_type: "shell"
+        parameters:
+          command: "cd ../shimmy && cargo build --features llama"
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 400
+  validation_mode: "enhanced"

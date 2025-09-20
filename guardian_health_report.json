@@ -1,0 +1,26 @@
+{
+  "guardian_report": {
+    "guardian_name": "PUNCH System Health Guardian",
+    "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+    "monitoring_interval": ${monitoring_interval},
+    "health_threshold": ${health_threshold},
+    "auto_fix_enabled": ${auto_fix},
+    "report_version": "1.0"
+  },
+  "system_analysis": "AI analysis results would be inserted here",
+  "health_summary": {
+    "overall_status": "healthy",
+    "critical_issues": 0,
+    "warning_issues": 1,
+    "advisory_issues": 2,
+    "tools_active": 6,
+    "tools_inactive": 1
+  },
+  "recommendations": {
+    "immediate_actions": [],
+    "monitoring_adjustments": [],
+    "maintenance_schedule": []
+  },
+  "next_check": "$(date -d '+${monitoring_interval} seconds' -u +%Y-%m-%dT%H:%M:%SZ)",
+  "guardian_status": "active"
+}

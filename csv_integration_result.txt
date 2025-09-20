@@ -1,0 +1,6 @@
+CSV Integration Test Results:
+
+Step: {load_csv_data.step_id}
+Status: {load_csv_data.status}
+
+Content loaded successfully: {load_csv_data.result}

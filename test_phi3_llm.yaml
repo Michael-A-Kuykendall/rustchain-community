@@ -1,0 +1,16 @@
+version: "1.0"
+name: "test_phi3_llm"
+description: "Test LLM with phi3:mini model"
+
+steps:
+  - id: "test_llm_phi3"
+    name: "Test LLM response with phi3"
+    step_type: "llm"
+    parameters:
+      prompt: "Say hello briefly"
+      model: "phi3:mini"
+      temperature: 0.3
+      max_tokens: 50
+
+config:
+  timeout_seconds: 60

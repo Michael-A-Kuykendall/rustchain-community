@@ -1,0 +1,1 @@
+{generate_property_analyzer}

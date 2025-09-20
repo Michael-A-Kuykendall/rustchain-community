@@ -1,0 +1,25 @@
+name: "Test Champion Model Simple"
+description: "Quick test of Champion model functionality"
+version: "1.0"
+
+steps:
+  - id: "champion_analysis"
+    name: "Champion Analysis Test"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama32-champion"
+      prompt: "Analyze this: RustChain is a Rust-based AI agent framework. List 3 key benefits of using Rust for AI frameworks."
+      temperature: 0.1
+      max_tokens: 200
+      
+  - id: "create_analysis_report"
+    name: "Create Analysis Report"
+    step_type: "create_file"
+    parameters:
+      path: "champion_analysis_result.md"
+      content: |
+        # Champion Model Analysis
+        
+        {champion_analysis}
+    depends_on: ["champion_analysis"]

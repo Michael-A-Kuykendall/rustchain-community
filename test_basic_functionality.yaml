@@ -1,0 +1,24 @@
+name: "Basic Functionality Test"
+description: "Test core RustChain functionality"
+version: "1.0"
+
+steps:
+  - id: "test_noop"
+    name: "Test NOOP step"
+    step_type: "noop"
+    parameters: {}
+    
+  - id: "test_create_file"
+    name: "Test file creation"
+    step_type: "create_file"
+    parameters:
+      path: "test_output.txt"
+      content: "Hello RustChain!"
+      
+  - id: "test_command"
+    name: "Test command execution"
+    step_type: "command"
+    parameters:
+      command: "echo"
+      args: ["Success!"]
+    depends_on: ["test_create_file"]

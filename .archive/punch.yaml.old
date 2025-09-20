@@ -1,0 +1,14 @@
+# Minimal punch config
+storage:
+  type: "memory"
+  path: "./punch_data"
+
+languages:
+  - rust
+
+patterns:
+  - "*.rs"
+
+ignore:
+  - "target/"
+  - ".git/"

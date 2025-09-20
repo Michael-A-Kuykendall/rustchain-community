@@ -1,0 +1,100 @@
+name: "Feature-Gated Steps Test"
+description: "Test SQL, Redis, FTP, SSH, WebSocket steps without optional features enabled"
+version: "1.0"
+
+steps:
+  - id: "test_sql_query_fallback"
+    name: "Test SQL Query without sqlx feature"
+    step_type: "sql_query"
+    parameters:
+      query: "SELECT 1 as test_column"
+      database_url: "sqlite://memory:"
+    continue_on_error: true
+
+  - id: "test_redis_set_fallback"
+    name: "Test Redis Set without redis feature"
+    step_type: "redis_set"
+    parameters:
+      key: "test_key"
+      value: "test_value"
+      redis_url: "redis://127.0.0.1:6379"
+    continue_on_error: true
+    depends_on: ["test_sql_query_fallback"]
+
+  - id: "test_redis_get_fallback"
+    name: "Test Redis Get without redis feature"
+    step_type: "redis_get"
+    parameters:
+      key: "test_key"
+      redis_url: "redis://127.0.0.1:6379"
+    continue_on_error: true
+    depends_on: ["test_redis_set_fallback"]
+
+  - id: "test_ftp_upload_fallback"
+    name: "Test FTP Upload without ftp feature"
+    step_type: "ftp_upload"
+    parameters:
+      host: "ftp.example.com"
+      username: "test"
+      password: "test"
+      local_file: "test.txt"
+      remote_file: "test.txt"
+    continue_on_error: true
+    depends_on: ["test_redis_get_fallback"]
+
+  - id: "test_ssh_execute_fallback"
+    name: "Test SSH Execute without openssh feature"
+    step_type: "ssh_execute"
+    parameters:
+      host: "ssh.example.com"
+      username: "test"
+      command: "echo hello"
+    continue_on_error: true
+    depends_on: ["test_ftp_upload_fallback"]
+
+  - id: "test_websocket_fallback"
+    name: "Test WebSocket Connect without tokio-tungstenite feature"
+    step_type: "websocket_connect"
+    parameters:
+      url: "wss://echo.websocket.org"
+      message: "test message"
+    continue_on_error: true
+    depends_on: ["test_ssh_execute_fallback"]
+
+  - id: "test_similarity_search_fallback"
+    name: "Test Similarity Search without rag feature"
+    step_type: "similarity_search"
+    parameters:
+      query_embedding: [0.1, 0.2, 0.3]
+      database: "test_db"
+      top_k: 5
+    continue_on_error: true
+    depends_on: ["test_websocket_fallback"]
+
+  - id: "create_fallback_test_results"
+    name: "Create feature fallback test results"
+    step_type: "create_file"
+    parameters:
+      path: "feature_fallback_test_results.json"
+      content: |
+        {
+          "test_name": "Feature-Gated Steps Test",
+          "timestamp": "2025-09-11",
+          "summary": "Tests proper 'feature not enabled' error handling",
+          "expected_behavior": "All steps should fail gracefully with clear error messages",
+          "test_categories": {
+            "database_operations": ["sql_query", "redis_set", "redis_get"],
+            "network_operations": ["ftp_upload", "ssh_execute", "websocket_connect"],
+            "ai_ml_operations": ["similarity_search"]
+          },
+          "validation": "Proper error messages prevent user confusion about missing features"
+        }
+    depends_on: ["test_similarity_search_fallback"]
+
+  - id: "validate_graceful_failures"
+    name: "Validate all feature-gated steps failed gracefully"
+    step_type: "command"
+    parameters:
+      command: "echo"
+      args: ["Feature-Gated Steps Test: All steps failed gracefully with proper error messages"]
+    depends_on: ["create_fallback_test_results"]

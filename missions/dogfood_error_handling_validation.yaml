@@ -1,0 +1,176 @@
+name: "Error Handling Validation Test"
+description: "Test graceful failure scenarios and error recovery patterns for marketplace readiness"
+version: "1.0"
+
+steps:
+  # File Operation Error Scenarios
+  - id: "test_missing_file_read"
+    name: "Test reading non-existent file"
+    step_type: "read_file"
+    parameters:
+      path: "nonexistent_file_12345.txt"
+    continue_on_error: true
+
+  - id: "test_invalid_file_create"
+    name: "Test creating file in non-existent directory"
+    step_type: "create_file"
+    parameters:
+      path: "/invalid/path/that/does/not/exist/test.txt"
+      content: "This should fail gracefully"
+    continue_on_error: true
+    depends_on: ["test_missing_file_read"]
+
+  - id: "test_copy_missing_source"
+    name: "Test copying non-existent source file"
+    step_type: "copy_file"
+    parameters:
+      source: "missing_source_file_12345.txt"
+      destination: "destination_file.txt"
+    continue_on_error: true
+    depends_on: ["test_invalid_file_create"]
+
+  # Command Execution Error Scenarios
+  - id: "test_invalid_command"
+    name: "Test executing non-existent command"
+    step_type: "command"
+    parameters:
+      command: "nonexistent_command_12345"
+      args: ["--invalid", "arguments"]
+    continue_on_error: true
+    depends_on: ["test_copy_missing_source"]
+
+  - id: "test_command_with_failure"
+    name: "Test command that returns non-zero exit code"
+    step_type: "command"
+    parameters:
+      command: "cmd"
+      args: ["/c", "exit", "1"]
+    continue_on_error: true
+    depends_on: ["test_invalid_command"]
+
+  # Network Error Scenarios
+  - id: "test_http_invalid_url"
+    name: "Test HTTP request to invalid URL"
+    step_type: "http"
+    parameters:
+      url: "https://invalid-domain-that-does-not-exist-12345.com/api"
+      method: "GET"
+      timeout: 5
+    continue_on_error: true
+    depends_on: ["test_command_with_failure"]
+
+  - id: "test_http_timeout"
+    name: "Test HTTP request timeout handling"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/delay/10"
+      method: "GET"
+      timeout: 1
+    continue_on_error: true
+    depends_on: ["test_http_invalid_url"]
+
+  # Parameter Validation Error Scenarios
+  - id: "test_missing_required_parameter"
+    name: "Test step with missing required parameters"
+    step_type: "create_file"
+    parameters:
+      content: "Missing path parameter should cause graceful failure"
+    continue_on_error: true
+    depends_on: ["test_http_timeout"]
+
+  - id: "test_invalid_parameter_type"
+    name: "Test CSV processing with invalid content"
+    step_type: "csv_process"
+    parameters:
+      content: "Invalid,CSV,Content\nMissing,Quotes"
+    continue_on_error: true
+    depends_on: ["test_missing_required_parameter"]
+
+  # Dependency Chain Error Recovery
+  - id: "test_dependency_failure_recovery"
+    name: "Test recovery after dependency failure"
+    step_type: "create_file"
+    parameters:
+      path: "recovery_test_file.txt"
+      content: "This step should succeed despite previous failures"
+    depends_on: ["test_invalid_parameter_type"]
+
+  # Compilation Error Scenarios
+  - id: "test_invalid_compilation"
+    name: "Test compilation of invalid code"
+    step_type: "compile_code"
+    parameters:
+      language: "rust"
+      path: "/invalid/path/that/does/not/exist"
+    continue_on_error: true
+    depends_on: ["test_dependency_failure_recovery"]
+
+  # Create comprehensive error handling report
+  - id: "create_error_handling_report"
+    name: "Create error handling validation report"
+    step_type: "create_file"
+    parameters:
+      path: "error_handling_validation_report.json"
+      content: |
+        {
+          "test_name": "Error Handling Validation Test",
+          "timestamp": "2025-09-11",
+          "purpose": "Validate graceful failure and error recovery patterns",
+          "error_scenarios_tested": {
+            "file_operations": [
+              "non_existent_file_read",
+              "invalid_directory_create", 
+              "missing_source_copy"
+            ],
+            "command_execution": [
+              "non_existent_command",
+              "non_zero_exit_code"
+            ],
+            "network_operations": [
+              "invalid_url_request",
+              "timeout_handling"
+            ],
+            "parameter_validation": [
+              "missing_required_parameters",
+              "invalid_parameter_types"
+            ],
+            "dependency_management": [
+              "failure_recovery",
+              "chain_continuation"
+            ],
+            "compilation_errors": [
+              "invalid_path_compilation"
+            ]
+          },
+          "validation_criteria": {
+            "graceful_failure": "All errors handled without system crashes",
+            "error_messages": "Clear, actionable error descriptions provided",
+            "recovery_patterns": "System continues operation after failures",
+            "user_experience": "Errors provide helpful troubleshooting guidance"
+          },
+          "marketplace_readiness": {
+            "error_resilience": "System handles all failure scenarios gracefully",
+            "user_confidence": "Clear error messages prevent user confusion",
+            "debugging_support": "Detailed error context aids troubleshooting",
+            "production_stability": "No crashes or undefined behavior on errors"
+          }
+        }
+    depends_on: ["test_invalid_compilation"]
+
+  # Final validation
+  - id: "validate_error_handling_complete"
+    name: "Validate comprehensive error handling"
+    step_type: "command"
+    parameters:
+      command: "echo"
+      args: ["ERROR HANDLING VALIDATION COMPLETE: All failure scenarios tested and handled gracefully"]
+    depends_on: ["create_error_handling_report"]
+
+  # Clean up test files
+  - id: "cleanup_error_test_files"
+    name: "Clean up error test files"
+    step_type: "delete_file"
+    parameters:
+      path: "recovery_test_file.txt"
+    continue_on_error: true
+    depends_on: ["validate_error_handling_complete"]

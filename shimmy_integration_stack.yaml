@@ -1,0 +1,231 @@
+version: "1.0"
+name: "shimmy_integration_mission_stack"
+description: "Complete shimmy integration using systematic RustChain missions - connect all the built pieces"
+
+# Token-depth optimized for llama32-champion model
+# Each mission ~15-25 minute scope, granular verification
+
+missions:
+  - id: "001_model_setup"
+    name: "Setup Test Model Infrastructure"
+    description: "Get shimmy working end-to-end with a real model"
+    steps:
+      - id: "create_model_directory"
+        step_type: "shell"
+        parameters:
+          command: "mkdir -p models"
+          
+      - id: "verify_env_vars"
+        step_type: "shell"
+        parameters:
+          command: "echo 'SHIMMY_BASE_GGUF=' && echo $SHIMMY_BASE_GGUF"
+          
+      - id: "test_basic_generation"
+        step_type: "shell"
+        parameters:
+          command: "cargo build --features llama"
+          
+      - id: "validate_build"
+        step_type: "shell"
+        parameters:
+          command: "cargo run --features llama -- list"
+
+  - id: "002_connect_discovery_to_cli"
+    name: "Wire Discovery System to CLI Commands"
+    description: "Connect the built ModelDiscovery to the list command"
+    depends_on: ["001_model_setup"]
+    steps:
+      - id: "analyze_current_cli"
+        step_type: "read_file"
+        parameters:
+          path: "src/cli.rs"
+          
+      - id: "analyze_discovery_module"
+        step_type: "read_file"
+        parameters:
+          path: "src/discovery.rs"
+          
+      - id: "plan_integration"
+        step_type: "llm"
+        parameters:
+          prompt: "I need to connect the discovery::ModelDiscovery system to the CLI list command. The warning shows 'function handle_list_command_with_discovery is never used'. How should I modify src/cli.rs to use the discovery system instead of the hardcoded registry?"
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 400
+          
+      - id: "implement_cli_discovery"
+        step_type: "edit_file"
+        parameters:
+          path: "src/cli.rs"
+          
+      - id: "verify_cli_integration"
+        step_type: "shell" 
+        parameters:
+          command: "cargo build --features llama"
+
+  - id: "003_wire_rustchain_compatibility"
+    name: "Enable RustChain Provider Integration"
+    description: "Connect the RustChain compatibility layer to the main server"
+    depends_on: ["002_connect_discovery_to_cli"]
+    steps:
+      - id: "analyze_rustchain_compat"
+        step_type: "read_file"
+        parameters:
+          path: "src/rustchain_compat.rs"
+          
+      - id: "analyze_server_routing"
+        step_type: "read_file"
+        parameters:
+          path: "src/server.rs"
+          
+      - id: "plan_rustchain_wiring"
+        step_type: "llm"
+        parameters:
+          prompt: "I have a rustchain_compat.rs module with RustChainRequest/Response types and rustchain_generate function, but it's not wired to the server. How should I add RustChain-compatible endpoints to the axum router in server.rs?"
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 400
+          
+      - id: "add_rustchain_routes"
+        step_type: "edit_file"
+        parameters:
+          path: "src/server.rs"
+          
+      - id: "verify_rustchain_endpoints"
+        step_type: "shell"
+        parameters:
+          command: "cargo build --features llama"
+
+  - id: "004_integrate_metrics_system"
+    name: "Connect Metrics to API Endpoints"
+    description: "Wire up the MetricsCollector to actual HTTP endpoints"
+    depends_on: ["003_wire_rustchain_compatibility"]
+    steps:
+      - id: "analyze_metrics_module"
+        step_type: "read_file"
+        parameters:
+          path: "src/metrics.rs"
+          
+      - id: "analyze_api_module"
+        step_type: "read_file"
+        parameters:
+          path: "src/api.rs"
+          
+      - id: "plan_metrics_integration"
+        step_type: "llm"
+        parameters:
+          prompt: "I have a complete MetricsCollector system but it's unused. How should I integrate metrics collection into the API endpoints in api.rs and add a /metrics endpoint to the server?"
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 400
+          
+      - id: "add_metrics_to_api"
+        step_type: "edit_file"
+        parameters:
+          path: "src/api.rs"
+          
+      - id: "add_metrics_endpoint"
+        step_type: "edit_file"
+        parameters:
+          path: "src/server.rs"
+          
+      - id: "verify_metrics"
+        step_type: "shell"
+        parameters:
+          command: "cargo build --features llama"
+
+  - id: "005_implement_auto_discovery"
+    name: "Complete Auto-Discovery Implementation"
+    description: "Make model discovery actually scan filesystem"
+    depends_on: ["004_integrate_metrics_system"]
+    steps:
+      - id: "analyze_discovery_implementation"
+        step_type: "read_file"
+        parameters:
+          path: "src/discovery.rs"
+          
+      - id: "plan_auto_discovery"
+        step_type: "llm"
+        parameters:
+          prompt: "Looking at the discovery.rs module, I need to implement actual filesystem scanning for GGUF, SafeTensors, and ONNX models. What's the best approach to scan directories and detect model formats?"
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 400
+          
+      - id: "implement_filesystem_scanning"
+        step_type: "edit_file"
+        parameters:
+          path: "src/discovery.rs"
+          
+      - id: "verify_discovery"
+        step_type: "shell"
+        parameters:
+          command: "cargo build --features llama"
+
+  - id: "006_clean_unused_code"
+    name: "Clean Up Warnings and Dead Code"
+    description: "Remove unused code and fix all compiler warnings"
+    depends_on: ["005_implement_auto_discovery"]
+    steps:
+      - id: "analyze_warnings"
+        step_type: "shell"
+        parameters:
+          command: "cargo build --features llama 2>&1 | grep warning"
+          
+      - id: "plan_cleanup"
+        step_type: "llm"
+        parameters:
+          prompt: "I have many Rust compiler warnings about unused code. Should I remove unused functions/structs or connect them to the main application? Focus on the most important ones first."
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 300
+          
+      - id: "clean_main_integration"
+        step_type: "edit_file"
+        parameters:
+          path: "src/main_integration.rs"
+          
+      - id: "verify_cleanup"
+        step_type: "shell"
+        parameters:
+          command: "cargo build --features llama"
+
+  - id: "007_production_readiness"
+    name: "Final Production Readiness"
+    description: "Add error handling, logging, and production features"
+    depends_on: ["006_clean_unused_code"]
+    steps:
+      - id: "analyze_error_handling"
+        step_type: "read_file"
+        parameters:
+          path: "src/api_errors.rs"
+          
+      - id: "plan_production_features"
+        step_type: "llm"
+        parameters:
+          prompt: "For production readiness, I need better error handling, proper logging, and robust configuration. What are the key areas to focus on for a local AI serving solution?"
+          model: "llama32-champion"
+          temperature: 0.3
+          max_tokens: 350
+          
+      - id: "enhance_error_handling"
+        step_type: "edit_file"
+        parameters:
+          path: "src/api.rs"
+          
+      - id: "final_verification"
+        step_type: "shell"
+        parameters:
+          command: "cargo build --features llama --release"
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 300
+  validation_mode: "standard"
+  
+# Token optimization for llama32-champion
+llm_config:
+  model: "llama32-champion"
+  temperature: 0.3
+  max_tokens: 400
+  context_window: 8192

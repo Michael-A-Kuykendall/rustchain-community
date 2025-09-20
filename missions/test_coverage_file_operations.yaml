@@ -1,0 +1,86 @@
+name: "Generate Test Coverage for File Operations"
+description: "Use RustChain to generate comprehensive test coverage for all file operation step types"
+version: "1.0"
+
+steps:
+  - id: "analyze_file_ops_coverage"
+    name: "Analyze current test coverage for file operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 2000
+      prompt: |
+        You are a Rust test coverage specialist. Analyze the file operation step types in RustChain and generate comprehensive unit tests.
+        
+        File Operation Step Types to Test:
+        1. CopyFile - copies files from source to destination
+        2. MoveFile - moves/renames files from source to destination  
+        3. ReadFile - reads file contents and returns as string
+        4. ListDirectory - lists directory contents with metadata
+        5. FileSearch - searches for files matching patterns
+        
+        Generate Rust unit tests that cover:
+        - Happy path scenarios
+        - Error conditions (file not found, permission denied, etc.)
+        - Edge cases (empty files, large files, special characters)
+        - Cross-platform compatibility
+        
+        Format as complete Rust test module with proper imports and test functions.
+        Use tokio::test for async tests and tempfile for test file creation.
+        
+        Focus on the step execution logic in src/engine/mod.rs around lines 2317-2413.
+  
+  - id: "create_file_ops_tests"
+    name: "Create file operations test file"
+    step_type: "create_file"
+    parameters:
+      path: "src/engine/tests/test_file_operations.rs"
+      content: "{analyze_file_ops_coverage_result}"
+  
+  - id: "analyze_edge_cases"
+    name: "Generate edge case tests for file operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 1500
+      prompt: |
+        Generate additional edge case tests for file operations focusing on:
+        
+        1. **Security scenarios**: Path traversal attempts, symlink handling
+        2. **Performance scenarios**: Large file operations, concurrent access
+        3. **Error recovery**: Partial operations, cleanup after failures
+        4. **Platform differences**: Windows vs Unix path handling, case sensitivity
+        
+        Create focused test functions that complement the main test suite.
+        Use descriptive test names like test_copy_file_prevents_path_traversal().
+        
+        Include proper error assertions and cleanup logic.
+  
+  - id: "append_edge_case_tests"
+    name: "Append edge case tests to file"
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_file_operations.rs"
+      operation: "append"
+      content: "\n\n// Edge Case Tests\n{analyze_edge_cases_result}"
+  
+  - id: "run_file_ops_tests"
+    name: "Run file operations tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--test", "test_file_operations", "--", "--nocapture"]
+      working_dir: "."
+  
+  - id: "coverage_report_file_ops"
+    name: "Generate coverage report for file operations"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["tarpaulin", "--out", "html", "--output-dir", "coverage/file_operations", "--include-tests", "--skip-clean"]
+      working_dir: "."
+      timeout: 300

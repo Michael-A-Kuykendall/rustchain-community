@@ -1,0 +1,24 @@
+version: "1.0"
+name: "champion_test_mission"
+description: "Test the champion model with knowledge of your projects"
+steps:
+  - id: "test_champion_knowledge"
+    name: "Test champion's knowledge of projects"
+    step_type: "llm"
+    parameters:
+      prompt: "Hello! I'm working on my Rust projects. Can you help me understand what shimmy and rustchain are supposed to do based on your training data? Keep it brief but accurate."
+      model: "llama32-champion"
+      temperature: 0.3
+      max_tokens: 200
+
+  - id: "save_champion_response"
+    name: "Save champion response"
+    step_type: "create_file" 
+    depends_on: ["test_champion_knowledge"]
+    parameters:
+      path: "champion_knowledge_test.txt"
+      content: "Champion model responded successfully"
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 60

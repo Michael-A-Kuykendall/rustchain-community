@@ -1,0 +1,19 @@
+name: "JSON/YAML Loader Integration Test"
+description: "Test JSON and YAML document loader through mission execution system"
+version: "1.0"
+
+steps:
+  - id: "load_yaml_data"
+    name: "Load YAML file through mission system"
+    step_type: "tool"
+    parameters:
+      tool: "json_yaml_loader"
+      parameters:
+        file_path: "test_json_yaml_integration.yaml"
+        format: "yaml"
+    timeout_seconds: 30
+
+config:
+  max_parallel_steps: 1
+  fail_fast: true
+  timeout_seconds: 120

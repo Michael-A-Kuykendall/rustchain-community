@@ -1,0 +1,20 @@
+name: "Variable Substitution Test"
+description: "Test variable substitution bug"
+version: "1.0"
+
+steps:
+  - id: "step1"
+    name: "Set a variable"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "phi3:mini"
+      prompt: "Just respond with: Hello World Test"
+      temperature: 0.1
+      
+  - id: "step2"  
+    name: "Create file using variable"
+    step_type: "create_file"
+    parameters:
+      path: "test_substitution_output.txt"
+      content: "Result from step1: {step1_response} and also {step1}"

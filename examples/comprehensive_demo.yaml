@@ -1,0 +1,66 @@
+version: "1.0"
+name: "comprehensive_demo"
+description: "Comprehensive demo showcasing all RustChain capabilities"
+steps:
+  - id: "initialize"
+    name: "Initialize demo"
+    step_type: "create_file"
+    parameters:
+      path: "demo_log.txt"
+      content: "=== RustChain Comprehensive Demo Started ===\n"
+  
+  - id: "llm_analysis"
+    name: "LLM analysis step"
+    step_type: "llm"
+    depends_on: ["initialize"]
+    parameters:
+      prompt: "What are the key advantages of using Rust for systems programming? List 3 main benefits."
+      temperature: 0.3
+      max_tokens: 200
+  
+  - id: "http_request"
+    name: "Test HTTP connectivity"
+    step_type: "http"
+    depends_on: ["llm_analysis"]
+    parameters:
+      url: "https://httpbin.org/json"
+      method: "GET"
+  
+  - id: "tool_execution"
+    name: "Execute file creation tool"
+    step_type: "tool"
+    depends_on: ["http_request"]
+    parameters:
+      tool: "create_file"
+      parameters:
+        path: "tool_output.txt"
+        content: "This file was created using the tool execution system!"
+  
+  - id: "agent_task"
+    name: "Autonomous agent reasoning"
+    step_type: "agent"
+    depends_on: ["tool_execution"]
+    parameters:
+      name: "AnalysisAgent"
+      objective: "Summarize the key features demonstrated in this RustChain workflow"
+  
+  - id: "chain_processing"
+    name: "Chain processing step"
+    step_type: "chain"
+    depends_on: ["agent_task"]
+    parameters:
+      type: "sequential"
+      prompt: "Create a brief conclusion for a technical demonstration that shows multiple AI capabilities working together"
+  
+  - id: "final_summary"
+    name: "Create final summary"
+    step_type: "create_file"
+    depends_on: ["chain_processing"]
+    parameters:
+      path: "demo_summary.txt"
+      content: "=== RustChain Comprehensive Demo Completed ===\nAll systems functional: LLM, HTTP, Tools, Agents, Chains\nCheck individual result files for details."
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 300
+  fail_fast: true

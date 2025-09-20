@@ -1,0 +1,95 @@
+name: "Generate Test Coverage for AI/ML Operations"
+description: "Use RustChain to generate comprehensive test coverage for all AI/ML operation step types"
+version: "1.0"
+
+steps:
+  - id: "analyze_ai_ml_coverage"
+    name: "Analyze current test coverage for AI/ML operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 2000
+      prompt: |
+        You are a Rust test coverage specialist. Analyze the AI/ML operation step types in RustChain and generate comprehensive unit tests.
+        
+        AI/ML Operation Step Types to Test:
+        1. GenerateEmbedding - creates vector embeddings from text using various models
+        2. SimilaritySearch - performs vector similarity searches with different metrics
+        3. ModelInference - runs ML model inference with various input types
+        
+        Generate Rust unit tests that cover:
+        - Multiple embedding models (OpenAI, Sentence Transformers, local models)
+        - Vector operations (cosine similarity, euclidean distance, dot product)
+        - Different input types (text, images, structured data)
+        - Model loading and caching mechanisms
+        - Batch processing and streaming inference
+        - Error handling for model loading failures, API timeouts
+        - Memory management for large vectors and models
+        - Performance optimization for bulk operations
+        
+        Format as complete Rust test module with proper imports and test functions.
+        Use tokio::test for async tests and mock ML services where appropriate.
+        Include vector dimension validation and similarity threshold testing.
+        
+        Focus on the step execution logic in src/engine/mod.rs around lines 3180-3280.
+
+  - id: "create_ai_ml_tests"
+    name: "Create AI/ML operations test file"
+    step_type: "create_file"
+    parameters:
+      path: "src/engine/tests/test_ai_ml_operations.rs"
+      content: "{analyze_ai_ml_coverage_result}"
+
+  - id: "analyze_ai_performance_tests"
+    name: "Generate AI/ML performance tests"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 1500
+      prompt: |
+        Generate specialized performance tests for AI/ML operations focusing on:
+        
+        1. **Embedding Performance**: Batch processing, caching, memory usage
+        2. **Search Efficiency**: Index building, query optimization, result ranking  
+        3. **Model Loading**: Cold start times, model sharing, memory constraints
+        4. **Concurrent Processing**: Thread safety, resource contention, throughput
+        5. **Large Scale Operations**: High-dimensional vectors, large datasets
+        
+        Create test functions that validate:
+        - Embedding generation completes within acceptable time limits
+        - Similarity search scales with vector database size
+        - Model inference handles concurrent requests efficiently
+        - Memory usage stays within reasonable bounds
+        - Cache hit rates improve performance significantly
+        
+        Include benchmarking utilities and performance assertions.
+        Use descriptive names like test_embedding_batch_performance().
+
+  - id: "append_ai_performance_tests"
+    name: "Append AI/ML performance tests to file"
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_ai_ml_operations.rs"
+      operation: "append"
+      content: "\n\n// AI/ML Performance Tests\n{analyze_ai_performance_tests_result}"
+
+  - id: "run_ai_ml_tests"
+    name: "Run AI/ML operations tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--test", "test_ai_ml_operations", "--", "--nocapture"]
+      working_dir: "."
+
+  - id: "coverage_report_ai_ml"
+    name: "Generate coverage report for AI/ML operations"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["tarpaulin", "--out", "html", "--output-dir", "coverage/ai_ml_operations", "--include-tests", "--skip-clean"]
+      working_dir: "."
+      timeout: 300

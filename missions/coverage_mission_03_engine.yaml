@@ -1,0 +1,107 @@
+name: "Coverage Mission 03 - Engine Module"
+description: "Improve test coverage for src/engine/mod.rs module"
+version: "1.0"
+
+steps:
+  - id: "analyze_engine_coverage"
+    name: "Analyze Current Engine Module Coverage"
+    step_type: "create_file"
+    parameters:
+      path: "engine_coverage_analysis.md"
+      content: |
+        # Engine Module Coverage Analysis
+        
+        Target file: src/engine/mod.rs
+        Current test count: 25+ tests
+        
+        Areas needing coverage:
+        1. Mission execution error recovery
+        2. Step dependency circular detection
+        3. Context variable edge cases
+        4. Mission timeout handling
+        5. Parallel step execution limits
+        
+        Goal: Add 3-4 targeted test cases for edge conditions
+  
+  - id: "create_engine_tests"
+    name: "Create Additional Engine Tests"
+    step_type: "create_file"
+    parameters:
+      path: "additional_engine_tests.rs"
+      content: |
+        #[tokio::test]
+        async fn test_mission_execution_with_invalid_step_type() {
+            let mission = Mission {
+                version: "1.0".to_string(),
+                name: "Invalid Step Mission".to_string(),
+                description: None,
+                steps: vec![
+                    MissionStep {
+                        id: "invalid_step".to_string(),
+                        name: "Invalid Step".to_string(),
+                        step_type: "invalid_type".parse().unwrap_or(StepType::Noop),
+                        depends_on: vec![],
+                        parameters: json!({}),
+                    }
+                ],
+                config: None,
+            };
+            
+            let executor = DagExecutor::new();
+            let context = ExecutionContext::new();
+            
+            let result = executor.execute_mission(mission, context).await;
+            assert!(result.is_err() || result.unwrap().status == MissionStatus::Failed);
+        }
+        
+        #[tokio::test]
+        async fn test_context_variable_type_mismatch() {
+            let mut context = ExecutionContext::new();
+            
+            // Set variable as string
+            context.set_variable("test_var", "string_value");
+            
+            // Try to use as different type
+            let retrieved = context.get_variable("test_var");
+            assert_eq!(retrieved, Some("string_value"));
+            
+            // Test variable override with different type
+            context.set_variable("test_var", "123");
+            let numeric_value = context.get_variable("test_var");
+            assert_eq!(numeric_value, Some("123"));
+        }
+        
+        #[tokio::test]
+        async fn test_mission_step_execution_order_validation() {
+            let steps = vec![
+                MissionStep {
+                    id: "step_c".to_string(),
+                    name: "Step C".to_string(),
+                    step_type: StepType::Noop,
+                    depends_on: vec!["step_b".to_string()],
+                    parameters: json!({}),
+                },
+                MissionStep {
+                    id: "step_a".to_string(),
+                    name: "Step A".to_string(),
+                    step_type: StepType::Noop,
+                    depends_on: vec![],
+                    parameters: json!({}),
+                },
+                MissionStep {
+                    id: "step_b".to_string(),
+                    name: "Step B".to_string(),
+                    step_type: StepType::Noop,
+                    depends_on: vec!["step_a".to_string()],
+                    parameters: json!({}),
+                },
+            ];
+            
+            let sorted_steps = sort_steps_topologically(&steps);
+            assert!(sorted_steps.is_ok());
+            
+            let ordered_steps = sorted_steps.unwrap();
+            assert_eq!(ordered_steps[0].id, "step_a");
+            assert_eq!(ordered_steps[1].id, "step_b");
+            assert_eq!(ordered_steps[2].id, "step_c");
+        }

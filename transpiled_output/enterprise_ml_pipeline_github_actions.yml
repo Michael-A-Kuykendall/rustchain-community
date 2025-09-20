@@ -1,0 +1,15 @@
+name: 'langchain_mission'
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  rustchain-mission:
+    runs-on: ubuntu-latest
+    # Generated from RustChain mission: langchain_mission
+    # Description: Converted from LangChain Python script
+    steps:
+      - name: 'Enterprise Vector Store: Pinecone'
+        run: echo 'Step type RagAdd not yet supported in GitHub Actions export'

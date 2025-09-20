@@ -1,0 +1,47 @@
+name: "Step Type Validation Test"
+description: "Systematically test each step type to identify implementation status"
+version: "1.0"
+
+steps:
+  # File Operations
+  - id: "test_create_file"
+    name: "Test CreateFile"
+    step_type: "create_file"
+    parameters:
+      path: "validation_test_file.txt"
+      content: "Test content"
+      
+  - id: "test_read_file"
+    name: "Test ReadFile"
+    step_type: "read_file"
+    parameters:
+      path: "validation_test_file.txt"
+    depends_on: ["test_create_file"]
+      
+  - id: "test_delete_file"
+    name: "Test DeleteFile"
+    step_type: "delete_file"
+    parameters:
+      path: "validation_test_file.txt"
+    depends_on: ["test_read_file"]
+
+  # System Operations  
+  - id: "test_command"
+    name: "Test Command"
+    step_type: "command"
+    parameters:
+      command: "echo"
+      args: ["Command test successful"]
+      
+  - id: "test_noop"
+    name: "Test NOOP"
+    step_type: "noop"
+    parameters: {}
+    
+  # HTTP Operations
+  - id: "test_http"
+    name: "Test HTTP"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/json"
+      method: "GET"

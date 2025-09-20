@@ -1,0 +1,13 @@
+{
+  "project_name": "Sample Rust Project",
+  "language": "rust",
+  "components": [
+    {"name": "main.rs", "type": "binary", "lines": 150},
+    {"name": "lib.rs", "type": "library", "lines": 300},
+    {"name": "parser.rs", "type": "module", "lines": 200}
+  ],
+  "dependencies": ["serde", "tokio", "clap"],
+  "test_coverage": 75,
+  "performance_issues": ["allocation in hot path", "unnecessary cloning"],
+  "async_patterns": ["tokio::spawn usage", "async/await chains"]
+}

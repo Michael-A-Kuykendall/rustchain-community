@@ -1,0 +1,82 @@
+name: "Coverage Mission 01 - Memory Module"
+description: "Improve test coverage for src/core/memory.rs module"
+version: "1.0"
+
+steps:
+  - id: "analyze_memory_coverage"
+    name: "Analyze Current Memory Module Coverage"
+    step_type: "create_file"
+    parameters:
+      path: "memory_coverage_analysis.md"
+      content: |
+        # Memory Module Coverage Analysis
+        
+        Target file: src/core/memory.rs
+        Current test count: 9 tests
+        
+        Areas needing coverage:
+        1. TTL expiration edge cases
+        2. Capacity management stress testing
+        3. Error handling for invalid operations
+        4. Concurrent access patterns
+        5. Memory store statistics accuracy
+        
+        Goal: Add 3-5 targeted test cases to improve coverage
+  
+  - id: "create_memory_tests"
+    name: "Create Additional Memory Tests"
+    step_type: "create_file"
+    parameters:
+      path: "additional_memory_tests.rs"
+      content: |
+        #[tokio::test]
+        async fn test_memory_store_concurrent_operations() {
+            let store = InMemoryStore::new(3600);
+            let store = Arc::new(RwLock::new(store));
+            
+            // Test concurrent reads and writes
+            let handles: Vec<_> = (0..10)
+                .map(|i| {
+                    let store_clone = Arc::clone(&store);
+                    tokio::spawn(async move {
+                        let key = format!("key_{}", i);
+                        let value = format!("value_{}", i);
+                        store_clone.write().await.store(&key, &value).await.unwrap();
+                        let retrieved = store_clone.read().await.retrieve(&key).await.unwrap();
+                        assert_eq!(retrieved, Some(value));
+                    })
+                })
+                .collect();
+                
+            for handle in handles {
+                handle.await.unwrap();
+            }
+        }
+        
+        #[tokio::test]
+        async fn test_memory_store_capacity_overflow() {
+            let mut store = InMemoryStore::with_capacity(2, 3600);
+            
+            // Fill to capacity
+            store.store("key1", "value1").await.unwrap();
+            store.store("key2", "value2").await.unwrap();
+            
+            // Overflow should evict oldest
+            store.store("key3", "value3").await.unwrap();
+            
+            assert!(store.retrieve("key1").await.unwrap().is_none());
+            assert!(store.retrieve("key2").await.unwrap().is_some());
+            assert!(store.retrieve("key3").await.unwrap().is_some());
+        }
+        
+        #[tokio::test]
+        async fn test_memory_store_ttl_precision() {
+            let mut store = InMemoryStore::new(1); // 1 second TTL
+            
+            store.store("test_key", "test_value").await.unwrap();
+            assert!(store.retrieve("test_key").await.unwrap().is_some());
+            
+            // Wait for expiration
+            tokio::time::sleep(Duration::from_millis(1100)).await;
+            assert!(store.retrieve("test_key").await.unwrap().is_none());
+        }

@@ -1,0 +1,50 @@
+name: "CHAMPION Phase 6b: Property-based Testing Detection Implementation"
+description: "Champion model executing property-based testing opportunity detection"
+version: "1.0"
+
+steps:
+  - id: "analyze_existing_code"
+    name: "Analyze Existing Test Coverage Code"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama32-champion"
+      prompt: |
+        Implement PUNCH Phase 6b: Property-based testing opportunity detection for Rust code analysis.
+        
+        Requirements:
+        - Detect QuickCheck, Proptest, Arbitrary usage patterns in Rust code
+        - Analyze opportunities for property-based testing where none exists
+        - Integration with existing test coverage analyzer
+        - Generate recommendations for property test improvements
+        
+        Current Context:
+        - Phase 6a (test coverage analysis) is complete
+        - We have test_coverage_analyzer.go working
+        - Need to extend this with property testing detection
+        
+        IMPLEMENTATION TASKS:
+        1. Create property_testing_analyzer.go file
+        2. Add detection algorithms for property testing frameworks (QuickCheck, Proptest, Arbitrary)
+        3. Pattern matching for existing property-based tests
+        4. Opportunity detection for functions that would benefit from property testing
+        5. Integration points with existing test coverage analyzer
+        6. CLI flags and output format design
+        
+        Provide Go implementation code that integrates with the existing PUNCH architecture.
+        Focus on practical, working code that can be immediately integrated.
+        
+        Keep response focused on implementation, under 1500 words.
+      temperature: 0.1
+      max_tokens: 3000
+
+  - id: "create_implementation_file"
+    name: "Create Property Testing Implementation"
+    step_type: "create_file"
+    parameters:
+      path: "champion_6b_implementation.go"
+      content: "{previous_result}"
+
+dependencies:
+  - from: "analyze_existing_code"
+    to: "create_implementation_file"

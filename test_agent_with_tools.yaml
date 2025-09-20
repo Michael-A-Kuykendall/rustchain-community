@@ -1,0 +1,21 @@
+version: "1.0"
+name: "Agent Test"
+description: "Test agent step type with tools integration"
+
+steps:
+  - id: "test_agent_reasoning"
+    name: "Test Agent with Tool Access"
+    step_type: "agent"
+    parameters:
+      name: "TestAgent"
+      objective: "Create a small text file and verify it was created successfully"
+      max_iterations: 5
+      tools: ["file_create", "command"]
+      provider: "ollama"
+      model: "phi3:mini"
+      temperature: 0.2
+    timeout_seconds: 120
+
+config:
+  timeout: 180
+  security_level: "medium"

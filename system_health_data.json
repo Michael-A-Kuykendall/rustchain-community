@@ -1,0 +1,30 @@
+{
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "registry_status": {
+    "status": "healthy",
+    "total_tools": 7,
+    "active_tools": 6,
+    "inactive_tools": 1,
+    "response_time_ms": 45
+  },
+  "tools_status": {
+    "punch": {"status": "active", "version": "2.0.0", "last_used": "2025-09-11T15:00:00Z"},
+    "punch-systems": {"status": "active", "version": "2.0.0", "last_used": "2025-09-11T16:00:00Z"},
+    "punch-web": {"status": "active", "version": "2.0.0", "last_used": "2025-09-11T14:30:00Z"},
+    "punch-data": {"status": "active", "version": "2.0.0", "last_used": "2025-09-11T13:00:00Z"},
+    "punch-enterprise": {"status": "active", "version": "2.0.0", "last_used": "2025-09-11T12:00:00Z"},
+    "punch-test": {"status": "active", "version": "2.0.0", "last_used": "2025-09-11T16:10:00Z"},
+    "punch-updater": {"status": "inactive", "version": "2.0.0", "last_used": "2025-09-10T18:00:00Z"}
+  },
+  "system_components": {
+    "contextlite_db": {"status": "active", "health": "good", "last_check": "2025-09-11T16:20:00Z"},
+    "configuration": {"status": "active", "health": "good", "config_valid": true},
+    "storage": {"status": "active", "disk_usage": "45%", "available_space": "250GB"}
+  },
+  "performance_metrics": {
+    "avg_response_time": 67,
+    "memory_usage": "512MB",
+    "cpu_usage": "8%",
+    "active_connections": 3
+  }
+}

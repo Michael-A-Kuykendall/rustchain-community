@@ -1,0 +1,25 @@
+version: "1.0"
+name: "test_ollama_champion"
+description: "Test Ollama Champion model directly"
+steps:
+  - id: "test_ollama_champion"
+    name: "Test Ollama Champion model"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama32-champion"
+      prompt: "Hello! You are the Champion model. Please respond with exactly: 'Champion model working!' and nothing else."
+      temperature: 0.1
+      max_tokens: 50
+
+  - id: "save_champion_test"
+    name: "Save test result"
+    step_type: "create_file" 
+    depends_on: ["test_ollama_champion"]
+    parameters:
+      path: "ollama_champion_test.txt"
+      content: "Ollama Champion test completed successfully: {test_ollama_champion_result}"
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 60

@@ -1,0 +1,31 @@
+version: "1.0"
+name: "shimmy_discovery_integration"
+description: "Connect ModelDiscovery to CLI list command - fix unused code warning"
+
+steps:
+  - id: "analyze_cli_structure"
+    name: "Read current CLI implementation"
+    step_type: "tool"
+    parameters:
+      tool_name: "file_reader"
+      path: "../shimmy/src/cli.rs"
+      
+  - id: "analyze_discovery_module"
+    name: "Read discovery module implementation"
+    step_type: "tool"
+    parameters:
+      tool_name: "file_reader"
+      path: "../shimmy/src/discovery.rs"
+      
+  - id: "plan_integration_strategy"
+    name: "Plan how to connect discovery to CLI"
+    step_type: "llm"
+    parameters:
+      prompt: "I have a CLI module with unused function 'handle_list_command_with_discovery' and a discovery module with ModelDiscovery struct. I need to connect them so the 'list' command uses discovery instead of hardcoded registry. How should I modify the CLI to use the discovery system?"
+      model: "llama32-champion"
+      temperature: 0.3
+      max_tokens: 400
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 180

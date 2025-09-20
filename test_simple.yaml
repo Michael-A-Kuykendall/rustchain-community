@@ -1,0 +1,11 @@
+name: "Simple Test Mission"
+description: "Basic functionality test"
+version: "1.0"
+
+steps:
+  - id: "test_file"
+    name: "Create Test File"
+    step_type: "create_file"
+    parameters:
+      path: "test_output.txt"
+      content: "Hello RustChain"

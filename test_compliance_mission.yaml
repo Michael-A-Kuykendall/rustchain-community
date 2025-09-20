@@ -1,0 +1,27 @@
+name: "Compliance Test Mission"
+version: "1.0"
+description: "Test mission for verifying compliance system functionality"
+
+steps:
+  - id: "safe_file_operation"
+    name: "Safe File Operation"
+    step_type: "create_file"
+    parameters:
+      path: "/tmp/compliance_test.txt"
+      content: "Safe compliance testing data"
+    
+  - id: "safe_http_request"
+    name: "Safe HTTP Request"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/get"
+      method: "GET"
+      headers:
+        User-Agent: "RustChain-Compliance-Test"
+        
+  - id: "safe_command"
+    name: "Safe Command Execution"
+    step_type: "command"
+    parameters:
+      command: "echo"
+      args: ["Compliance test completed successfully"]

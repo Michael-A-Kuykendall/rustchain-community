@@ -1,0 +1,35 @@
+version: "1.0"
+name: "shimmy_basic_validation"
+description: "Basic validation of shimmy codebase status"
+
+steps:
+  - id: "check_shimmy_exists"
+    name: "Verify shimmy directory exists"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "ls -la /c/Users/micha/repos/shimmy/"]
+
+  - id: "check_cargo_toml"
+    name: "Check Cargo.toml exists"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cat /c/Users/micha/repos/shimmy/Cargo.toml | head -10"]
+
+  - id: "quick_build_test"
+    name: "Quick build test"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && cargo check"]
+
+  - id: "feature_build_test"
+    name: "Build with llama feature"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && timeout 30 cargo build --features llama || echo 'Build timeout or error'"]
+
+config:
+  timeout_seconds: 120

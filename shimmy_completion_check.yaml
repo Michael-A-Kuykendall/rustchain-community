@@ -1,0 +1,35 @@
+version: "1.0"
+name: "shimmy_completion_check"
+description: "Check what shimmy integration work remains"
+
+steps:
+  - id: "check_server_status"
+    name: "Check if shimmy server runs"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && timeout 3 ./target/release/shimmy.exe serve --bind 127.0.0.1:11999 || echo 'Server test completed'"]
+
+  - id: "check_generate_cmd"
+    name: "Check generate command exists"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && ./target/release/shimmy.exe generate --help || echo 'Generate command checked'"]
+
+  - id: "check_probe_cmd"
+    name: "Check probe command exists"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && ./target/release/shimmy.exe probe --help || echo 'Probe command checked'"]
+
+  - id: "check_rustchain_integration"
+    name: "Check rustchain compatibility module"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && ls -la src/rustchain_compat.rs && echo 'RustChain integration present'"]
+
+config:
+  timeout_seconds: 60

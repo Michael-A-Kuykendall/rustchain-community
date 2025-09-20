@@ -1,0 +1,19 @@
+version: '1.0'
+name: langchain_mission
+description: Converted from LangChain Python script
+steps:
+- id: step_1
+  name: 'Enterprise Vector Store: Pinecone'
+  step_type: rag_add
+  depends_on: null
+  timeout_seconds: 240
+  continue_on_error: false
+  parameters:
+    api_key_env: OPENAI_API_KEY
+    chunk_size: 1000
+    documents: '{{input_documents}}'
+    embedding_model: text-embedding-ada-002
+    enterprise_vectorization: true
+    index_name: enterprise-knowledge-base
+    vector_store_type: Pinecone
+config: null

@@ -1,0 +1,19 @@
+name: "HTML Loader Integration Test"
+description: "Test HTML document loader through mission execution system"
+version: "1.0"
+
+steps:
+  - id: "load_html_data"
+    name: "Load HTML file through mission system"
+    step_type: "tool"
+    parameters:
+      tool: "html_loader"
+      parameters:
+        file_path: "test_sample.html"
+        extract_mode: "text"
+    timeout_seconds: 30
+
+config:
+  max_parallel_steps: 1
+  fail_fast: true
+  timeout_seconds: 120

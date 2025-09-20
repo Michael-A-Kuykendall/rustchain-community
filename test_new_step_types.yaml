@@ -1,0 +1,54 @@
+name: "Test New Step Types"
+description: "Test all the newly implemented step types for RustChain"
+version: "1.0"
+
+steps:
+  - id: "test_copy_file"
+    name: "Test file copy operation"
+    step_type: "copy_file"
+    parameters:
+      source: "Cargo.toml"
+      destination: "Cargo.toml.backup"
+  
+  - id: "test_list_directory"
+    name: "Test directory listing"
+    step_type: "list_directory"
+    parameters:
+      path: "."
+  
+  - id: "test_parse_json"
+    name: "Test JSON parsing"
+    step_type: "parse_json"
+    parameters:
+      content: '{"test": "value", "number": 42}'
+  
+  - id: "test_csv_process"
+    name: "Test CSV processing"
+    step_type: "csv_process"
+    parameters:
+      content: "name,age,city\nJohn,30,New York\nJane,25,San Francisco"
+  
+  - id: "test_git_status"
+    name: "Test git status"
+    step_type: "git_status"
+    parameters:
+      path: "."
+  
+  - id: "test_monitor_resources"
+    name: "Test resource monitoring"
+    step_type: "monitor_resources"
+    parameters: {}
+  
+  - id: "test_ping_host"
+    name: "Test ping host"
+    step_type: "ping_host"
+    parameters:
+      host: "localhost"
+      count: 1
+      
+  - id: "test_generate_embedding"
+    name: "Test embedding generation (mock)"
+    step_type: "generate_embedding"
+    parameters:
+      text: "This is a test string for embedding generation"
+      model: "test-model"

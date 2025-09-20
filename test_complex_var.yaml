@@ -1,0 +1,27 @@
+name: "Complex Variable Test"
+description: "Test complex variable substitution patterns"
+version: "1.0"
+
+steps:
+  - id: "design_auto_updater_system"
+    name: "Design System"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "phi3:mini"
+      prompt: "Design a simple auto-updater system. Just respond with: Auto-updater design complete with version checking and secure downloads."
+      temperature: 0.1
+      
+  - id: "implementation_file"  
+    name: "Create Implementation File"
+    step_type: "create_file"
+    depends_on: ["design_auto_updater_system"]
+    parameters:
+      path: "auto_updater_implementation.md"
+      content: |
+        # Auto-Updater Implementation
+        
+        Design Output: {design_auto_updater_system}
+        
+        Also using _result suffix: {design_auto_updater_system_result}
+        And using _response suffix: {design_auto_updater_system_response}

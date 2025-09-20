@@ -1,0 +1,12 @@
+name: "HTTP Detailed Test"
+description: "Debug HTTP step failure"
+version: "1.0"
+
+steps:
+  - id: "test_simple_http"
+    name: "Test Simple HTTP GET"
+    step_type: "http"
+    parameters:
+      url: "https://httpbin.org/status/200"
+      method: "GET"
+      timeout: 30

@@ -1,0 +1,341 @@
+---
+apiVersion: specify.dev/v1
+kind: ProviderSpecification
+metadata:
+  name: Ollama LLM Provider
+  version: "1.0"
+  description: |
+    Ollama provider implementation for RustChain, enabling local language model
+    inference with privacy-first, air-gapped operation and model management.
+  
+  tags:
+    - ollama
+    - local-llm
+    - privacy
+    - air-gapped
+    - streaming
+  
+  provider_info:
+    name: "Ollama"
+    type: "local"
+    base_url: "http://localhost:11434"
+    authentication: "none"
+
+spec:
+  overview: |
+    The Ollama provider enables local language model inference through the
+    Ollama runtime. Provides complete privacy, air-gapped operation, and
+    extensive model support with streaming capabilities.
+
+  capabilities:
+    streaming: true
+    tools: false
+    multimodal: false
+    embeddings: true
+    fine_tuning: false
+
+  authentication:
+    method: "none"
+    description: "No authentication required for local Ollama instance"
+
+  models:
+    llama2:
+      id: "llama2"
+      name: "Llama 2"
+      context_length: 4096
+      max_output_tokens: 2048
+      supports_tools: false
+      supports_streaming: true
+      cost_per_input_token: 0.0
+      cost_per_output_token: 0.0
+      size_gb: 3.8
+      
+    mistral:
+      id: "mistral"
+      name: "Mistral 7B"
+      context_length: 8192
+      max_output_tokens: 4096
+      supports_tools: false
+      supports_streaming: true
+      cost_per_input_token: 0.0
+      cost_per_output_token: 0.0
+      size_gb: 4.1
+      
+    phi3:
+      id: "phi3:mini"
+      name: "Phi-3 Mini"
+      context_length: 4096
+      max_output_tokens: 2048
+      supports_tools: false
+      supports_streaming: true
+      cost_per_input_token: 0.0
+      cost_per_output_token: 0.0
+      size_gb: 2.3
+      
+    starcoder2:
+      id: "starcoder2:3b"
+      name: "StarCoder2 3B"
+      context_length: 16384
+      max_output_tokens: 8192
+      supports_tools: false
+      supports_streaming: true
+      cost_per_input_token: 0.0
+      cost_per_output_token: 0.0
+      size_gb: 1.7
+
+  api_endpoints:
+    generate:
+      url: "/api/generate"
+      method: "POST"
+      description: "Generate text completion"
+      
+    chat:
+      url: "/api/chat"
+      method: "POST"
+      description: "Generate chat completion"
+      
+    tags:
+      url: "/api/tags"
+      method: "GET"
+      description: "List available models"
+      
+    pull:
+      url: "/api/pull"
+      method: "POST"
+      description: "Download model"
+      
+    push:
+      url: "/api/push"
+      method: "POST"
+      description: "Upload model"
+
+  request_format:
+    description: "Ollama chat API format"
+    properties:
+      model:
+        type: "string"
+        required: true
+        description: "Model name"
+        
+      messages:
+        type: "array"
+        required: true
+        description: "Array of message objects"
+        items:
+          type: "object"
+          properties:
+            role:
+              type: "string"
+              enum: ["system", "user", "assistant"]
+            content:
+              type: "string"
+              description: "Message content"
+              
+      stream:
+        type: "boolean"
+        required: false
+        default: false
+        description: "Enable streaming response"
+        
+      options:
+        type: "object"
+        required: false
+        description: "Model parameters"
+        properties:
+          temperature:
+            type: "number"
+            minimum: 0
+            maximum: 2
+          top_p:
+            type: "number"
+            minimum: 0
+            maximum: 1
+          top_k:
+            type: "integer"
+            minimum: 1
+          repeat_penalty:
+            type: "number"
+            minimum: 0
+
+  response_format:
+    description: "Ollama API response format"
+    properties:
+      model:
+        type: "string"
+        description: "Model used"
+        
+      created_at:
+        type: "string"
+        description: "ISO 8601 timestamp"
+        
+      message:
+        type: "object"
+        description: "Response message"
+        properties:
+          role:
+            type: "string"
+          content:
+            type: "string"
+            
+      done:
+        type: "boolean"
+        description: "Completion status"
+        
+      total_duration:
+        type: "integer"
+        description: "Total time in nanoseconds"
+        
+      load_duration:
+        type: "integer"
+        description: "Model load time"
+        
+      prompt_eval_count:
+        type: "integer"
+        description: "Input tokens processed"
+        
+      eval_count:
+        type: "integer"
+        description: "Output tokens generated"
+
+  error_handling:
+    description: "Ollama-specific error handling"
+    error_codes:
+      404:
+        type: "ModelNotFoundError"
+        message: "Model not found or not pulled"
+        
+      400:
+        type: "InvalidRequestError"
+        message: "Invalid request parameters"
+        
+      500:
+        type: "ServiceUnavailableError"
+        message: "Ollama service error"
+        
+      connection_refused:
+        type: "NetworkError"
+        message: "Ollama service not running"
+
+  model_management:
+    description: "Ollama model lifecycle management"
+    operations:
+      pull_model:
+        description: "Download model from registry"
+        endpoint: "/api/pull"
+        parameters:
+          name:
+            type: "string"
+            required: true
+            description: "Model name to download"
+            
+      list_models:
+        description: "List locally available models"
+        endpoint: "/api/tags"
+        
+      remove_model:
+        description: "Delete local model"
+        endpoint: "/api/delete"
+        parameters:
+          name:
+            type: "string"
+            required: true
+
+  configuration:
+    description: "Provider configuration options"
+    properties:
+      base_url:
+        type: "string"
+        required: false
+        default: "http://localhost:11434"
+        description: "Ollama server URL"
+        
+      default_model:
+        type: "string"
+        required: false
+        default: "llama2"
+        description: "Default model for requests"
+        
+      timeout_seconds:
+        type: "integer"
+        required: false
+        default: 120
+        description: "Request timeout (longer for local processing)"
+        
+      auto_pull:
+        type: "boolean"
+        required: false
+        default: true
+        description: "Automatically download missing models"
+
+examples:
+  basic_chat:
+    description: "Simple chat completion"
+    request:
+      model: "llama2"
+      messages:
+        - role: "user"
+          content: "Hello! How are you today?"
+      stream: false
+      
+  streaming_chat:
+    description: "Streaming chat completion"
+    request:
+      model: "mistral"
+      messages:
+        - role: "system"
+          content: "You are a helpful assistant."
+        - role: "user"
+          content: "Explain quantum computing"
+      stream: true
+      options:
+        temperature: 0.7
+        top_p: 0.9
+
+  model_management:
+    description: "Download and use new model"
+    operations:
+      - name: "pull_model"
+        request:
+          name: "phi3:mini"
+      - name: "chat"
+        request:
+          model: "phi3:mini"
+          messages:
+            - role: "user"
+              content: "Test the new model"
+
+compliance:
+  standards:
+    - "Ollama API compatibility"
+    - "Local HTTP API"
+    - "No authentication required"
+  
+  privacy:
+    - "Complete local processing"
+    - "No data sent to external servers"
+    - "Air-gapped operation supported"
+  
+  security:
+    - "Local network access only"
+    - "No external API dependencies"
+    - "User-controlled model management"
+
+performance:
+  description: "Local inference performance characteristics"
+  factors:
+    - "Hardware dependent (CPU/GPU)"
+    - "Model size affects memory usage"
+    - "First request has model loading overhead"
+    - "Subsequent requests are faster"
+  
+  optimization:
+    - "Keep models loaded for better performance"
+    - "Use smaller models for faster response"
+    - "GPU acceleration when available"
+
+changelog:
+  v1.0:
+    - "Initial Ollama provider specification"
+    - "Support for popular open-source models"
+    - "Streaming response capability"
+    - "Model management integration"

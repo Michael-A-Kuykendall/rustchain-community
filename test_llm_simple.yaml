@@ -1,0 +1,19 @@
+version: "1.0"
+name: "Simple LLM Test"
+description: "Test basic LLM functionality with minimal configuration"
+
+steps:
+  - id: "test_llm_basic"
+    name: "Test Basic LLM Response"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "phi3:mini"
+      prompt: "Say Hello from RustChain and nothing else."
+      temperature: 0.1
+      max_tokens: 50
+    timeout_seconds: 30
+
+config:
+  timeout: 60
+  security_level: "medium"

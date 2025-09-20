@@ -1,0 +1,15 @@
+version: "1.0"
+name: "test_default_llm"
+description: "Test LLM with default model setting"
+
+steps:
+  - id: "test_llm_default"
+    name: "Test LLM with default model"
+    step_type: "llm"
+    parameters:
+      prompt: "Hello"
+      temperature: 0.3
+      max_tokens: 20
+
+config:
+  timeout_seconds: 60

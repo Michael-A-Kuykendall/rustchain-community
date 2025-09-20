@@ -1,0 +1,86 @@
+name: "Generate Test Coverage for Data Processing Operations"
+description: "Use RustChain to generate comprehensive test coverage for all data processing step types"
+version: "1.0"
+
+steps:
+  - id: "analyze_data_processing_coverage"
+    name: "Analyze current test coverage for data processing"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 2500
+      prompt: |
+        You are a Rust test coverage specialist. Generate comprehensive unit tests for RustChain's data processing step types.
+        
+        Data Processing Step Types to Test:
+        1. ParseJson - parses JSON strings into structured data
+        2. ParseYaml - parses YAML strings into structured data  
+        3. ParseXml - parses XML strings and extracts elements
+        4. ValidateSchema - validates JSON data against schemas
+        5. CsvProcess - processes CSV data and extracts records
+        
+        Generate Rust unit tests covering:
+        - Valid input parsing (well-formed JSON, YAML, XML, CSV)
+        - Invalid input handling (malformed syntax, encoding issues)
+        - Empty and edge cases (empty strings, null values, special chars)
+        - Large data handling (performance considerations)
+        - Schema validation scenarios (valid/invalid against schema)
+        
+        Format as complete Rust test module with:
+        - Proper imports (serde_json, serde_yaml, csv, xml)
+        - Test fixtures with sample data
+        - Async test functions using tokio::test
+        - Detailed assertions checking parsed output structure
+        
+        Focus on implementation in src/engine/mod.rs lines 2415-2494.
+  
+  - id: "create_data_processing_tests"
+    name: "Create data processing test file"
+    step_type: "create_file"
+    parameters:
+      path: "src/engine/tests/test_data_processing.rs"
+      content: "{analyze_data_processing_coverage_result}"
+  
+  - id: "generate_test_fixtures"
+    name: "Generate comprehensive test data fixtures"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 1500
+      prompt: |
+        Create comprehensive test data fixtures for data processing tests:
+        
+        1. **JSON fixtures**: Valid nested objects, arrays, edge cases (unicode, escapes)
+        2. **YAML fixtures**: Multi-document, complex structures, anchors/references
+        3. **XML fixtures**: Nested elements, attributes, CDATA, namespaces
+        4. **CSV fixtures**: Headers, quoted fields, embedded commas/newlines
+        5. **Invalid samples**: Syntax errors, truncated data, encoding issues
+        
+        Format as Rust const strings that can be used in tests.
+        Include both positive and negative test cases.
+        
+        Example format:
+        ```rust
+        const VALID_JSON: &str = r#"{"key": "value", "nested": {...}}"#;
+        const INVALID_JSON: &str = r#"{"unclosed": true"#;
+        ```
+  
+  - id: "append_test_fixtures"
+    name: "Append test fixtures to test file"
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_data_processing.rs"
+      operation: "append"
+      content: "\n\n// Test Data Fixtures\n{generate_test_fixtures_result}"
+  
+  - id: "run_data_processing_tests"
+    name: "Run data processing tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--test", "test_data_processing", "--", "--nocapture"]
+      working_dir: "."

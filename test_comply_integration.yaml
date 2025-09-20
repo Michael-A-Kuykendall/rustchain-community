@@ -1,0 +1,18 @@
+name: Test Comply Integration
+version: "1.0"
+description: Simple mission to test RustChain + Comply integration
+
+steps:
+  - id: safe_operation
+    name: Create Safe Test File
+    step_type: create_file
+    parameters:
+      path: "/tmp/compliance_test.txt"
+      content: "This is a safe compliance test file"
+      
+  - id: safe_command
+    name: Safe System Command
+    step_type: command
+    parameters:
+      command: "echo"
+      args: ["Compliance test successful"]

@@ -1,0 +1,41 @@
+version: "1.0"
+name: "connect_discovery_to_cli"
+description: "Connect ModelDiscovery system to CLI list command - fix unused code"
+
+verification_criteria:
+  - "cargo build --features llama succeeds"
+  - "CLI list command uses discovery system"
+  - "handle_list_command_with_discovery function is used"
+
+steps:
+  - id: "check_current_warnings"
+    name: "Check current unused code warnings"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd ../shimmy && cargo build --features llama 2>&1 | grep 'never used'"]
+
+  - id: "examine_cli_structure"
+    name: "Show current CLI structure"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd ../shimmy && head -30 src/cli.rs"]
+
+  - id: "examine_discovery_module"
+    name: "Show discovery module structure"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd ../shimmy && head -20 src/discovery.rs"]
+
+  - id: "verify_build_status"
+    name: "Verify current build status"
+    step_type: "command"
+    depends_on: ["examine_cli_structure", "examine_discovery_module"]
+    parameters:
+      command: "bash"
+      args: ["-c", "cd ../shimmy && cargo build --features llama"]
+
+config:
+  timeout_seconds: 120

@@ -1,0 +1,93 @@
+name: "Generate Test Coverage for Code Development Operations"
+description: "Use RustChain to generate comprehensive test coverage for all code development step types"
+version: "1.0"
+
+steps:
+  - id: "analyze_code_dev_coverage"
+    name: "Analyze current test coverage for code development operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 2000
+      prompt: |
+        You are a Rust test coverage specialist. Analyze the code development step types in RustChain and generate comprehensive unit tests.
+        
+        Code Development Step Types to Test:
+        1. CompileCode - compiles source code for various languages (Rust, Go, etc.)
+        2. RunTests - executes test suites and reports results
+        3. FormatCode - formats source code using language-specific formatters
+        4. LintCode - runs linters and static analysis tools
+        5. GenerateCode - generates boilerplate code from templates
+        6. BuildProject - builds entire projects with dependency management
+        
+        Generate Rust unit tests that cover:
+        - Multi-language support (Rust, Go, Python, JavaScript)
+        - Build system integration (Cargo, Make, npm, etc.)
+        - Error handling for compilation failures, missing dependencies
+        - Performance testing for large codebases
+        - Cross-platform build differences (Windows vs Unix)
+        
+        Format as complete Rust test module with proper imports and test functions.
+        Use tokio::test for async tests and tempfile for creating test projects.
+        Mock external command execution where appropriate.
+        
+        Focus on the step execution logic in src/engine/mod.rs around lines 2570-2720.
+
+  - id: "create_code_dev_tests"
+    name: "Create code development test file"
+    step_type: "create_file"
+    parameters:
+      path: "src/engine/tests/test_code_development.rs"
+      content: "{analyze_code_dev_coverage_result}"
+
+  - id: "analyze_build_systems"
+    name: "Generate build system integration tests"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 1500
+      prompt: |
+        Generate specialized tests for build system integration focusing on:
+        
+        1. **Cargo Integration**: Feature flags, workspace builds, cross-compilation
+        2. **Make Integration**: Makefiles, parallel builds, dependency tracking
+        3. **npm/pnpm Integration**: Package.json scripts, monorepo handling
+        4. **Go Module Integration**: go.mod handling, vendor directories
+        
+        Create test functions that validate:
+        - Proper environment variable handling
+        - Working directory management
+        - Build output parsing and validation
+        - Error message extraction and formatting
+        
+        Include mock implementations for external command execution.
+        Use descriptive names like test_cargo_build_with_features().
+
+  - id: "append_build_system_tests"
+    name: "Append build system tests to file"
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_code_development.rs"
+      operation: "append"
+      content: "\n\n// Build System Integration Tests\n{analyze_build_systems_result}"
+
+  - id: "run_code_dev_tests"
+    name: "Run code development tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--test", "test_code_development", "--", "--nocapture"]
+      working_dir: "."
+
+  - id: "coverage_report_code_dev"
+    name: "Generate coverage report for code development"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["tarpaulin", "--out", "html", "--output-dir", "coverage/code_development", "--include-tests", "--skip-clean"]
+      working_dir: "."
+      timeout: 300

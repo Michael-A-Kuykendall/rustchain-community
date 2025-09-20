@@ -1,0 +1,96 @@
+name: "Generate Test Coverage for Database Operations"
+description: "Use RustChain to generate comprehensive test coverage for all database operation step types"
+version: "1.0"
+
+steps:
+  - id: "analyze_db_ops_coverage"
+    name: "Analyze current test coverage for database operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 2000
+      prompt: |
+        You are a Rust test coverage specialist. Analyze the database operation step types in RustChain and generate comprehensive unit tests.
+        
+        Database Operation Step Types to Test:
+        1. SqlQuery - executes SQL queries against databases (PostgreSQL, MySQL, SQLite)
+        2. RedisSet - sets key-value pairs in Redis
+        3. RedisGet - retrieves values from Redis by key
+        4. DbBackup - creates database backups
+        5. DbMigrate - runs database migrations
+        
+        Generate Rust unit tests that cover:
+        - Multiple database engines (SQLite for testing, mock PostgreSQL/MySQL)
+        - Connection pooling and connection management
+        - Query execution with various parameter types
+        - Transaction handling and rollback scenarios
+        - Redis operations with different data types (strings, lists, sets, hashes)
+        - Backup and migration error scenarios
+        - SQL injection prevention and parameter binding
+        
+        Format as complete Rust test module with proper imports and test functions.
+        Use tokio::test for async tests and in-memory databases for testing.
+        Mock external database connections where appropriate.
+        
+        Focus on the step execution logic in src/engine/mod.rs around lines 2980-3120.
+
+  - id: "create_db_ops_tests"
+    name: "Create database operations test file"
+    step_type: "create_file"
+    parameters:
+      path: "src/engine/tests/test_database_operations.rs"
+      content: "{analyze_db_ops_coverage_result}"
+
+  - id: "analyze_db_security_tests"
+    name: "Generate database security tests"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 1500
+      prompt: |
+        Generate specialized security tests for database operations focusing on:
+        
+        1. **SQL Injection Prevention**: Parameterized queries, input sanitization
+        2. **Connection Security**: TLS/SSL connections, certificate validation
+        3. **Access Control**: User permissions, role-based access
+        4. **Data Protection**: Encryption at rest, sensitive data handling
+        5. **Redis Security**: AUTH commands, key expiration, memory limits
+        
+        Create test functions that validate:
+        - Proper parameter binding prevents SQL injection
+        - Connection strings don't leak credentials
+        - Error messages don't expose sensitive information
+        - Backup files are properly secured
+        - Redis operations respect access controls
+        
+        Include mock scenarios for various attack vectors.
+        Use descriptive names like test_sql_query_prevents_injection().
+
+  - id: "append_db_security_tests"
+    name: "Append database security tests to file"
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_database_operations.rs"
+      operation: "append"
+      content: "\n\n// Database Security Tests\n{analyze_db_security_tests_result}"
+
+  - id: "run_db_ops_tests"
+    name: "Run database operations tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--test", "test_database_operations", "--", "--nocapture"]
+      working_dir: "."
+
+  - id: "coverage_report_db_ops"
+    name: "Generate coverage report for database operations"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["tarpaulin", "--out", "html", "--output-dir", "coverage/database_operations", "--include-tests", "--skip-clean"]
+      working_dir: "."
+      timeout: 300

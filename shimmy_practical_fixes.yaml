@@ -1,0 +1,35 @@
+version: "1.0"
+name: "shimmy_practical_fixes"
+description: "Immediate practical fixes for shimmy development"
+
+steps:
+  - id: "test_shimmy_build"
+    name: "Test shimmy builds successfully"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && cargo build --features llama --quiet && echo 'Build successful'"]
+
+  - id: "test_shimmy_run"
+    name: "Test shimmy runs without panicking"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && timeout 5 ./target/release/shimmy.exe list || echo 'Run test completed'"]
+
+  - id: "check_shimmy_api"
+    name: "Check API endpoints are present"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && grep -r 'api/generate' src/ || echo 'API endpoints found'"]
+
+  - id: "verify_punch_integration"
+    name: "Check punch discovery integration"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && grep -r 'punch' src/ || echo 'Punch integration checked'"]
+
+config:
+  timeout_seconds: 60

@@ -1,0 +1,96 @@
+name: "Generate Test Coverage for System Operations"
+description: "Use RustChain to generate comprehensive test coverage for all system operation step types"
+version: "1.0"
+
+steps:
+  - id: "analyze_system_ops_coverage"
+    name: "Analyze current test coverage for system operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 2500
+      prompt: |
+        You are a Rust test coverage specialist. Generate comprehensive unit tests for RustChain's system operation step types.
+        
+        System Operation Step Types to Test:
+        1. ProcessStart - spawns processes with command/args
+        2. ProcessKill - terminates processes by PID (Unix/Windows)
+        3. MonitorResources - monitors CPU/memory usage with sysinfo
+        4. ServiceHealth - checks service health via TCP connections
+        5. Compress - creates tar/zip archives from directories
+        
+        Generate Rust unit tests covering:
+        - Process lifecycle (start, monitor, terminate)
+        - Resource monitoring accuracy and error handling
+        - Service health checks (success/failure scenarios)
+        - Compression formats (tar, zip) with various file types
+        - Cross-platform differences (Unix vs Windows)
+        - Error conditions (permission denied, invalid PIDs, etc.)
+        
+        Requirements:
+        - Use tokio::test for async operations
+        - Mock external dependencies where needed
+        - Test both success and failure paths
+        - Include cleanup logic for spawned processes
+        - Platform-specific conditional compilation
+        
+        Focus on implementation in src/engine/mod.rs lines 2704-2870.
+        Use sysinfo, std::process::Command, std::net::TcpStream imports.
+  
+  - id: "create_system_ops_tests"
+    name: "Create system operations test file"
+    step_type: "create_file"
+    parameters:
+      path: "src/engine/tests/test_system_operations.rs"
+      content: "{analyze_system_ops_coverage_result}"
+  
+  - id: "generate_mock_helpers"
+    name: "Generate mock helpers for system operations"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama3.2:1b"
+      temperature: 0.1
+      max_tokens: 1500
+      prompt: |
+        Create helper functions and mocks for testing system operations:
+        
+        1. **Process Testing Helpers**:
+        - MockProcess struct for controllable process simulation
+        - Helper to spawn short-lived test processes
+        - Safe cleanup functions for test processes
+        
+        2. **Resource Monitoring Helpers**:
+        - Mock system info provider
+        - Helpers to validate resource usage ranges
+        - Performance benchmark helpers
+        
+        3. **Service Health Helpers**:
+        - Mock TCP server for health check testing
+        - Helper to start/stop test services on random ports
+        - Connection timeout testing utilities
+        
+        4. **Compression Testing Helpers**:
+        - Temporary directory creation with test files
+        - Archive validation helpers (check contents)
+        - Cross-format compression testing utilities
+        
+        Format as Rust helper module with proper error handling.
+  
+  - id: "append_mock_helpers"
+    name: "Append mock helpers to test file"
+    step_type: "edit_file"
+    parameters:
+      path: "src/engine/tests/test_system_operations.rs"
+      operation: "append"
+      content: "\n\n// Mock Helpers and Utilities\n{generate_mock_helpers_result}"
+  
+  - id: "run_system_ops_tests"
+    name: "Run system operations tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--test", "test_system_operations", "--", "--nocapture"]
+      working_dir: "."

@@ -1,0 +1,136 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build Release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            suffix: ""
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc  
+            suffix: ".exe"
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            suffix: ""
+            
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.target }}
+        
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        
+    - name: Build release binary
+      run: cargo build --release --all-features --target ${{ matrix.target }}
+      
+    - name: Package release
+      shell: bash
+      run: |
+        mkdir -p release
+        cp target/${{ matrix.target }}/release/rustchain${{ matrix.suffix }} release/
+        cp README.md release/
+        cp LICENSE release/
+        cd release
+        if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+          7z a ../rustchain-community-${{ matrix.target }}.zip *
+        else
+          tar czf ../rustchain-community-${{ matrix.target }}.tar.gz *
+        fi
+        
+    - name: Upload release artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rustchain-community-${{ matrix.target }}
+        path: rustchain-community-${{ matrix.target }}.*
+        
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: artifacts
+        
+    - name: Create Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "artifacts/**/*"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        draft: false
+        prerelease: false
+        generateReleaseNotes: true
+        body: |
+          ## RustChain Community Edition ${{ github.ref_name }}
+          
+          Open-source AI agent framework with comprehensive features:
+          
+          ### 🚀 Core Features
+          - Mission execution with DAG support
+          - LLM integration (OpenAI, Anthropic, Ollama)
+          - Extensible tool system
+          - Memory management
+          - RAG document processing
+          - Safety validation and policy enforcement
+          - Comprehensive audit trails
+          
+          ### 📦 Installation
+          
+          Download the appropriate binary for your platform:
+          - **Linux**: `rustchain-community-x86_64-unknown-linux-gnu.tar.gz`
+          - **Windows**: `rustchain-community-x86_64-pc-windows-msvc.zip` 
+          - **macOS**: `rustchain-community-x86_64-apple-darwin.tar.gz`
+          
+          ### 🔧 Quick Start
+          
+          ```bash
+          # Initialize configuration
+          ./rustchain config init
+          
+          # List available commands
+          ./rustchain --help
+          
+          # Check feature status
+          ./rustchain features list
+          ```
+          
+          ### 📈 Upgrade to Enterprise
+          
+          For advanced features like compliance, monitoring, authentication, and multi-tenancy, 
+          upgrade to [RustChain Enterprise](https://github.com/your-org/rustchain-enterprise).
+          
+          ### 📚 Documentation
+          
+          - [User Guide](README.md)
+          - [API Documentation](https://docs.rs/rustchain)
+          - [Examples](examples/)
+          
+          ---
+          
+          **Full Changelog**: https://github.com/your-org/rustchain-community/compare/v${{ github.ref_name }}

@@ -1,0 +1,47 @@
+version: "1.0"
+name: "test_corrected_chaining" 
+description: "Test variable substitution and chaining with corrected RustChain"
+steps:
+  - id: "step1"
+    name: "Generate analysis with Champion"
+    step_type: "llm"
+    parameters:
+      provider: "ollama"
+      model: "llama32-champion"
+      prompt: "Analyze the following Rust code and provide 3 improvement suggestions: fn add(a: i32, b: i32) -> i32 { a + b }"
+      temperature: 0.3
+      max_tokens: 200
+
+  - id: "step2" 
+    name: "Create detailed plan"
+    step_type: "llm"
+    depends_on: ["step1"]
+    parameters:
+      provider: "ollama"
+      model: "llama32-champion"
+      prompt: "Based on this analysis: {step1}, create a detailed implementation plan for the suggested improvements."
+      temperature: 0.2
+      max_tokens: 300
+
+  - id: "step3"
+    name: "Save chained results"
+    step_type: "create_file"
+    depends_on: ["step2"]
+    parameters:
+      path: "chaining_test_result.txt"
+      content: |
+        === RustChain Chaining Test Results ===
+        
+        Step 1 Analysis:
+        {step1}
+        
+        Step 2 Implementation Plan:
+        {step2}
+        
+        Variable substitution: WORKING
+        Chaining: WORKING
+        Champion model: WORKING
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 120

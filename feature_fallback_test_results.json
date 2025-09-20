@@ -1,0 +1,12 @@
+{
+  "test_name": "Feature-Gated Steps Test",
+  "timestamp": "2025-09-11",
+  "summary": "Tests proper 'feature not enabled' error handling",
+  "expected_behavior": "All steps should fail gracefully with clear error messages",
+  "test_categories": {
+    "database_operations": ["sql_query", "redis_set", "redis_get"],
+    "network_operations": ["ftp_upload", "ssh_execute", "websocket_connect"],
+    "ai_ml_operations": ["similarity_search"]
+  },
+  "validation": "Proper error messages prevent user confusion about missing features"
+}

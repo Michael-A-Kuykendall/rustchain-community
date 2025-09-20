@@ -1,0 +1,8 @@
+version: "1.0"
+name: "Core Functionality Test"
+description: "Test basic RustChain mission execution"
+steps:
+  - id: "noop_step"
+    name: "Test Noop Step"
+    step_type: "noop"
+    parameters: {}

@@ -1,0 +1,89 @@
+name: "Coverage Mission 01 - Memory Module (Edit-Based)"
+description: "AI-driven coverage improvement using direct file editing"
+version: "1.0"
+
+steps:
+  - id: "read_current_memory_module"
+    name: "Read Current Memory Module Structure"
+    step_type: "create_file"
+    parameters:
+      path: "memory_analysis.md"
+      content: |
+        # Memory Module Analysis
+        
+        Current memory.rs has 9 existing tests.
+        Need to add 3 focused tests for:
+        1. TTL precision timing
+        2. Capacity eviction behavior
+        3. Concurrent access patterns
+        
+        Will append tests to existing test module.
+
+  - id: "append_ttl_test"
+    name: "Add TTL Precision Test"
+    step_type: "create_file"
+    parameters:
+      path: "ttl_test_addition.txt"
+      content: |
+        
+        #[tokio::test]
+        async fn test_memory_store_ttl_precision() {
+            let mut store = InMemoryStore::new(1); // 1 second TTL
+            
+            store.store("precision_key", "precision_value").await.unwrap();
+            assert!(store.retrieve("precision_key").await.unwrap().is_some());
+            
+            // Wait just under TTL
+            tokio::time::sleep(Duration::from_millis(900)).await;
+            assert!(store.retrieve("precision_key").await.unwrap().is_some());
+            
+            // Wait past TTL
+            tokio::time::sleep(Duration::from_millis(200)).await;
+            assert!(store.retrieve("precision_key").await.unwrap().is_none());
+        }
+
+  - id: "append_capacity_test"
+    name: "Add Capacity Eviction Test"
+    step_type: "create_file"
+    parameters:
+      path: "capacity_test_addition.txt"
+      content: |
+        
+        #[tokio::test]
+        async fn test_memory_store_capacity_eviction_order() {
+            let mut store = InMemoryStore::with_capacity(2, 3600);
+            
+            store.store("first", "1").await.unwrap();
+            store.store("second", "2").await.unwrap();
+            
+            // This should evict "first" (oldest)
+            store.store("third", "3").await.unwrap();
+            
+            assert!(store.retrieve("first").await.unwrap().is_none());
+            assert!(store.retrieve("second").await.unwrap().is_some());
+            assert!(store.retrieve("third").await.unwrap().is_some());
+        }
+
+  - id: "validate_tests_compile"
+    name: "Validate New Tests Compile"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["check", "--lib"]
+      working_dir: "."
+
+  - id: "run_memory_tests"
+    name: "Run Memory Module Tests"
+    step_type: "command"
+    parameters:
+      command: "cargo"
+      args: ["test", "--lib", "core::memory", "--", "--test-threads=1"]
+      working_dir: "."
+
+  - id: "cleanup_temp_files"
+    name: "Clean Up Temporary Files"
+    step_type: "command"
+    parameters:
+      command: "rm"
+      args: ["-f", "memory_analysis.md", "ttl_test_addition.txt", "capacity_test_addition.txt"]
+      working_dir: "."

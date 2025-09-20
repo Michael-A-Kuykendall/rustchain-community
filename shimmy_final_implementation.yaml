@@ -1,0 +1,68 @@
+name: "shimmy_final_auto_discovery"
+description: "Complete auto-discovery implementation for Shimmy using champion analysis"
+version: "1.0"
+
+steps:
+  - id: create_discovery_implementation
+    name: "Implement Discovery Module"
+    step_type: llm
+    depends_on: []
+    parameters:
+      provider: ollama
+      model: llama32-champion
+      temperature: 0.1
+      max_tokens: 3000
+      system: |
+        You are the champion LLM with deep knowledge of this user's development patterns.
+        You need to implement the complete auto-discovery system for shimmy.
+        Focus on practical, working code that integrates cleanly with the existing codebase.
+      prompt: |
+        Implement the complete auto-discovery system for shimmy:
+
+        1. Create src/discovery.rs with model scanning functionality
+        2. Update src/model_registry.rs to integrate discovered models
+        3. Update src/cli.rs to show discovered models in list command
+        4. Update src/lib.rs to export the discovery module
+        5. Update Cargo.toml if new dependencies are needed
+
+        Current shimmy structure:
+        - src/api.rs - HTTP/WebSocket API endpoints
+        - src/cli.rs - CLI commands (list, probe, serve, generate, bench)
+        - src/engine/llama.rs - llama.cpp backend
+        - src/model_registry.rs - simple in-memory model registry
+        - src/templates.rs - prompt templates
+        - src/server.rs - axum server setup
+        - src/main.rs - main entry point
+
+        Requirements:
+        - Scan SHIMMY_BASE_GGUF parent directory and common model paths
+        - Support both GGUF and SafeTensors format detection
+        - Add discovered models to the existing registry
+        - Show discovered vs registered models in list command
+        - Allow probing discovered models
+        - Handle Windows paths correctly (USERPROFILE vs HOME)
+        - Keep existing functionality intact
+
+        Provide the complete file implementations needed.
+
+  - id: generate_integration_steps
+    name: "Generate Integration Steps"
+    step_type: llm
+    depends_on: [create_discovery_implementation]
+    parameters:
+      provider: ollama
+      model: llama32-champion
+      temperature: 0.2
+      max_tokens: 1500
+      system: |
+        Generate specific step-by-step integration instructions for the user.
+      prompt: |
+        Based on the auto-discovery implementation, provide:
+        
+        1. Exact commands to run to integrate the changes
+        2. Testing steps to verify discovery works
+        3. Environment setup recommendations
+        4. Sample output showing discovered models
+        5. Troubleshooting tips for common issues
+        
+        Keep it practical and actionable for immediate implementation.

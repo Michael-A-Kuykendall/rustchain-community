@@ -1,0 +1,28 @@
+version: "1.0"
+name: "fix_shimmy_warnings"
+description: "Fix the 21 compiler warnings in shimmy codebase"
+
+steps:
+  - id: "check_warnings"
+    name: "Check current warnings"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && cargo build --features llama 2>&1 | grep warning"]
+
+  - id: "list_unused_variables"
+    name: "List unused variables"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && cargo build --features llama 2>&1 | grep 'unused variable'"]
+
+  - id: "check_dead_code"
+    name: "Check dead code warnings"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && cargo build --features llama 2>&1 | grep 'dead_code'"]
+
+config:
+  timeout_seconds: 60

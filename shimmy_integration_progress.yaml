@@ -1,0 +1,35 @@
+version: "1.0"
+name: "shimmy_integration_progress"
+description: "Check integration status and fix immediate issues"
+
+steps:
+  - id: "check_features"
+    name: "Check available cargo features"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && grep -A 10 '\\[features\\]' Cargo.toml"]
+
+  - id: "check_dependencies"
+    name: "Check dependencies status"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && cargo tree --features llama | head -20"]
+
+  - id: "check_module_structure"
+    name: "Check module structure"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && find src/ -name '*.rs' | head -10"]
+
+  - id: "test_basic_commands"
+    name: "Test basic shimmy commands"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "cd /c/Users/micha/repos/shimmy && ./target/release/shimmy.exe --help | head -10"]
+
+config:
+  timeout_seconds: 60

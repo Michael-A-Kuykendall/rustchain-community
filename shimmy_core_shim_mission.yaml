@@ -1,0 +1,11 @@
+version: "1.0"
+name: "shimmy_core_shim_excellence"
+description: "Make shimmy the best local inference shim - OpenAI compatibility and auto-discovery"
+
+steps:
+  - id: "focus_validation"
+    name: "Confirm shimmy core shim focus"
+    step_type: "command"
+    parameters:
+      command: "bash"
+      args: ["-c", "echo 'Shimmy mission: Best local inference shim with OpenAI compatibility'"]

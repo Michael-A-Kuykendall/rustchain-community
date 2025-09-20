@@ -1,0 +1,1703 @@
+{
+  "summary": {
+    "total_functions": 1339,
+    "total_test_functions": 424,
+    "total_public_functions": 476,
+    "total_structs": 458,
+    "total_enums": 108,
+    "total_traits": 0,
+    "total_complexity": 3028,
+    "avg_complexity": 2.2613890963405527,
+    "test_to_function_ratio": 31.665421956684092,
+    "public_api_ratio": 35.54891710231516
+  },
+  "features": {
+    "core": {
+      "modules": [
+        "art::performance",
+        "core::agent",
+        "core::audit",
+        "core::chain",
+        "core::chroma_vector_store",
+        "core::config",
+        "core::contextlite_config",
+        "core::document_loaders",
+        "core::error",
+        "core::error_formatting",
+        "core::executor",
+        "core::features",
+        "core::github_toolkit",
+        "core::llm",
+        "core::memory::tests",
+        "core::memory",
+        "core::mission",
+        "core::mod",
+        "core::model_manager",
+        "core::pinecone_vector_store",
+        "core::plugin",
+        "core::plugins",
+        "core::python_interpreter",
+        "core::rag",
+        "core::tools",
+        "core::web_search_tools",
+        "engine::chain_executor",
+        "engine::context",
+        "engine::executor",
+        "engine::mission_loader",
+        "engine::mod",
+        "performance::mod",
+        "runtime::mod",
+        "runtime::prompt_cache",
+        "runtime::sandbox",
+        "smt::compliance_engine",
+        "validation::mod"
+      ],
+      "total_functions": 674,
+      "test_functions": 230,
+      "public_functions": 249,
+      "coverage_ratio": 51.80180180180181,
+      "complexity_total": 1320,
+      "avg_complexity": 1.9584569732937684,
+      "structs": 185,
+      "enums": 34,
+      "traits": 0
+    },
+    "llm": {
+      "modules": [
+        "core::llm",
+        "llm::aws_bedrock_provider",
+        "llm::azure_openai_provider",
+        "llm::google_gemini_provider",
+        "llm::mod",
+        "llm::shimmy_provider",
+        "llm::shimmy_provider_coverage_tests",
+        "llm::test_connectivity"
+      ],
+      "total_functions": 98,
+      "test_functions": 20,
+      "public_functions": 25,
+      "coverage_ratio": 25.64102564102564,
+      "complexity_total": 146,
+      "avg_complexity": 1.489795918367347,
+      "structs": 44,
+      "enums": 3,
+      "traits": 0
+    },
+    "tools": {
+      "modules": [
+        "core::tools",
+        "core::web_search_tools",
+        "devtools::deps",
+        "smt::customer_tools",
+        "tools::mod"
+      ],
+      "total_functions": 99,
+      "test_functions": 20,
+      "public_functions": 24,
+      "coverage_ratio": 25.31645569620253,
+      "complexity_total": 134,
+      "avg_complexity": 1.3535353535353536,
+      "structs": 34,
+      "enums": 3,
+      "traits": 0
+    },
+    "agent": {
+      "modules": [
+        "core::agent"
+      ],
+      "total_functions": 29,
+      "test_functions": 4,
+      "public_functions": 14,
+      "coverage_ratio": 16.0,
+      "complexity_total": 33,
+      "avg_complexity": 1.1379310344827587,
+      "structs": 9,
+      "enums": 2,
+      "traits": 0
+    },
+    "chain": {
+      "modules": [
+        "bin::rustchain-pretty",
+        "core::chain",
+        "engine::chain_executor"
+      ],
+      "total_functions": 54,
+      "test_functions": 3,
+      "public_functions": 23,
+      "coverage_ratio": 5.88235294117647,
+      "complexity_total": 65,
+      "avg_complexity": 1.2037037037037037,
+      "structs": 13,
+      "enums": 2,
+      "traits": 0
+    },
+    "memory": {
+      "modules": [
+        "core::memory::tests",
+        "core::memory"
+      ],
+      "total_functions": 68,
+      "test_functions": 37,
+      "public_functions": 18,
+      "coverage_ratio": 119.35483870967742,
+      "complexity_total": 130,
+      "avg_complexity": 1.911764705882353,
+      "structs": 7,
+      "enums": 0,
+      "traits": 0
+    },
+    "security": {
+      "modules": [
+        "core::audit",
+        "policy::mod",
+        "safety::mod",
+        "security::access_control",
+        "security::audit",
+        "security::auth",
+        "security::compliance",
+        "security::encryption",
+        "security::mod",
+        "security::threat_detection"
+      ],
+      "total_functions": 193,
+      "test_functions": 79,
+      "public_functions": 67,
+      "coverage_ratio": 69.2982456140351,
+      "complexity_total": 520,
+      "avg_complexity": 2.694300518134715,
+      "structs": 72,
+      "enums": 28,
+      "traits": 0
+    },
+    "enterprise": {
+      "modules": [
+        "registry::mod"
+      ],
+      "total_functions": 9,
+      "test_functions": 3,
+      "public_functions": 5,
+      "coverage_ratio": 50.0,
+      "complexity_total": 10,
+      "avg_complexity": 1.1111111111111112,
+      "structs": 5,
+      "enums": 1,
+      "traits": 0
+    },
+    "cli": {
+      "modules": [
+        "cli::commands",
+        "cli::commands_pretty",
+        "cli::handlers::mod",
+        "cli::handlers_pretty",
+        "cli::help_examples",
+        "cli::interactive",
+        "cli::main",
+        "cli::mod",
+        "cli::path_resolver",
+        "cli::pretty",
+        "compliance::cli"
+      ],
+      "total_functions": 89,
+      "test_functions": 42,
+      "public_functions": 29,
+      "coverage_ratio": 89.36170212765957,
+      "complexity_total": 260,
+      "avg_complexity": 2.9213483146067416,
+      "structs": 40,
+      "enums": 26,
+      "traits": 0
+    },
+    "server": {
+      "modules": [
+        "server::mod",
+        "server::rate_limit"
+      ],
+      "total_functions": 25,
+      "test_functions": 11,
+      "public_functions": 5,
+      "coverage_ratio": 78.57142857142857,
+      "complexity_total": 41,
+      "avg_complexity": 1.64,
+      "structs": 17,
+      "enums": 1,
+      "traits": 0
+    },
+    "smt": {
+      "modules": [
+        "compliance::api",
+        "compliance::cli",
+        "compliance::mod",
+        "compliance::reports",
+        "compliance::sdk",
+        "compliance_sdk",
+        "security::compliance",
+        "smt::compliance_engine",
+        "smt::constraints",
+        "smt::contextlite_bridge",
+        "smt::customer_tools",
+        "smt::mod",
+        "smt::oscal_converter",
+        "smt::solver",
+        "smt::standards_compliance",
+        "smt::verification"
+      ],
+      "total_functions": 123,
+      "test_functions": 4,
+      "public_functions": 33,
+      "coverage_ratio": 3.361344537815126,
+      "complexity_total": 611,
+      "avg_complexity": 4.967479674796748,
+      "structs": 78,
+      "enums": 24,
+      "traits": 0
+    },
+    "art": {
+      "modules": [
+        "art::mod",
+        "art::performance",
+        "art::ruler",
+        "art::session",
+        "art::tracker",
+        "art::training",
+        "art::trajectory",
+        "art::trajectory_tests"
+      ],
+      "total_functions": 34,
+      "test_functions": 13,
+      "public_functions": 11,
+      "coverage_ratio": 61.904761904761905,
+      "complexity_total": 47,
+      "avg_complexity": 1.3823529411764706,
+      "structs": 12,
+      "enums": 0,
+      "traits": 0
+    },
+    "rag": {
+      "modules": [
+        "core::chroma_vector_store",
+        "core::document_loaders",
+        "core::pinecone_vector_store",
+        "core::rag",
+        "llm::shimmy_provider_coverage_tests",
+        "rag::mod"
+      ],
+      "total_functions": 113,
+      "test_functions": 56,
+      "public_functions": 22,
+      "coverage_ratio": 98.24561403508771,
+      "complexity_total": 251,
+      "avg_complexity": 2.2212389380530975,
+      "structs": 40,
+      "enums": 4,
+      "traits": 0
+    }
+  },
+  "modules": {
+    "discovery": {
+      "total_functions": 9,
+      "test_functions": 0,
+      "public_functions": 4,
+      "private_functions": 5,
+      "structs": 5,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 24,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\discovery.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\${shimmy_path}\\src\\discovery.rs"
+      ]
+    },
+    "unknown": {
+      "total_functions": 39,
+      "test_functions": 21,
+      "public_functions": 6,
+      "private_functions": 12,
+      "structs": 5,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 100,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\simple_check.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\test_main_2.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\shimmy_additional_tests.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\test_main_3.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\tests\\test_suite.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\test_main_1.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\champion_test_result.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\benchmarks\\simple_benchmark.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\tests\\stability_tests_fixed.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\reality_check_simple.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\tests\\comprehensive_stability_tests.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\test_oscal_count.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\tests\\integration_invariant_tests.rs",
+        "C:\\Users\\micha\\repos\\rustchain-community\\tests\\invariant_test_runner.rs"
+      ]
+    },
+    "art::mod": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 1,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\art\\mod.rs"
+      ]
+    },
+    "art::performance": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 1,
+      "structs": 3,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\art\\performance.rs"
+      ]
+    },
+    "art::ruler": {
+      "total_functions": 8,
+      "test_functions": 4,
+      "public_functions": 3,
+      "private_functions": 1,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 12,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\art\\ruler.rs"
+      ]
+    },
+    "art::session": {
+      "total_functions": 10,
+      "test_functions": 5,
+      "public_functions": 5,
+      "private_functions": 0,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 11,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\art\\session.rs"
+      ]
+    },
+    "art::tracker": {
+      "total_functions": 5,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 5,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 10,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\art\\tracker.rs"
+      ]
+    },
+    "art::training": {
+      "total_functions": 8,
+      "test_functions": 4,
+      "public_functions": 3,
+      "private_functions": 1,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 11,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\art\\training.rs"
+      ]
+    },
+    "art::trajectory": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 1,
+      "structs": 4,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\art\\trajectory.rs"
+      ]
+    },
+    "art::trajectory_tests": {
+      "total_functions": 0,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 0,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\art\\trajectory_tests.rs"
+      ]
+    },
+    "bin::rustchain-pretty": {
+      "total_functions": 6,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 6,
+      "structs": 1,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 8,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\bin\\rustchain-pretty.rs"
+      ]
+    },
+    "build_dashboard": {
+      "total_functions": 15,
+      "test_functions": 4,
+      "public_functions": 8,
+      "private_functions": 3,
+      "structs": 6,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 38,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\build_dashboard.rs"
+      ]
+    },
+    "cli::commands": {
+      "total_functions": 37,
+      "test_functions": 37,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 1,
+      "enums": 18,
+      "traits": 0,
+      "complexity_total": 130,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\commands.rs"
+      ]
+    },
+    "cli::commands_pretty": {
+      "total_functions": 0,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 27,
+      "enums": 6,
+      "traits": 0,
+      "complexity_total": 0,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\commands_pretty.rs"
+      ]
+    },
+    "cli::handlers::mod": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\handlers\\mod.rs"
+      ]
+    },
+    "cli::handlers_pretty": {
+      "total_functions": 3,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 2,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 11,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\handlers_pretty.rs"
+      ]
+    },
+    "cli::help_examples": {
+      "total_functions": 13,
+      "test_functions": 3,
+      "public_functions": 10,
+      "private_functions": 0,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 19,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\help_examples.rs"
+      ]
+    },
+    "cli::interactive": {
+      "total_functions": 2,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 1,
+      "structs": 1,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 4,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\interactive.rs"
+      ]
+    },
+    "cli::main": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 1,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\main.rs"
+      ]
+    },
+    "cli::mod": {
+      "total_functions": 2,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 1,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 5,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\mod.rs"
+      ]
+    },
+    "cli::path_resolver": {
+      "total_functions": 9,
+      "test_functions": 1,
+      "public_functions": 4,
+      "private_functions": 4,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 42,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\path_resolver.rs"
+      ]
+    },
+    "cli::pretty": {
+      "total_functions": 17,
+      "test_functions": 0,
+      "public_functions": 11,
+      "private_functions": 6,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 28,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\cli\\pretty.rs"
+      ]
+    },
+    "compliance::api": {
+      "total_functions": 3,
+      "test_functions": 0,
+      "public_functions": 2,
+      "private_functions": 1,
+      "structs": 10,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 3,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\compliance\\api.rs"
+      ]
+    },
+    "compliance::cli": {
+      "total_functions": 4,
+      "test_functions": 1,
+      "public_functions": 0,
+      "private_functions": 3,
+      "structs": 5,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 19,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\compliance\\cli.rs"
+      ]
+    },
+    "compliance::mod": {
+      "total_functions": 2,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 2,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 20,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\compliance\\mod.rs"
+      ]
+    },
+    "compliance::reports": {
+      "total_functions": 8,
+      "test_functions": 2,
+      "public_functions": 6,
+      "private_functions": 0,
+      "structs": 3,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 39,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\compliance\\reports.rs"
+      ]
+    },
+    "compliance::sdk": {
+      "total_functions": 7,
+      "test_functions": 0,
+      "public_functions": 5,
+      "private_functions": 2,
+      "structs": 6,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 9,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\compliance\\sdk.rs"
+      ]
+    },
+    "compliance_sdk": {
+      "total_functions": 2,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 2,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 15,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\compliance_sdk.rs"
+      ]
+    },
+    "concurrency": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\concurrency.rs"
+      ]
+    },
+    "core::agent": {
+      "total_functions": 29,
+      "test_functions": 4,
+      "public_functions": 14,
+      "private_functions": 11,
+      "structs": 9,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 33,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\agent.rs"
+      ]
+    },
+    "core::audit": {
+      "total_functions": 34,
+      "test_functions": 9,
+      "public_functions": 17,
+      "private_functions": 8,
+      "structs": 11,
+      "enums": 3,
+      "traits": 0,
+      "complexity_total": 105,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\audit.rs"
+      ]
+    },
+    "core::chain": {
+      "total_functions": 44,
+      "test_functions": 3,
+      "public_functions": 21,
+      "private_functions": 20,
+      "structs": 10,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 45,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\chain.rs"
+      ]
+    },
+    "core::chroma_vector_store": {
+      "total_functions": 20,
+      "test_functions": 14,
+      "public_functions": 3,
+      "private_functions": 3,
+      "structs": 7,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 27,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\chroma_vector_store.rs"
+      ]
+    },
+    "core::config": {
+      "total_functions": 2,
+      "test_functions": 0,
+      "public_functions": 2,
+      "private_functions": 0,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 2,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\config.rs"
+      ]
+    },
+    "core::contextlite_config": {
+      "total_functions": 2,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 1,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 2,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\contextlite_config.rs"
+      ]
+    },
+    "core::document_loaders": {
+      "total_functions": 54,
+      "test_functions": 29,
+      "public_functions": 5,
+      "private_functions": 20,
+      "structs": 11,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 135,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\document_loaders.rs"
+      ]
+    },
+    "core::error": {
+      "total_functions": 61,
+      "test_functions": 26,
+      "public_functions": 32,
+      "private_functions": 3,
+      "structs": 0,
+      "enums": 7,
+      "traits": 0,
+      "complexity_total": 99,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\error.rs"
+      ]
+    },
+    "core::error_formatting": {
+      "total_functions": 24,
+      "test_functions": 6,
+      "public_functions": 4,
+      "private_functions": 14,
+      "structs": 2,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 154,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\error_formatting.rs"
+      ]
+    },
+    "core::executor": {
+      "total_functions": 9,
+      "test_functions": 1,
+      "public_functions": 1,
+      "private_functions": 7,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 20,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\executor.rs"
+      ]
+    },
+    "core::features": {
+      "total_functions": 13,
+      "test_functions": 2,
+      "public_functions": 8,
+      "private_functions": 3,
+      "structs": 5,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 20,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\features.rs"
+      ]
+    },
+    "core::github_toolkit": {
+      "total_functions": 20,
+      "test_functions": 14,
+      "public_functions": 4,
+      "private_functions": 2,
+      "structs": 18,
+      "enums": 3,
+      "traits": 0,
+      "complexity_total": 42,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\github_toolkit.rs"
+      ]
+    },
+    "core::llm": {
+      "total_functions": 15,
+      "test_functions": 1,
+      "public_functions": 0,
+      "private_functions": 14,
+      "structs": 6,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 16,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\llm.rs"
+      ]
+    },
+    "core::memory::tests": {
+      "total_functions": 37,
+      "test_functions": 37,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 49,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\memory\\tests.rs"
+      ]
+    },
+    "core::memory": {
+      "total_functions": 31,
+      "test_functions": 0,
+      "public_functions": 18,
+      "private_functions": 13,
+      "structs": 7,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 81,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\memory.rs"
+      ]
+    },
+    "core::mission": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\mission.rs"
+      ]
+    },
+    "core::mod": {
+      "total_functions": 19,
+      "test_functions": 0,
+      "public_functions": 16,
+      "private_functions": 3,
+      "structs": 10,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 20,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\mod.rs"
+      ]
+    },
+    "core::model_manager": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\model_manager.rs"
+      ]
+    },
+    "core::pinecone_vector_store": {
+      "total_functions": 16,
+      "test_functions": 10,
+      "public_functions": 3,
+      "private_functions": 3,
+      "structs": 13,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 20,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\pinecone_vector_store.rs"
+      ]
+    },
+    "core::plugin": {
+      "total_functions": 23,
+      "test_functions": 4,
+      "public_functions": 7,
+      "private_functions": 12,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 33,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\plugin.rs"
+      ]
+    },
+    "core::plugins": {
+      "total_functions": 22,
+      "test_functions": 1,
+      "public_functions": 14,
+      "private_functions": 7,
+      "structs": 5,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 30,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\plugins.rs"
+      ]
+    },
+    "core::python_interpreter": {
+      "total_functions": 20,
+      "test_functions": 11,
+      "public_functions": 7,
+      "private_functions": 2,
+      "structs": 6,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 34,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\python_interpreter.rs"
+      ]
+    },
+    "core::rag": {
+      "total_functions": 6,
+      "test_functions": 0,
+      "public_functions": 3,
+      "private_functions": 3,
+      "structs": 0,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 30,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\rag.rs"
+      ]
+    },
+    "core::tools": {
+      "total_functions": 35,
+      "test_functions": 7,
+      "public_functions": 13,
+      "private_functions": 15,
+      "structs": 6,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 42,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\tools.rs"
+      ]
+    },
+    "core::web_search_tools": {
+      "total_functions": 19,
+      "test_functions": 9,
+      "public_functions": 4,
+      "private_functions": 6,
+      "structs": 13,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 23,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\core\\web_search_tools.rs"
+      ]
+    },
+    "devtools::deps": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 5,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\devtools\\deps.rs"
+      ]
+    },
+    "engine::chain_executor": {
+      "total_functions": 4,
+      "test_functions": 0,
+      "public_functions": 2,
+      "private_functions": 2,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 12,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\engine\\chain_executor.rs"
+      ]
+    },
+    "engine::context": {
+      "total_functions": 5,
+      "test_functions": 0,
+      "public_functions": 5,
+      "private_functions": 0,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 5,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\engine\\context.rs"
+      ]
+    },
+    "engine::executor": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 8,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\engine\\executor.rs"
+      ]
+    },
+    "engine::mission_loader": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\engine\\mission_loader.rs"
+      ]
+    },
+    "engine::mod": {
+      "total_functions": 30,
+      "test_functions": 21,
+      "public_functions": 6,
+      "private_functions": 3,
+      "structs": 9,
+      "enums": 3,
+      "traits": 0,
+      "complexity_total": 61,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\engine\\mod.rs"
+      ]
+    },
+    "infrastructure::bootstrap": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\infrastructure\\bootstrap.rs"
+      ]
+    },
+    "infrastructure::logging": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\infrastructure\\logging.rs"
+      ]
+    },
+    "invariant_ppt": {
+      "total_functions": 11,
+      "test_functions": 1,
+      "public_functions": 10,
+      "private_functions": 0,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 14,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\invariant_ppt.rs"
+      ]
+    },
+    "lib": {
+      "total_functions": 0,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 0,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\lib.rs"
+      ]
+    },
+    "lib_backup": {
+      "total_functions": 0,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 0,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\lib_backup.rs"
+      ]
+    },
+    "llm::aws_bedrock_provider": {
+      "total_functions": 14,
+      "test_functions": 5,
+      "public_functions": 4,
+      "private_functions": 5,
+      "structs": 6,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 20,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\llm\\aws_bedrock_provider.rs"
+      ]
+    },
+    "llm::azure_openai_provider": {
+      "total_functions": 14,
+      "test_functions": 6,
+      "public_functions": 3,
+      "private_functions": 5,
+      "structs": 6,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 19,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\llm\\azure_openai_provider.rs"
+      ]
+    },
+    "llm::google_gemini_provider": {
+      "total_functions": 10,
+      "test_functions": 3,
+      "public_functions": 2,
+      "private_functions": 5,
+      "structs": 10,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 16,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\llm\\google_gemini_provider.rs"
+      ]
+    },
+    "llm::mod": {
+      "total_functions": 30,
+      "test_functions": 0,
+      "public_functions": 12,
+      "private_functions": 18,
+      "structs": 13,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 50,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\llm\\mod.rs"
+      ]
+    },
+    "llm::shimmy_provider": {
+      "total_functions": 11,
+      "test_functions": 2,
+      "public_functions": 4,
+      "private_functions": 5,
+      "structs": 3,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 19,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\llm\\shimmy_provider.rs"
+      ]
+    },
+    "llm::shimmy_provider_coverage_tests": {
+      "total_functions": 4,
+      "test_functions": 3,
+      "public_functions": 0,
+      "private_functions": 1,
+      "structs": 0,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 6,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\llm\\shimmy_provider_coverage_tests.rs"
+      ]
+    },
+    "llm::test_connectivity": {
+      "total_functions": 0,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 0,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\llm\\test_connectivity.rs"
+      ]
+    },
+    "main_pretty": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 1,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 3,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\main_pretty.rs"
+      ]
+    },
+    "performance::mod": {
+      "total_functions": 24,
+      "test_functions": 4,
+      "public_functions": 18,
+      "private_functions": 2,
+      "structs": 6,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 25,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\performance\\mod.rs"
+      ]
+    },
+    "plugins::mod": {
+      "total_functions": 5,
+      "test_functions": 0,
+      "public_functions": 5,
+      "private_functions": 0,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 5,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\plugins\\mod.rs"
+      ]
+    },
+    "policy::mod": {
+      "total_functions": 52,
+      "test_functions": 31,
+      "public_functions": 20,
+      "private_functions": 1,
+      "structs": 6,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 94,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\policy\\mod.rs"
+      ]
+    },
+    "rag::mod": {
+      "total_functions": 13,
+      "test_functions": 0,
+      "public_functions": 8,
+      "private_functions": 5,
+      "structs": 9,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 33,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\rag\\mod.rs"
+      ]
+    },
+    "registry::mod": {
+      "total_functions": 9,
+      "test_functions": 3,
+      "public_functions": 5,
+      "private_functions": 1,
+      "structs": 5,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 10,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\registry\\mod.rs"
+      ]
+    },
+    "runtime::mod": {
+      "total_functions": 15,
+      "test_functions": 11,
+      "public_functions": 3,
+      "private_functions": 1,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 19,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\runtime\\mod.rs"
+      ]
+    },
+    "runtime::prompt_cache": {
+      "total_functions": 3,
+      "test_functions": 0,
+      "public_functions": 3,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 3,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\runtime\\prompt_cache.rs"
+      ]
+    },
+    "runtime::sandbox": {
+      "total_functions": 3,
+      "test_functions": 0,
+      "public_functions": 3,
+      "private_functions": 0,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 3,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\runtime\\sandbox.rs"
+      ]
+    },
+    "safety::mod": {
+      "total_functions": 55,
+      "test_functions": 39,
+      "public_functions": 9,
+      "private_functions": 7,
+      "structs": 6,
+      "enums": 3,
+      "traits": 0,
+      "complexity_total": 127,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\safety\\mod.rs"
+      ]
+    },
+    "sandbox::mod": {
+      "total_functions": 12,
+      "test_functions": 0,
+      "public_functions": 8,
+      "private_functions": 4,
+      "structs": 8,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 22,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\sandbox\\mod.rs"
+      ]
+    },
+    "security::access_control": {
+      "total_functions": 8,
+      "test_functions": 0,
+      "public_functions": 3,
+      "private_functions": 5,
+      "structs": 6,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 42,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\security\\access_control.rs"
+      ]
+    },
+    "security::audit": {
+      "total_functions": 7,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 6,
+      "structs": 7,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 63,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\security\\audit.rs"
+      ]
+    },
+    "security::auth": {
+      "total_functions": 6,
+      "test_functions": 0,
+      "public_functions": 5,
+      "private_functions": 1,
+      "structs": 4,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 21,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\security\\auth.rs"
+      ]
+    },
+    "security::compliance": {
+      "total_functions": 7,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 6,
+      "structs": 13,
+      "enums": 7,
+      "traits": 0,
+      "complexity_total": 21,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\security\\compliance.rs"
+      ]
+    },
+    "security::encryption": {
+      "total_functions": 12,
+      "test_functions": 0,
+      "public_functions": 8,
+      "private_functions": 4,
+      "structs": 5,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 20,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\security\\encryption.rs"
+      ]
+    },
+    "security::mod": {
+      "total_functions": 4,
+      "test_functions": 0,
+      "public_functions": 2,
+      "private_functions": 2,
+      "structs": 5,
+      "enums": 5,
+      "traits": 0,
+      "complexity_total": 4,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\security\\mod.rs"
+      ]
+    },
+    "security::threat_detection": {
+      "total_functions": 8,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 7,
+      "structs": 9,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 23,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\security\\threat_detection.rs"
+      ]
+    },
+    "server::mod": {
+      "total_functions": 16,
+      "test_functions": 11,
+      "public_functions": 4,
+      "private_functions": 1,
+      "structs": 13,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 16,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\server\\mod.rs"
+      ]
+    },
+    "server::rate_limit": {
+      "total_functions": 9,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 8,
+      "structs": 4,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 25,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\server\\rate_limit.rs"
+      ]
+    },
+    "smt::compliance_engine": {
+      "total_functions": 16,
+      "test_functions": 0,
+      "public_functions": 2,
+      "private_functions": 14,
+      "structs": 10,
+      "enums": 5,
+      "traits": 0,
+      "complexity_total": 84,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\compliance_engine.rs"
+      ]
+    },
+    "smt::constraints": {
+      "total_functions": 2,
+      "test_functions": 0,
+      "public_functions": 2,
+      "private_functions": 0,
+      "structs": 2,
+      "enums": 2,
+      "traits": 0,
+      "complexity_total": 8,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\constraints.rs"
+      ]
+    },
+    "smt::contextlite_bridge": {
+      "total_functions": 11,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 10,
+      "structs": 3,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 56,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\contextlite_bridge.rs"
+      ]
+    },
+    "smt::customer_tools": {
+      "total_functions": 9,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 8,
+      "structs": 5,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 25,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\customer_tools.rs"
+      ]
+    },
+    "smt::mod": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 1,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\mod.rs"
+      ]
+    },
+    "smt::oscal_converter": {
+      "total_functions": 10,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 9,
+      "structs": 9,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 40,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\oscal_converter.rs"
+      ]
+    },
+    "smt::solver": {
+      "total_functions": 10,
+      "test_functions": 0,
+      "public_functions": 2,
+      "private_functions": 8,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 36,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\solver.rs"
+      ]
+    },
+    "smt::standards_compliance": {
+      "total_functions": 25,
+      "test_functions": 1,
+      "public_functions": 8,
+      "private_functions": 16,
+      "structs": 5,
+      "enums": 8,
+      "traits": 0,
+      "complexity_total": 226,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\standards_compliance.rs"
+      ]
+    },
+    "smt::verification": {
+      "total_functions": 6,
+      "test_functions": 0,
+      "public_functions": 2,
+      "private_functions": 4,
+      "structs": 2,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 9,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\smt\\verification.rs"
+      ]
+    },
+    "telemetry::mod": {
+      "total_functions": 19,
+      "test_functions": 2,
+      "public_functions": 13,
+      "private_functions": 4,
+      "structs": 3,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 22,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\telemetry\\mod.rs"
+      ]
+    },
+    "testing::invariants": {
+      "total_functions": 1,
+      "test_functions": 0,
+      "public_functions": 1,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 1,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\testing\\invariants.rs"
+      ]
+    },
+    "testing::replay": {
+      "total_functions": 1,
+      "test_functions": 1,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 1,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 2,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\testing\\replay.rs"
+      ]
+    },
+    "testing": {
+      "total_functions": 0,
+      "test_functions": 0,
+      "public_functions": 0,
+      "private_functions": 0,
+      "structs": 0,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 0,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\testing.rs"
+      ]
+    },
+    "tools::mod": {
+      "total_functions": 35,
+      "test_functions": 4,
+      "public_functions": 5,
+      "private_functions": 26,
+      "structs": 10,
+      "enums": 0,
+      "traits": 0,
+      "complexity_total": 39,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\tools\\mod.rs"
+      ]
+    },
+    "validation::mod": {
+      "total_functions": 14,
+      "test_functions": 6,
+      "public_functions": 6,
+      "private_functions": 2,
+      "structs": 2,
+      "enums": 1,
+      "traits": 0,
+      "complexity_total": 34,
+      "files": [
+        "C:\\Users\\micha\\repos\\rustchain-community\\src\\validation\\mod.rs"
+      ]
+    }
+  },
+  "generated_at": "2025-09-08 17:13:35.774100"
+}
