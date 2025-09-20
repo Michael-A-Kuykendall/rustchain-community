@@ -9,7 +9,7 @@
 
 <!-- Main Title -->
 <h1 style="font-size: 3.5rem; font-weight: 900; margin-bottom: 1rem; line-height: 1; color: #1a1a1a;">
-  <span style="color: #ff4500;">RUST</span><span style="color: #666;">CHAIN</span>
+  <span style="color: #ff4500;">R</span><span style="color: #666;">ustchain</span>
 </h1>
 
 <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 2rem; color: #666;">
@@ -41,7 +41,11 @@
 <!-- Status Badges -->
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/License-MIT%20OR%20Apache--2.0-blue.svg)](https://opensource.org/licenses/MIT)
 [![Rust](https://img.shields.io/badge/rust-1.70+-orange.svg)](https://www.rust-lang.org)
-[![Tests](https://img.shields.io/badge/tests-748%20passing-green.svg)](https://github.com/rustchain-community/rustchain-community/actions)
+[![Tests](https://img.shields.io/badge/tests-748%20passing-green.svg)](https://github.com/Michael-A-Kuykendall/rustchain-community/actions)
+[![Crates.io](https://img.shields.io/crates/v/rustchain-community.svg)](https://crates.io/crates/rustchain-community)
+[![Downloads](https://img.shields.io/crates/d/rustchain-community.svg)](https://crates.io/crates/rustchain-community)
+[![GitHub Stars](https://img.shields.io/github/stars/Michael-A-Kuykendall/rustchain-community.svg)](https://github.com/Michael-A-Kuykendall/rustchain-community/stargazers)
+[![Discord](https://img.shields.io/badge/discord-join%20chat-7289da.svg)](https://discord.gg/rustchain)
 
 [Installation](#installation) • [Quick Start](#quick-start) • [Documentation](docs/README.md) • [Examples](examples/README.md) • [Community](#community)
 
@@ -49,7 +53,7 @@
 
 ## Overview
 
-RustChain Community is a powerful, memory-safe AI agent framework built in Rust that delivers 10-100x performance improvements over Python alternatives. It features universal workflow transpilation, enterprise compliance, and production-ready architecture.
+Rustchain Community is a powerful, memory-safe AI agent framework built in Rust that delivers 10-100x performance improvements over Python alternatives. It features universal workflow transpilation, enterprise compliance, and production-ready architecture.
 
 ### Key Features
 
@@ -89,14 +93,14 @@ docker run --rm -it rustchain/community:latest
 # hello-world.yaml
 version: '1.0'
 name: hello_world_mission
-description: My first RustChain mission
+description: My first Rustchain mission
 
 steps:
   - id: greeting
     name: Say Hello
     step_type: command
     parameters:
-      command: echo "Hello, RustChain!"
+      command: echo "Hello, Rustchain!"
 ```
 
 ### 2. Execute the Mission
@@ -119,7 +123,7 @@ rustchain transpile showcase-all my-workflow.py
 
 ## Universal Transpilation
 
-RustChain supports bidirectional conversion between major workflow platforms:
+Rustchain supports bidirectional conversion between major workflow platforms:
 
 | Input Format | Output Formats | Use Case |
 |--------------|----------------|----------|
@@ -154,11 +158,11 @@ Generates production-ready Kubernetes manifests with:
 
 ## Performance Comparison
 
-RustChain delivers significant performance advantages:
+Rustchain delivers significant performance advantages:
 
 | Framework | Execution Time | Memory Usage | Error Rate |
 |-----------|----------------|--------------|------------|
-| **RustChain** | 1ms | 2.8MB | 0.0% |
+| **Rustchain** | 1ms | 2.8MB | 0.0% |
 | LangChain (Python) | 15ms | 48.3MB | 2.3% |
 | Apache Airflow | 45ms | 128.5MB | 3.2% |
 | GitHub Actions | 8ms | 32.1MB | 1.8% |
@@ -202,7 +206,7 @@ rustchain benchmark report --output performance-analysis.md
 
 ## Mission Engine
 
-RustChain's DAG-based mission engine supports 12+ step types:
+Rustchain's DAG-based mission engine supports 12+ step types:
 
 - **CreateFile**: File system operations
 - **Command**: Shell command execution
@@ -304,7 +308,7 @@ Contributions are welcome! Please read our [Contributing Guidelines](CONTRIBUTIN
 
 ## Acknowledgments
 
-Built with ❤️ by the RustChain Community. Special thanks to all contributors and the Rust ecosystem.
+Built with ❤️ by the Rustchain Community. Special thanks to all contributors and the Rust ecosystem.
 
 ---
 
