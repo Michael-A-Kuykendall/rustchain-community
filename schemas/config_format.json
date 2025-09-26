@@ -1,0 +1,673 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://rustchain.dev/schemas/config-format/v1.0",
+  "title": "RustChain Configuration Format",
+  "description": "JSON Schema for validating RustChain configuration files",
+  "type": "object",
+  "additionalProperties": false,
+  
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Configuration format version",
+      "pattern": "^\\d+\\.\\d+$",
+      "default": "1.0"
+    },
+    
+    "runtime": {
+      "$ref": "#/$defs/RuntimeConfig",
+      "description": "Runtime execution configuration"
+    },
+    
+    "logging": {
+      "$ref": "#/$defs/LoggingConfig", 
+      "description": "Audit logging and telemetry configuration"
+    },
+    
+    "features": {
+      "$ref": "#/$defs/FeatureConfig",
+      "description": "Feature flag configuration"
+    },
+    
+    "tools": {
+      "$ref": "#/$defs/ToolsConfig",
+      "description": "Tool management configuration"
+    },
+    
+    "llm": {
+      "$ref": "#/$defs/LLMConfig",
+      "description": "Language model provider configuration"
+    },
+    
+    "database": {
+      "$ref": "#/$defs/DatabaseConfig",
+      "description": "Database connectivity configuration"
+    },
+    
+    "network": {
+      "$ref": "#/$defs/NetworkConfig",
+      "description": "Network and HTTP configuration"
+    },
+    
+    "security": {
+      "$ref": "#/$defs/SecurityConfig",
+      "description": "Security constraints and validation"
+    },
+    
+    "performance": {
+      "$ref": "#/$defs/PerformanceConfig",
+      "description": "Performance tuning configuration"
+    }
+  },
+  
+  "$defs": {
+    "RuntimeConfig": {
+      "type": "object",
+      "description": "Core runtime execution settings",
+      "additionalProperties": false,
+      
+      "properties": {
+        "max_parallel_missions": {
+          "type": "integer",
+          "description": "Maximum concurrent mission executions",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 4
+        },
+        
+        "default_timeout_seconds": {
+          "type": "integer",
+          "description": "Default timeout for operations",
+          "minimum": 1,
+          "maximum": 86400,
+          "default": 300
+        },
+        
+        "retry_count": {
+          "type": "integer",
+          "description": "Default retry count for failed operations",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 3
+        },
+        
+        "continue_on_error": {
+          "type": "boolean",
+          "description": "Default error handling behavior",
+          "default": false
+        },
+        
+        "context_variables": {
+          "type": "object",
+          "description": "Global context variables",
+          "additionalProperties": {
+            "oneOf": [
+              {"type": "string"},
+              {"type": "number"},
+              {"type": "boolean"},
+              {"type": "null"}
+            ]
+          }
+        }
+      }
+    },
+    
+    "LoggingConfig": {
+      "type": "object",
+      "description": "Audit logging and telemetry settings",
+      "additionalProperties": false,
+      
+      "properties": {
+        "level": {
+          "type": "string",
+          "description": "Logging level",
+          "enum": ["error", "warn", "info", "debug", "trace"],
+          "default": "info"
+        },
+        
+        "audit_enabled": {
+          "type": "boolean",
+          "description": "Enable audit trail logging",
+          "default": true
+        },
+        
+        "audit_file": {
+          "type": "string",
+          "description": "Path to audit log file",
+          "default": "rustchain_audit.log"
+        },
+        
+        "retention_days": {
+          "type": "integer",
+          "description": "Audit log retention period in days",
+          "minimum": 1,
+          "maximum": 3650,
+          "default": 90
+        },
+        
+        "include_timings": {
+          "type": "boolean",
+          "description": "Include execution timing information",
+          "default": true
+        },
+        
+        "structured_format": {
+          "type": "boolean",
+          "description": "Use structured JSON logging",
+          "default": true
+        },
+        
+        "console_output": {
+          "type": "boolean",
+          "description": "Enable console log output",
+          "default": true
+        }
+      }
+    },
+    
+    "FeatureConfig": {
+      "type": "object",
+      "description": "Feature flag configuration",
+      "additionalProperties": false,
+      
+      "properties": {
+        "tools": {
+          "type": "boolean",
+          "description": "Enable tool management system",
+          "default": false
+        },
+        
+        "llm": {
+          "type": "boolean",
+          "description": "Enable LLM integration",
+          "default": false
+        },
+        
+        "sql": {
+          "type": "boolean",
+          "description": "Enable SQL database operations",
+          "default": false
+        },
+        
+        "networking": {
+          "type": "boolean",
+          "description": "Enable network operations",
+          "default": false
+        },
+        
+        "git": {
+          "type": "boolean",
+          "description": "Enable Git operations",
+          "default": false
+        },
+        
+        "compression": {
+          "type": "boolean",
+          "description": "Enable compression operations",
+          "default": false
+        },
+        
+        "websockets": {
+          "type": "boolean",
+          "description": "Enable WebSocket operations",
+          "default": false
+        },
+        
+        "agents": {
+          "type": "boolean",
+          "description": "Enable AI agent functionality",
+          "default": false
+        },
+        
+        "chains": {
+          "type": "boolean",
+          "description": "Enable chain execution",
+          "default": false
+        }
+      }
+    },
+    
+    "ToolsConfig": {
+      "type": "object",
+      "description": "Tool management configuration",
+      "additionalProperties": false,
+      
+      "properties": {
+        "discovery_paths": {
+          "type": "array",
+          "description": "Paths to search for tools",
+          "items": {"type": "string"},
+          "default": ["./tools", "~/.rustchain/tools"]
+        },
+        
+        "max_execution_time": {
+          "type": "integer",
+          "description": "Maximum tool execution time in seconds",
+          "minimum": 1,
+          "maximum": 3600,
+          "default": 300
+        },
+        
+        "sandbox_enabled": {
+          "type": "boolean",
+          "description": "Enable tool execution sandboxing",
+          "default": true
+        },
+        
+        "allowed_tools": {
+          "type": "array",
+          "description": "Whitelist of allowed tools (empty = all allowed)",
+          "items": {"type": "string"},
+          "default": []
+        },
+        
+        "blocked_tools": {
+          "type": "array",
+          "description": "Blacklist of blocked tools",
+          "items": {"type": "string"},
+          "default": []
+        },
+        
+        "resource_limits": {
+          "$ref": "#/$defs/ResourceLimits"
+        }
+      }
+    },
+    
+    "LLMConfig": {
+      "type": "object",
+      "description": "Language model provider configuration",
+      "additionalProperties": false,
+      
+      "properties": {
+        "default_provider": {
+          "type": "string",
+          "description": "Default LLM provider",
+          "enum": ["openai", "anthropic", "ollama", "azure", "huggingface"],
+          "default": "ollama"
+        },
+        
+        "providers": {
+          "type": "object",
+          "description": "Provider-specific configurations",
+          "additionalProperties": false,
+          "properties": {
+            "openai": {"$ref": "#/$defs/OpenAIConfig"},
+            "anthropic": {"$ref": "#/$defs/AnthropicConfig"},
+            "ollama": {"$ref": "#/$defs/OllamaConfig"},
+            "azure": {"$ref": "#/$defs/AzureConfig"},
+            "huggingface": {"$ref": "#/$defs/HuggingFaceConfig"}
+          }
+        },
+        
+        "default_model": {
+          "type": "string",
+          "description": "Default model to use",
+          "default": "phi3:mini"
+        },
+        
+        "timeout_seconds": {
+          "type": "integer",
+          "description": "LLM request timeout",
+          "minimum": 1,
+          "maximum": 300,
+          "default": 30
+        },
+        
+        "max_retries": {
+          "type": "integer",
+          "description": "Maximum retry attempts",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 3
+        }
+      }
+    },
+    
+    "DatabaseConfig": {
+      "type": "object",
+      "description": "Database connectivity configuration",
+      "additionalProperties": false,
+      
+      "properties": {
+        "default_connection": {
+          "type": "string",
+          "description": "Default database connection name",
+          "default": "primary"
+        },
+        
+        "connections": {
+          "type": "object",
+          "description": "Named database connections",
+          "additionalProperties": {
+            "$ref": "#/$defs/DatabaseConnection"
+          }
+        },
+        
+        "pool_size": {
+          "type": "integer",
+          "description": "Connection pool size",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10
+        },
+        
+        "timeout_seconds": {
+          "type": "integer",
+          "description": "Database operation timeout",
+          "minimum": 1,
+          "maximum": 300,
+          "default": 30
+        }
+      }
+    },
+    
+    "NetworkConfig": {
+      "type": "object",
+      "description": "Network and HTTP configuration",
+      "additionalProperties": false,
+      
+      "properties": {
+        "timeout_seconds": {
+          "type": "integer",
+          "description": "HTTP request timeout",
+          "minimum": 1,
+          "maximum": 300,
+          "default": 30
+        },
+        
+        "max_redirects": {
+          "type": "integer",
+          "description": "Maximum HTTP redirects",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 5
+        },
+        
+        "user_agent": {
+          "type": "string",
+          "description": "Default User-Agent header",
+          "default": "RustChain/1.0"
+        },
+        
+        "proxy": {
+          "$ref": "#/$defs/ProxyConfig"
+        },
+        
+        "tls": {
+          "$ref": "#/$defs/TLSConfig"
+        }
+      }
+    },
+    
+    "SecurityConfig": {
+      "type": "object",
+      "description": "Security constraints and validation",
+      "additionalProperties": false,
+      
+      "properties": {
+        "path_validation": {
+          "type": "boolean",
+          "description": "Enable path traversal validation",
+          "default": true
+        },
+        
+        "command_validation": {
+          "type": "boolean",
+          "description": "Enable command injection validation",
+          "default": true
+        },
+        
+        "allowed_directories": {
+          "type": "array",
+          "description": "Allowed file system access paths",
+          "items": {"type": "string"},
+          "default": ["./", "/tmp"]
+        },
+        
+        "blocked_directories": {
+          "type": "array",
+          "description": "Blocked file system access paths",
+          "items": {"type": "string"},
+          "default": ["/etc", "/sys", "/proc", "C:\\Windows"]
+        },
+        
+        "max_file_size_mb": {
+          "type": "integer",
+          "description": "Maximum file size for operations",
+          "minimum": 1,
+          "maximum": 1024,
+          "default": 100
+        },
+        
+        "encryption": {
+          "$ref": "#/$defs/EncryptionConfig"
+        }
+      }
+    },
+    
+    "PerformanceConfig": {
+      "type": "object",
+      "description": "Performance tuning configuration",
+      "additionalProperties": false,
+      
+      "properties": {
+        "max_memory_mb": {
+          "type": "integer",
+          "description": "Maximum memory usage in MB",
+          "minimum": 100,
+          "maximum": 32768,
+          "default": 2048
+        },
+        
+        "cache_size_mb": {
+          "type": "integer",
+          "description": "Cache size in MB",
+          "minimum": 10,
+          "maximum": 1024,
+          "default": 64
+        },
+        
+        "worker_threads": {
+          "type": "integer",
+          "description": "Number of worker threads",
+          "minimum": 1,
+          "maximum": 64,
+          "default": 4
+        },
+        
+        "batch_size": {
+          "type": "integer",
+          "description": "Default batch size for operations",
+          "minimum": 1,
+          "maximum": 10000,
+          "default": 100
+        }
+      }
+    },
+    
+    "ResourceLimits": {
+      "type": "object",
+      "description": "Resource limits for tool execution",
+      "additionalProperties": false,
+      
+      "properties": {
+        "max_memory_mb": {
+          "type": "integer",
+          "description": "Maximum memory per tool",
+          "minimum": 1,
+          "maximum": 1024,
+          "default": 128
+        },
+        
+        "max_cpu_percent": {
+          "type": "integer",
+          "description": "Maximum CPU usage percentage",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 50
+        },
+        
+        "max_files": {
+          "type": "integer",
+          "description": "Maximum open files",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 100
+        }
+      }
+    },
+    
+    "OpenAIConfig": {
+      "type": "object",
+      "description": "OpenAI provider configuration",
+      "properties": {
+        "api_key": {"type": "string"},
+        "base_url": {"type": "string", "default": "https://api.openai.com/v1"},
+        "organization": {"type": "string"},
+        "model": {"type": "string", "default": "gpt-3.5-turbo"}
+      }
+    },
+    
+    "AnthropicConfig": {
+      "type": "object",
+      "description": "Anthropic provider configuration",
+      "properties": {
+        "api_key": {"type": "string"},
+        "base_url": {"type": "string", "default": "https://api.anthropic.com"},
+        "model": {"type": "string", "default": "claude-3-sonnet-20240229"}
+      }
+    },
+    
+    "OllamaConfig": {
+      "type": "object",
+      "description": "Ollama provider configuration",
+      "properties": {
+        "base_url": {"type": "string", "default": "http://localhost:11434"},
+        "model": {"type": "string", "default": "phi3:mini"},
+        "keep_alive": {"type": "string", "default": "5m"}
+      }
+    },
+    
+    "AzureConfig": {
+      "type": "object",
+      "description": "Azure OpenAI configuration",
+      "properties": {
+        "api_key": {"type": "string"},
+        "endpoint": {"type": "string"},
+        "deployment": {"type": "string"},
+        "api_version": {"type": "string", "default": "2023-12-01-preview"}
+      }
+    },
+    
+    "HuggingFaceConfig": {
+      "type": "object",
+      "description": "Hugging Face configuration",
+      "properties": {
+        "api_key": {"type": "string"},
+        "base_url": {"type": "string", "default": "https://api-inference.huggingface.co"},
+        "model": {"type": "string"}
+      }
+    },
+    
+    "DatabaseConnection": {
+      "type": "object",
+      "description": "Database connection configuration",
+      "properties": {
+        "driver": {
+          "type": "string",
+          "enum": ["postgres", "mysql", "sqlite", "sqlserver"],
+          "default": "sqlite"
+        },
+        "connection_string": {"type": "string"},
+        "host": {"type": "string"},
+        "port": {"type": "integer"},
+        "database": {"type": "string"},
+        "username": {"type": "string"},
+        "password": {"type": "string"},
+        "ssl_mode": {
+          "type": "string",
+          "enum": ["disable", "require", "verify-ca", "verify-full"],
+          "default": "disable"
+        }
+      }
+    },
+    
+    "ProxyConfig": {
+      "type": "object",
+      "description": "HTTP proxy configuration",
+      "properties": {
+        "enabled": {"type": "boolean", "default": false},
+        "url": {"type": "string"},
+        "username": {"type": "string"},
+        "password": {"type": "string"}
+      }
+    },
+    
+    "TLSConfig": {
+      "type": "object",
+      "description": "TLS/SSL configuration",
+      "properties": {
+        "verify_certificates": {"type": "boolean", "default": true},
+        "ca_cert_file": {"type": "string"},
+        "client_cert_file": {"type": "string"},
+        "client_key_file": {"type": "string"}
+      }
+    },
+    
+    "EncryptionConfig": {
+      "type": "object",
+      "description": "Encryption configuration",
+      "properties": {
+        "enabled": {"type": "boolean", "default": false},
+        "algorithm": {
+          "type": "string",
+          "enum": ["aes-256-gcm", "chacha20poly1305"],
+          "default": "aes-256-gcm"
+        },
+        "key_file": {"type": "string"},
+        "rotate_keys": {"type": "boolean", "default": false}
+      }
+    }
+  },
+  
+  "examples": [
+    {
+      "version": "1.0",
+      "runtime": {
+        "max_parallel_missions": 2,
+        "default_timeout_seconds": 600,
+        "retry_count": 2,
+        "continue_on_error": false
+      },
+      "logging": {
+        "level": "info",
+        "audit_enabled": true,
+        "audit_file": "audit.log",
+        "retention_days": 30,
+        "structured_format": true
+      },
+      "features": {
+        "tools": true,
+        "llm": true,
+        "networking": true
+      },
+      "llm": {
+        "default_provider": "ollama",
+        "providers": {
+          "ollama": {
+            "base_url": "http://localhost:11434",
+            "model": "phi3:mini"
+          }
+        },
+        "timeout_seconds": 30
+      },
+      "security": {
+        "path_validation": true,
+        "command_validation": true,
+        "allowed_directories": ["./workspace", "/tmp"],
+        "max_file_size_mb": 50
+      }
+    }
+  ]
+}

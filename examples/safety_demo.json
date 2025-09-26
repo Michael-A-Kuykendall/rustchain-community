@@ -1,0 +1,79 @@
+{
+  "id": "safety_demo_001",
+  "name": "Safety Validation Demo",
+  "description": "Demonstrates safety validation features by attempting both safe and unsafe operations",
+  "version": "1.0.0",
+  "steps": [
+    {
+      "id": "safe_operation",
+      "name": "Safe File Operation",
+      "step_type": "Tool",
+      "config": {
+        "tool": "echo",
+        "args": ["This is a safe operation"]
+      },
+      "dependencies": [],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    },
+    {
+      "id": "safe_file_create",
+      "name": "Safe File Creation",
+      "step_type": "Tool",
+      "config": {
+        "tool": "touch",
+        "args": ["/tmp/safe_file.txt"]
+      },
+      "dependencies": ["safe_operation"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    },
+    {
+      "id": "safe_file_content",
+      "name": "Safe File Content Write",
+      "step_type": "Tool",
+      "config": {
+        "tool": "bash",
+        "args": ["-c", "echo 'Safe content' > /tmp/safe_file.txt"]
+      },
+      "dependencies": ["safe_file_create"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    },
+    {
+      "id": "safe_file_read",
+      "name": "Safe File Read",
+      "step_type": "Tool",
+      "config": {
+        "tool": "cat",
+        "args": ["/tmp/safe_file.txt"]
+      },
+      "dependencies": ["safe_file_content"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    },
+    {
+      "id": "safe_cleanup",
+      "name": "Safe Cleanup",
+      "step_type": "Tool",
+      "config": {
+        "tool": "rm",
+        "args": ["/tmp/safe_file.txt"]
+      },
+      "dependencies": ["safe_file_read"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    }
+  ],
+  "metadata": {
+    "category": "safety-demo",
+    "difficulty": "beginner",
+    "estimated_duration": "1 minute",
+    "note": "This mission demonstrates safe operations that should pass validation"
+  }
+}

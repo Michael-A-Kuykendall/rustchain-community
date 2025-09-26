@@ -1,0 +1,105 @@
+{
+  "id": "data_processing_001",
+  "name": "Data Processing Pipeline",
+  "description": "A comprehensive data processing mission that demonstrates file operations, data validation, and analysis",
+  "version": "1.0.0",
+  "steps": [
+    {
+      "id": "create_workspace",
+      "name": "Create Working Directory",
+      "step_type": "Tool",
+      "config": {
+        "tool": "mkdir",
+        "args": ["-p", "/tmp/rustchain_demo"]
+      },
+      "dependencies": [],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "abort"
+    },
+    {
+      "id": "generate_sample_data",
+      "name": "Generate Sample Data",
+      "step_type": "Tool",
+      "config": {
+        "tool": "python3",
+        "args": ["-c", "import csv; import random; data = [['id', 'name', 'value']] + [[i, f'item_{i}', random.randint(1, 100)] for i in range(1, 101)]; [print(','.join(map(str, row))) for row in data]"]
+      },
+      "dependencies": ["create_workspace"],
+      "timeout": 60,
+      "retry_count": 2,
+      "on_failure": "abort"
+    },
+    {
+      "id": "save_data",
+      "name": "Save Data to File",
+      "step_type": "Tool",
+      "config": {
+        "tool": "bash",
+        "args": ["-c", "python3 -c \"import csv; import random; data = [['id', 'name', 'value']] + [[i, f'item_{i}', random.randint(1, 100)] for i in range(1, 101)]; f = open('/tmp/rustchain_demo/data.csv', 'w'); writer = csv.writer(f); [writer.writerow(row) for row in data]; f.close()\""]
+      },
+      "dependencies": ["generate_sample_data"],
+      "timeout": 60,
+      "retry_count": 2,
+      "on_failure": "abort"
+    },
+    {
+      "id": "validate_data",
+      "name": "Validate Data Format",
+      "step_type": "Tool",
+      "config": {
+        "tool": "head",
+        "args": ["-5", "/tmp/rustchain_demo/data.csv"]
+      },
+      "dependencies": ["save_data"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    },
+    {
+      "id": "count_records",
+      "name": "Count Data Records",
+      "step_type": "Tool",
+      "config": {
+        "tool": "wc",
+        "args": ["-l", "/tmp/rustchain_demo/data.csv"]
+      },
+      "dependencies": ["validate_data"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    },
+    {
+      "id": "analyze_data",
+      "name": "Basic Data Analysis",
+      "step_type": "Tool",
+      "config": {
+        "tool": "python3",
+        "args": ["-c", "import csv; data = list(csv.reader(open('/tmp/rustchain_demo/data.csv'))); values = [int(row[2]) for row in data[1:]]; print(f'Total records: {len(values)}'); print(f'Average value: {sum(values)/len(values):.2f}'); print(f'Min value: {min(values)}'); print(f'Max value: {max(values)}')"]
+      },
+      "dependencies": ["count_records"],
+      "timeout": 60,
+      "retry_count": 2,
+      "on_failure": "continue"
+    },
+    {
+      "id": "cleanup",
+      "name": "Cleanup Working Directory",
+      "step_type": "Tool",
+      "config": {
+        "tool": "rm",
+        "args": ["-rf", "/tmp/rustchain_demo"]
+      },
+      "dependencies": ["analyze_data"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    }
+  ],
+  "metadata": {
+    "category": "data-processing",
+    "difficulty": "intermediate",
+    "estimated_duration": "3 minutes",
+    "requires": ["python3", "bash", "basic unix tools"]
+  }
+}

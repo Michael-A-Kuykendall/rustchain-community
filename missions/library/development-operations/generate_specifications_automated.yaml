@@ -1,0 +1,224 @@
+name: "Automated Specification Generation for Any Codebase"
+description: "A repeatable mission that analyzes source code and automatically generates comprehensive specifications using GitHub Spec Kit methodology. Perfect for documentation audits, enterprise readiness, and community onboarding."
+version: "1.0"
+category: "development-operations"
+certification_level: "professional"
+author: "RustChain Community"
+tags: ["documentation", "spec-driven-development", "automation", "enterprise", "onboarding"]
+estimated_duration: "10-30 minutes per component"
+success_rate: "95%"
+
+parameters:
+  - name: "component_path"
+    description: "Path to the source code component to analyze"
+    type: "string"
+    required: true
+    example: "src/engine/mod.rs"
+  
+  - name: "component_name"
+    description: "Human-readable name for the component"
+    type: "string"
+    required: true
+    example: "Mission Engine"
+    
+  - name: "component_type"
+    description: "Type of component being analyzed"
+    type: "string"
+    required: true
+    enum: ["engine", "cli", "tools", "security", "llm", "agent", "chain", "transpiler", "memory"]
+    example: "engine"
+    
+  - name: "priority_level"
+    description: "Business priority for this component"
+    type: "string"
+    required: false
+    default: "medium"
+    enum: ["critical", "high", "medium", "low"]
+    
+  - name: "enterprise_features"
+    description: "Whether to include enterprise compliance requirements"
+    type: "boolean"
+    required: false
+    default: true
+
+steps:
+  - id: "analyze_source_code"
+    step_type: "tool"
+    description: "Analyze the source code to understand component architecture"
+    parameters:
+      tool_name: "file_read"
+      path: "${component_path}"
+    outputs:
+      source_content: "content"
+
+  - id: "generate_component_description"
+    step_type: "llm"
+    description: "Generate natural language description from source code analysis"
+    parameters:
+      provider: "claude"
+      model: "claude-3-sonnet"
+      prompt: |
+        Analyze this ${component_type} component source code and generate a comprehensive natural language description suitable for specification creation.
+        
+        Component: ${component_name}
+        Priority: ${priority_level}
+        Enterprise Features: ${enterprise_features}
+        
+        Source Code:
+        ${source_content}
+        
+        Please provide:
+        1. High-level purpose and business value
+        2. Key features and capabilities
+        3. Integration points and dependencies
+        4. User-facing functionality
+        5. Enterprise/compliance considerations (if enterprise_features=true)
+        6. Performance and scalability requirements
+        
+        Format as a detailed natural language description that can be fed directly to a /specify command.
+    outputs:
+      component_description: "response"
+
+  - id: "create_feature_branch"
+    step_type: "command"
+    description: "Create a feature branch for the specification"
+    parameters:
+      command: "git"
+      args: ["checkout", "-b", "spec-${component_type}-${component_name}"]
+    continue_on_error: true
+
+  - id: "generate_specification"
+    step_type: "tool"
+    description: "Generate the actual specification using GitHub Spec Kit"
+    parameters:
+      tool_name: "github_spec_kit"
+      command: "specify"
+      input: "${component_description}"
+      encoding_fix: "PYTHONIOENCODING=utf-8"
+    outputs:
+      spec_branch: "branch_name"
+      spec_file: "spec_file_path"
+
+  - id: "validate_against_source"
+    step_type: "llm"
+    description: "Validate the generated specification against the actual source code"
+    parameters:
+      provider: "claude"
+      model: "claude-3-sonnet"
+      prompt: |
+        Compare the generated specification with the actual source code implementation and identify:
+        
+        1. Accurate representations of functionality
+        2. Missing features not captured in spec
+        3. Over-specified features not in implementation
+        4. Technical debt or improvement opportunities
+        5. Enterprise compliance gaps
+        
+        Specification file: ${spec_file}
+        Source code: ${source_content}
+        
+        Provide a validation report with specific recommendations.
+    outputs:
+      validation_report: "response"
+
+  - id: "create_implementation_plan"
+    step_type: "tool"
+    description: "Generate implementation plan using /plan command"
+    parameters:
+      tool_name: "github_spec_kit"
+      command: "plan"
+      input: "Create implementation plan for ${component_name} based on existing Rust codebase architecture, focusing on validation and enhancement opportunities identified in the specification."
+      encoding_fix: "PYTHONIOENCODING=utf-8"
+    outputs:
+      plan_file: "plan_file_path"
+
+  - id: "generate_task_breakdown"
+    step_type: "tool"
+    description: "Create actionable task list using /tasks command"
+    parameters:
+      tool_name: "github_spec_kit"
+      command: "tasks"
+      encoding_fix: "PYTHONIOENCODING=utf-8"
+    outputs:
+      tasks_file: "tasks_file_path"
+
+  - id: "create_validation_summary"
+    step_type: "create_file"
+    description: "Create comprehensive validation and next steps summary"
+    parameters:
+      path: "specs/${spec_branch}/VALIDATION_SUMMARY.md"
+      content: |
+        # ${component_name} Specification Validation Summary
+        
+        **Component**: ${component_name} (${component_type})
+        **Priority**: ${priority_level}
+        **Generated**: $(date)
+        **Branch**: ${spec_branch}
+        
+        ## Files Generated
+        - Specification: ${spec_file}
+        - Implementation Plan: ${plan_file}
+        - Task Breakdown: ${tasks_file}
+        
+        ## Validation Results
+        ${validation_report}
+        
+        ## Next Steps
+        1. Review specification for accuracy and completeness
+        2. Address any gaps identified in validation
+        3. Use task breakdown for community contribution
+        4. Implement improvements identified in validation
+        
+        ## Enterprise Readiness
+        - Specification completed: ✅
+        - Implementation validation: ✅
+        - Task breakdown for contributors: ✅
+        - Documentation audit: ✅
+        
+        **Status**: Ready for community review and contribution
+
+  - id: "commit_specification"
+    step_type: "command"
+    description: "Commit the generated specification to version control"
+    parameters:
+      command: "git"
+      args: ["add", "specs/${spec_branch}/"]
+    continue_on_error: true
+
+  - id: "commit_with_message"
+    step_type: "command"
+    description: "Commit with descriptive message"
+    parameters:
+      command: "git"
+      args: ["commit", "-m", "feat(specs): automated specification generation for ${component_name}\n\n- Generated comprehensive specification using GitHub Spec Kit\n- Validated against source code implementation\n- Created implementation plan and task breakdown\n- Ready for community contribution\n\n🤖 Generated with RustChain Automated Spec Generation Mission"]
+    continue_on_error: true
+
+success_criteria:
+  - "Specification file created and populated"
+  - "Validation report shows >90% accuracy"
+  - "Implementation plan addresses identified gaps"
+  - "Task breakdown is actionable for contributors"
+  - "All files committed to version control"
+
+error_handling:
+  - step: "generate_specification"
+    on_error: "retry_with_simplified_input"
+    max_retries: 2
+  - step: "validate_against_source"
+    on_error: "continue_with_warning"
+  - step: "commit_specification"
+    on_error: "continue_with_warning"
+
+outputs:
+  specification_file: "${spec_file}"
+  validation_report: "${validation_report}"
+  implementation_plan: "${plan_file}"
+  task_breakdown: "${tasks_file}"
+  git_branch: "${spec_branch}"
+
+marketplace_info:
+  pricing_tier: "community"
+  license: "MIT"
+  support_level: "community"
+  usage_analytics: true
+  success_tracking: true

@@ -1,0 +1,509 @@
+---
+apiVersion: specify.dev/v1
+kind: Specification
+metadata:
+  name: RustChain LLM Provider Interface
+  version: "1.0"
+  description: |
+    Universal interface specification for RustChain LLM providers, ensuring
+    consistent behavior across all language model integrations including
+    OpenAI, Anthropic, Ollama, Shimmy, AWS Bedrock, Azure OpenAI, and Google Gemini.
+  
+  tags:
+    - llm-provider
+    - language-models
+    - ai-integration
+    - universal-interface
+    - rust
+  
+  generated:
+    timestamp: "2025-09-17T16:30:00Z"
+    tool: "Manual Specification Generation"
+    source: "src/llm/mod.rs"
+
+spec:
+  overview: |
+    The LLM Provider Interface defines a universal contract for integrating
+    language model providers into RustChain. This interface ensures that all
+    providers expose identical capabilities while allowing for provider-specific
+    optimizations and features.
+
+  components:
+    - name: LLMProvider
+      type: trait
+      description: "Universal trait for all language model providers"
+      
+    - name: LLMRequest
+      type: data-structure
+      description: "Universal request format for language model operations"
+      
+    - name: LLMResponse
+      type: data-structure
+      description: "Universal response format from language model operations"
+      
+    - name: ModelInfo
+      type: data-structure
+      description: "Metadata about available models and their capabilities"
+
+  interfaces:
+    llm_provider:
+      description: "Universal LLM provider interface"
+      trait: "LLMProvider"
+      requirements:
+        - "Must be Send + Sync for thread safety"
+        - "All methods are async for non-blocking operation"
+        - "Must handle errors gracefully with Result types"
+        
+      methods:
+        - name: complete
+          description: "Generate completion for given request"
+          signature: "async fn complete(&self, request: LLMRequest) -> Result<LLMResponse>"
+          inputs:
+            - name: request
+              type: LLMRequest
+              required: true
+              description: "Request with messages, model preferences, and parameters"
+          outputs:
+            - name: response
+              type: Result<LLMResponse>
+              description: "Complete response with content, usage, and metadata"
+          behavior: |
+            1. Validate request parameters
+            2. Convert to provider-specific format
+            3. Make API call to language model
+            4. Parse response and extract content
+            5. Convert back to universal LLMResponse format
+            6. Return response with usage statistics
+
+        - name: stream
+          description: "Generate streaming completion for given request"
+          signature: |
+            async fn stream(&self, request: LLMRequest) -> 
+              Result<Box<dyn futures::Stream<Item = Result<LLMResponse>> + Send + Unpin>>
+          inputs:
+            - name: request
+              type: LLMRequest
+              required: true
+              description: "Request configured for streaming response"
+          outputs:
+            - name: stream
+              type: Result<Stream<LLMResponse>>
+              description: "Stream of partial responses"
+          behavior: |
+            1. Validate streaming is supported
+            2. Configure request for streaming mode
+            3. Establish streaming connection
+            4. Parse partial responses as they arrive
+            5. Convert each chunk to LLMResponse format
+            6. Handle stream completion and errors
+
+        - name: list_models
+          description: "Get available models for this provider"
+          signature: "async fn list_models(&self) -> Result<Vec<ModelInfo>>"
+          inputs: []
+          outputs:
+            - name: models
+              type: Result<Vec<ModelInfo>>
+              description: "List of available models with capabilities"
+          behavior: |
+            1. Query provider API for available models
+            2. Parse model metadata and capabilities
+            3. Convert to ModelInfo format
+            4. Return comprehensive model list
+
+        - name: provider_name
+          description: "Get human-readable provider name"
+          signature: "fn provider_name(&self) -> &str"
+          inputs: []
+          outputs:
+            - name: name
+              type: "&str"
+              description: "Provider name (e.g., 'OpenAI', 'Anthropic', 'Ollama')"
+          behavior: "Return static provider identification string"
+
+        - name: supports_streaming
+          description: "Check if provider supports streaming responses"
+          signature: "fn supports_streaming(&self) -> bool"
+          inputs: []
+          outputs:
+            - name: supports
+              type: bool
+              description: "True if streaming is supported"
+          behavior: "Return provider streaming capability"
+
+        - name: supports_tools
+          description: "Check if provider supports tool/function calling"
+          signature: "fn supports_tools(&self) -> bool"
+          inputs: []
+          outputs:
+            - name: supports
+              type: bool
+              description: "True if tools/functions are supported"
+          behavior: "Return provider tool calling capability"
+
+  data_structures:
+    LLMRequest:
+      description: "Universal request format for all LLM providers"
+      properties:
+        messages:
+          type: Vec<ChatMessage>
+          required: true
+          description: "Conversation messages with roles and content"
+          
+        model:
+          type: Option<String>
+          required: false
+          description: "Specific model to use (uses provider default if None)"
+          
+        temperature:
+          type: Option<f32>
+          required: false
+          description: "Sampling temperature (0.0-2.0, provider-specific ranges)"
+          constraints:
+            - "Must be >= 0.0"
+            - "Provider-specific maximum (typically 2.0)"
+            
+        max_tokens:
+          type: Option<u32>
+          required: false
+          description: "Maximum tokens in response"
+          constraints:
+            - "Must be > 0"
+            - "Limited by model context length"
+            
+        stream:
+          type: bool
+          required: true
+          description: "Whether to return streaming response"
+          default: false
+          
+        tools:
+          type: Option<Vec<ToolDefinition>>
+          required: false
+          description: "Available tools for function calling"
+          
+        metadata:
+          type: HashMap<String, serde_json::Value>
+          required: true
+          description: "Provider-specific metadata and options"
+
+    ChatMessage:
+      description: "Individual message in conversation"
+      properties:
+        role:
+          type: MessageRole
+          required: true
+          description: "Message role (System, User, Assistant, Tool)"
+          
+        content:
+          type: String
+          required: true
+          description: "Message content text"
+          
+        name:
+          type: Option<String>
+          required: false
+          description: "Optional name for the message sender"
+          
+        tool_calls:
+          type: Option<Vec<ToolCall>>
+          required: false
+          description: "Tool calls made by assistant"
+          
+        tool_call_id:
+          type: Option<String>
+          required: false
+          description: "ID of tool call this message responds to"
+
+    LLMResponse:
+      description: "Universal response format from all LLM providers"
+      properties:
+        content:
+          type: String
+          required: true
+          description: "Generated text content"
+          
+        role:
+          type: MessageRole
+          required: true
+          description: "Response role (typically Assistant)"
+          
+        model:
+          type: String
+          required: true
+          description: "Actual model that generated the response"
+          
+        usage:
+          type: TokenUsage
+          required: true
+          description: "Token consumption statistics"
+          
+        tool_calls:
+          type: Option<Vec<ToolCall>>
+          required: false
+          description: "Tool calls requested by the model"
+          
+        finish_reason:
+          type: FinishReason
+          required: true
+          description: "Reason why generation stopped"
+          
+        metadata:
+          type: HashMap<String, serde_json::Value>
+          required: true
+          description: "Provider-specific response metadata"
+
+    ModelInfo:
+      description: "Metadata about available language models"
+      properties:
+        id:
+          type: String
+          required: true
+          description: "Unique model identifier"
+          
+        name:
+          type: String
+          required: true
+          description: "Human-readable model name"
+          
+        provider:
+          type: String
+          required: true
+          description: "Provider name"
+          
+        context_length:
+          type: u32
+          required: true
+          description: "Maximum context window in tokens"
+          
+        max_output_tokens:
+          type: u32
+          required: true
+          description: "Maximum output tokens per request"
+          
+        supports_tools:
+          type: bool
+          required: true
+          description: "Whether model supports function calling"
+          
+        supports_streaming:
+          type: bool
+          required: true
+          description: "Whether model supports streaming responses"
+          
+        cost_per_input_token:
+          type: Option<f64>
+          required: false
+          description: "Cost per input token in USD"
+          
+        cost_per_output_token:
+          type: Option<f64>
+          required: false
+          description: "Cost per output token in USD"
+
+  enumerations:
+    MessageRole:
+      description: "Role types for conversation messages"
+      values:
+        System: "System instruction or context"
+        User: "User input or question"
+        Assistant: "AI assistant response"
+        Tool: "Tool execution result"
+      serialization: "lowercase string representation"
+
+    FinishReason:
+      description: "Reason why response generation stopped"
+      values:
+        Stop: "Natural completion at end of response"
+        Length: "Maximum token limit reached"
+        ToolCalls: "Model requested tool/function calls"
+        ContentFilter: "Content was filtered by safety systems"
+        Error: "Error occurred during generation"
+      serialization: "lowercase string representation"
+
+  error_handling:
+    description: "Standardized error handling across all providers"
+    error_types:
+      - AuthenticationError: "Invalid API key or authentication failure"
+      - RateLimitError: "Request rate limit exceeded"
+      - QuotaExceededError: "Usage quota or credits exhausted"
+      - ModelNotFoundError: "Requested model not available"
+      - InvalidRequestError: "Malformed request parameters"
+      - ContentFilterError: "Request content rejected by safety filters"
+      - NetworkError: "Network connectivity or timeout issues"
+      - ServiceUnavailableError: "Provider service temporarily unavailable"
+      - UnknownError: "Unexpected provider-specific error"
+
+    error_mapping:
+      description: "How provider-specific errors map to universal errors"
+      requirements:
+        - "All providers must map errors to standard types"
+        - "Include original error details in error context"
+        - "Provide actionable error messages where possible"
+        - "Maintain error chain for debugging"
+
+  authentication:
+    description: "Authentication patterns across providers"
+    methods:
+      bearer_token:
+        description: "Bearer token in Authorization header"
+        providers: ["OpenAI", "Azure OpenAI"]
+        format: "Bearer {token}"
+        
+      api_key_header:
+        description: "API key in custom header"
+        providers: ["Anthropic"]
+        format: "x-api-key: {key}"
+        
+      no_authentication:
+        description: "No authentication required"
+        providers: ["Ollama", "Shimmy"]
+        format: "None"
+        
+      aws_signature:
+        description: "AWS Signature Version 4"
+        providers: ["AWS Bedrock"]
+        format: "AWS4-HMAC-SHA256 Credential=..."
+
+  provider_capabilities:
+    description: "Capability matrix for implemented providers"
+    matrix:
+      OpenAI:
+        streaming: true
+        tools: true
+        models: ["gpt-4", "gpt-4-turbo", "gpt-3.5-turbo"]
+        authentication: "bearer_token"
+        
+      Anthropic:
+        streaming: false
+        tools: false
+        models: ["claude-3-opus", "claude-3-sonnet", "claude-3-haiku"]
+        authentication: "api_key_header"
+        
+      Ollama:
+        streaming: true
+        tools: false
+        models: ["llama2", "mistral", "phi3", "starcoder2"]
+        authentication: "no_authentication"
+        
+      Shimmy:
+        streaming: false
+        tools: false
+        models: ["phi3-mini", "starcoder2-3b", "qwen2-0.5b"]
+        authentication: "no_authentication"
+
+examples:
+  basic_completion:
+    description: "Simple text completion request"
+    rust: |
+      use rustchain::llm::{LLMProvider, LLMRequest, ChatMessage, MessageRole};
+      
+      async fn example_completion(provider: Box<dyn LLMProvider>) -> anyhow::Result<()> {
+          let request = LLMRequest {
+              messages: vec![
+                  ChatMessage {
+                      role: MessageRole::User,
+                      content: "What is Rust?".to_string(),
+                      name: None,
+                      tool_calls: None,
+                      tool_call_id: None,
+                  }
+              ],
+              model: None, // Use provider default
+              temperature: Some(0.7),
+              max_tokens: Some(150),
+              stream: false,
+              tools: None,
+              metadata: std::collections::HashMap::new(),
+          };
+          
+          let response = provider.complete(request).await?;
+          println!("Response: {}", response.content);
+          Ok(())
+      }
+
+  streaming_completion:
+    description: "Streaming response with real-time processing"
+    rust: |
+      use futures::StreamExt;
+      
+      async fn example_streaming(provider: Box<dyn LLMProvider>) -> anyhow::Result<()> {
+          let request = LLMRequest {
+              messages: vec![/* ... */],
+              stream: true,
+              // ... other fields
+          };
+          
+          let mut stream = provider.stream(request).await?;
+          while let Some(chunk) = stream.next().await {
+              match chunk {
+                  Ok(response) => print!("{}", response.content),
+                  Err(e) => eprintln!("Stream error: {}", e),
+              }
+          }
+          Ok(())
+      }
+
+  tool_calling:
+    description: "Function calling with tool definitions"
+    rust: |
+      use rustchain::llm::{ToolDefinition, ToolCall, FunctionCall};
+      
+      async fn example_tools(provider: Box<dyn LLMProvider>) -> anyhow::Result<()> {
+          if !provider.supports_tools() {
+              return Err(anyhow::anyhow!("Provider doesn't support tools"));
+          }
+          
+          let request = LLMRequest {
+              messages: vec![/* ... */],
+              tools: Some(vec![
+                  ToolDefinition {
+                      name: "get_weather".to_string(),
+                      description: "Get current weather for a location".to_string(),
+                      parameters: serde_json::json!({
+                          "type": "object",
+                          "properties": {
+                              "location": {"type": "string"}
+                          },
+                          "required": ["location"]
+                      }),
+                  }
+              ]),
+              // ... other fields
+          };
+          
+          let response = provider.complete(request).await?;
+          if let Some(tool_calls) = response.tool_calls {
+              for call in tool_calls {
+                  println!("Tool call: {}", call.function.name);
+              }
+          }
+          Ok(())
+      }
+
+compliance:
+  standards:
+    - "Rust API Guidelines"
+    - "OpenAI API compatibility"
+    - "Async/await best practices"
+    - "Error handling patterns"
+  
+  safety:
+    - "Content filtering integration"
+    - "Rate limiting respect"
+    - "Secure credential handling"
+    - "Input validation and sanitization"
+    
+  performance:
+    - "Async operations for non-blocking execution"
+    - "Connection pooling where supported"
+    - "Efficient streaming implementations"
+    - "Memory-efficient response processing"
+
+changelog:
+  v1.0:
+    - "Initial universal interface specification"
+    - "Support for 6 provider types"
+    - "Comprehensive error handling"
+    - "Tool calling capability framework"
+    - "Streaming response support"

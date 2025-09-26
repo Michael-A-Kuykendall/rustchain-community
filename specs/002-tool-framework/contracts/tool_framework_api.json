@@ -1,0 +1,1440 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "RustChain Tool Framework API",
+    "description": "Comprehensive API specification for tool registration, execution, security, and marketplace operations",
+    "version": "1.0.0",
+    "contact": {
+      "name": "RustChain Community",
+      "url": "https://github.com/rustchain-community"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.rustchain.io/v1",
+      "description": "Production API"
+    },
+    {
+      "url": "http://localhost:8080/v1",
+      "description": "Local development"
+    }
+  ],
+  "paths": {
+    "/tools": {
+      "get": {
+        "summary": "Discover tools",
+        "description": "Search and filter available tools in the registry",
+        "operationId": "discoverTools",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "description": "Search query for tool discovery",
+            "schema": {
+              "type": "string",
+              "example": "file operations"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by tool category",
+            "schema": {
+              "$ref": "#/components/schemas/ToolCategory"
+            }
+          },
+          {
+            "name": "security_level",
+            "in": "query",
+            "description": "Filter by security level",
+            "schema": {
+              "$ref": "#/components/schemas/SecurityLevel"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of results",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool discovery results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolDiscoveryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      },
+      "post": {
+        "summary": "Register new tool",
+        "description": "Register a new tool in the framework",
+        "operationId": "registerTool",
+        "requestBody": {
+          "description": "Tool registration data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToolRegistration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tool registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolRegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        }
+      }
+    },
+    "/tools/{toolId}": {
+      "get": {
+        "summary": "Get tool details",
+        "description": "Retrieve detailed information about a specific tool",
+        "operationId": "getTool",
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "description": "Unique tool identifier",
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Unregister tool",
+        "description": "Remove a tool from the registry",
+        "operationId": "unregisterTool",
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "description": "Unique tool identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Tool unregistered successfully"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          }
+        }
+      }
+    },
+    "/tools/{toolId}/execute": {
+      "post": {
+        "summary": "Execute tool",
+        "description": "Execute a tool with specified parameters",
+        "operationId": "executeTool",
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "description": "Tool identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Tool execution request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToolExecutionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool execution result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolExecutionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "408": {
+            "$ref": "#/components/responses/Timeout"
+          }
+        }
+      }
+    },
+    "/tools/{toolId}/schema": {
+      "get": {
+        "summary": "Get tool schema",
+        "description": "Retrieve parameter schema for a tool",
+        "operationId": "getToolSchema",
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "description": "Tool identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tool parameter schema",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToolSchema"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/tools/{toolId}/security": {
+      "get": {
+        "summary": "Get security report",
+        "description": "Retrieve security assessment for a tool",
+        "operationId": "getToolSecurity",
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "description": "Tool identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Security assessment report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecurityReport"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "post": {
+        "summary": "Run security scan",
+        "description": "Trigger security scan for a tool",
+        "operationId": "scanToolSecurity",
+        "parameters": [
+          {
+            "name": "toolId",
+            "in": "path",
+            "required": true,
+            "description": "Tool identifier",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Security scan initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecurityScanResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/marketplace/tools": {
+      "get": {
+        "summary": "Browse marketplace",
+        "description": "Browse tools available in the marketplace",
+        "operationId": "browseMarketplace",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by category",
+            "schema": {
+              "$ref": "#/components/schemas/ToolCategory"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria",
+            "schema": {
+              "type": "string",
+              "enum": ["popularity", "rating", "newest", "name"],
+              "default": "popularity"
+            }
+          },
+          {
+            "name": "featured",
+            "in": "query",
+            "description": "Show only featured tools",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Marketplace browse results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketplaceBrowseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Publish tool to marketplace",
+        "description": "Submit a tool for marketplace publication",
+        "operationId": "publishTool",
+        "requestBody": {
+          "description": "Marketplace publication request",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarketplacePublicationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Publication request submitted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/policies": {
+      "get": {
+        "summary": "List tool policies",
+        "description": "Retrieve active tool execution policies",
+        "operationId": "listPolicies",
+        "responses": {
+          "200": {
+            "description": "List of active policies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create tool policy",
+        "description": "Create a new tool execution policy",
+        "operationId": "createPolicy",
+        "requestBody": {
+          "description": "Policy definition",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PolicyDefinition"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Policy created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        }
+      }
+    },
+    "/audit/tools": {
+      "get": {
+        "summary": "Get tool audit logs",
+        "description": "Retrieve audit trail for tool operations",
+        "operationId": "getToolAuditLogs",
+        "parameters": [
+          {
+            "name": "tool_id",
+            "in": "query",
+            "description": "Filter by tool ID",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "from_date",
+            "in": "query",
+            "description": "Start date for audit log range",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to_date",
+            "in": "query",
+            "description": "End date for audit log range",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "event_type",
+            "in": "query",
+            "description": "Filter by event type",
+            "schema": {
+              "$ref": "#/components/schemas/AuditEventType"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audit log entries",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditLogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ToolCategory": {
+        "type": "string",
+        "enum": [
+          "file_operations",
+          "network_operations", 
+          "data_processing",
+          "ai_integration",
+          "system_commands",
+          "enterprise_integration",
+          "utility",
+          "custom"
+        ]
+      },
+      "SecurityLevel": {
+        "type": "string",
+        "enum": ["safe", "restricted", "privileged", "enterprise"]
+      },
+      "ToolDiscoveryResponse": {
+        "type": "object",
+        "properties": {
+          "tools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolMetadata"
+            }
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "query_time_ms": {
+            "type": "integer"
+          }
+        }
+      },
+      "ToolMetadata": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/ToolCategory"
+          },
+          "security_level": {
+            "$ref": "#/components/schemas/SecurityLevel"
+          },
+          "author": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "download_count": {
+            "type": "integer"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 5
+          }
+        }
+      },
+      "ToolRegistration": {
+        "type": "object",
+        "required": ["name", "description", "category", "schema", "implementation"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "category": {
+            "$ref": "#/components/schemas/ToolCategory"
+          },
+          "schema": {
+            "$ref": "#/components/schemas/ToolSchema"
+          },
+          "implementation": {
+            "type": "string",
+            "description": "Tool implementation code or reference"
+          },
+          "security_level": {
+            "$ref": "#/components/schemas/SecurityLevel"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "documentation": {
+            "type": "string"
+          },
+          "examples": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ToolExample"
+            }
+          }
+        }
+      },
+      "ToolRegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "tool_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["registered", "pending_review"]
+          },
+          "security_scan_id": {
+            "type": "string"
+          },
+          "validation_results": {
+            "$ref": "#/components/schemas/ValidationResults"
+          }
+        }
+      },
+      "ToolDetails": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ToolMetadata"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "$ref": "#/components/schemas/ToolSchema"
+              },
+              "security_report": {
+                "$ref": "#/components/schemas/SecurityReport"
+              },
+              "usage_statistics": {
+                "$ref": "#/components/schemas/UsageStatistics"
+              },
+              "reviews": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ToolReview"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ToolExecutionRequest": {
+        "type": "object",
+        "required": ["parameters"],
+        "properties": {
+          "parameters": {
+            "type": "object",
+            "description": "Tool-specific parameters"
+          },
+          "timeout_ms": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 300000,
+            "default": 30000
+          },
+          "continue_on_error": {
+            "type": "boolean",
+            "default": false
+          },
+          "execution_context": {
+            "$ref": "#/components/schemas/ExecutionContext"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      },
+      "ToolExecutionResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "output": {
+            "type": "object",
+            "description": "Tool execution output"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ToolError"
+          },
+          "execution_time_ms": {
+            "type": "integer"
+          },
+          "memory_usage_bytes": {
+            "type": "integer"
+          },
+          "audit_events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditEvent"
+            }
+          }
+        }
+      },
+      "ToolSchema": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "object"
+          },
+          "properties": {
+            "type": "object"
+          },
+          "required": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SecurityReport": {
+        "type": "object",
+        "properties": {
+          "overall_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "scan_date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "vulnerabilities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SecurityVulnerability"
+            }
+          },
+          "code_analysis": {
+            "$ref": "#/components/schemas/CodeAnalysis"
+          },
+          "compliance_status": {
+            "$ref": "#/components/schemas/ComplianceStatus"
+          }
+        }
+      },
+      "SecurityScanResponse": {
+        "type": "object",
+        "properties": {
+          "scan_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["initiated", "in_progress", "completed", "failed"]
+          },
+          "estimated_completion": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "MarketplaceBrowseResponse": {
+        "type": "object",
+        "properties": {
+          "tools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarketplaceToolEntry"
+            }
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryStats"
+            }
+          },
+          "featured_tools": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarketplaceToolEntry"
+            }
+          }
+        }
+      },
+      "MarketplacePublicationRequest": {
+        "type": "object",
+        "required": ["tool_id", "pricing_model"],
+        "properties": {
+          "tool_id": {
+            "type": "string"
+          },
+          "pricing_model": {
+            "$ref": "#/components/schemas/PricingModel"
+          },
+          "marketing_description": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "screenshots": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "demo_video": {
+            "type": "string",
+            "format": "uri"
+          },
+          "support_contact": {
+            "type": "string",
+            "format": "email"
+          }
+        }
+      },
+      "PolicyListResponse": {
+        "type": "object",
+        "properties": {
+          "policies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicySummary"
+            }
+          }
+        }
+      },
+      "PolicyDefinition": {
+        "type": "object",
+        "required": ["name", "rules"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/PolicyScope"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyRule"
+            }
+          },
+          "enforcement_level": {
+            "$ref": "#/components/schemas/EnforcementLevel"
+          }
+        }
+      },
+      "AuditLogResponse": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditEvent"
+            }
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "integrity_verified": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ToolError": {
+        "type": "object",
+        "properties": {
+          "error_type": {
+            "type": "string",
+            "enum": [
+              "validation_error",
+              "security_violation", 
+              "resource_exhaustion",
+              "timeout_error",
+              "internal_error",
+              "network_error",
+              "permission_denied"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object"
+          },
+          "retry_suggested": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ExecutionContext": {
+        "type": "object",
+        "properties": {
+          "variables": {
+            "type": "object"
+          },
+          "mission_id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          }
+        }
+      },
+      "AuditEvent": {
+        "type": "object",
+        "properties": {
+          "event_id": {
+            "type": "string"
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/AuditEventType"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tool_id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object"
+          },
+          "integrity_hash": {
+            "type": "string"
+          }
+        }
+      },
+      "AuditEventType": {
+        "type": "string",
+        "enum": [
+          "tool_registered",
+          "tool_executed", 
+          "tool_failed",
+          "security_violation",
+          "policy_violation",
+          "parameter_validation",
+          "resource_limit_exceeded"
+        ]
+      },
+      "ValidationResults": {
+        "type": "object",
+        "properties": {
+          "schema_valid": {
+            "type": "boolean"
+          },
+          "code_analysis": {
+            "type": "object"
+          },
+          "security_scan": {
+            "type": "object"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UsageStatistics": {
+        "type": "object",
+        "properties": {
+          "total_executions": {
+            "type": "integer"
+          },
+          "success_rate": {
+            "type": "number"
+          },
+          "average_execution_time": {
+            "type": "number"
+          },
+          "last_execution": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ToolReview": {
+        "type": "object",
+        "properties": {
+          "reviewer_id": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "comment": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verified_usage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ToolExample": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object"
+          },
+          "expected_output": {
+            "type": "object"
+          }
+        }
+      },
+      "SecurityVulnerability": {
+        "type": "object",
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "remediation": {
+            "type": "string"
+          }
+        }
+      },
+      "CodeAnalysis": {
+        "type": "object",
+        "properties": {
+          "unsafe_blocks": {
+            "type": "integer"
+          },
+          "system_calls": {
+            "type": "integer"
+          },
+          "network_access": {
+            "type": "boolean"
+          },
+          "file_access": {
+            "type": "boolean"
+          },
+          "complexity_score": {
+            "type": "number"
+          }
+        }
+      },
+      "ComplianceStatus": {
+        "type": "object",
+        "properties": {
+          "gdpr_compliant": {
+            "type": "boolean"
+          },
+          "sox_compliant": {
+            "type": "boolean"
+          },
+          "hipaa_compliant": {
+            "type": "boolean"
+          },
+          "pci_compliant": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MarketplaceToolEntry": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ToolMetadata"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pricing": {
+                "$ref": "#/components/schemas/PricingInfo"
+              },
+              "publisher": {
+                "$ref": "#/components/schemas/PublisherInfo"
+              },
+              "quality_score": {
+                "type": "number"
+              }
+            }
+          }
+        ]
+      },
+      "CategoryStats": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "$ref": "#/components/schemas/ToolCategory"
+          },
+          "tool_count": {
+            "type": "integer"
+          },
+          "average_rating": {
+            "type": "number"
+          }
+        }
+      },
+      "PricingModel": {
+        "type": "object",
+        "discriminator": {
+          "propertyName": "type"
+        },
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/FreePricing"
+          },
+          {
+            "$ref": "#/components/schemas/OneTimePricing"
+          },
+          {
+            "$ref": "#/components/schemas/SubscriptionPricing"
+          },
+          {
+            "$ref": "#/components/schemas/PayPerUsePricing"
+          }
+        ]
+      },
+      "FreePricing": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "free"
+          }
+        }
+      },
+      "OneTimePricing": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "one_time"
+          },
+          "price": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "SubscriptionPricing": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "subscription"
+          },
+          "monthly_price": {
+            "type": "number"
+          },
+          "annual_price": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "PayPerUsePricing": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "pay_per_use"
+          },
+          "price_per_execution": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "PricingInfo": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/PricingModel"
+          },
+          "free_tier": {
+            "type": "boolean"
+          },
+          "trial_available": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PublisherInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "reputation_score": {
+            "type": "number"
+          }
+        }
+      },
+      "PolicySummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive", "draft"]
+          },
+          "scope": {
+            "$ref": "#/components/schemas/PolicyScope"
+          },
+          "enforcement_level": {
+            "$ref": "#/components/schemas/EnforcementLevel"
+          }
+        }
+      },
+      "PolicyScope": {
+        "type": "string",
+        "enum": ["global", "tool", "category", "user", "mission"]
+      },
+      "PolicyRule": {
+        "type": "object",
+        "properties": {
+          "condition": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "enum": ["allow", "deny", "warn"]
+          },
+          "parameters": {
+            "type": "object"
+          }
+        }
+      },
+      "EnforcementLevel": {
+        "type": "string",
+        "enum": ["advisory", "warning", "blocking", "emergency"]
+      },
+      "PolicyResponse": {
+        "type": "object",
+        "properties": {
+          "policy_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "validation_results": {
+            "type": "object"
+          }
+        }
+      },
+      "PublicationResponse": {
+        "type": "object",
+        "properties": {
+          "submission_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["submitted", "under_review", "approved", "rejected"]
+          },
+          "estimated_review_time": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                },
+                "details": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Access forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                },
+                "policy_violation": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "Resource conflict",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                },
+                "existing_resource": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Timeout": {
+        "description": "Request timeout",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string"
+                },
+                "timeout_ms": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    },
+    {
+      "BearerAuth": []
+    }
+  ]
+}

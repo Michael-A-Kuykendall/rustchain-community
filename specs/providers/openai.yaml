@@ -1,0 +1,315 @@
+---
+apiVersion: specify.dev/v1
+kind: ProviderSpecification
+metadata:
+  name: OpenAI LLM Provider
+  version: "1.0"
+  description: |
+    OpenAI API provider implementation for RustChain, supporting GPT models
+    with streaming, function calling, and comprehensive error handling.
+  
+  tags:
+    - openai
+    - gpt
+    - cloud-llm
+    - streaming
+    - function-calling
+  
+  provider_info:
+    name: "OpenAI"
+    type: "cloud"
+    base_url: "https://api.openai.com/v1"
+    authentication: "bearer_token"
+
+spec:
+  overview: |
+    The OpenAI provider integrates RustChain with OpenAI's GPT models through
+    their REST API. Supports all major GPT models, streaming responses, function
+    calling, and comprehensive usage tracking.
+
+  capabilities:
+    streaming: true
+    tools: true
+    multimodal: true
+    embeddings: false
+    fine_tuning: false
+
+  authentication:
+    method: "bearer_token"
+    header: "Authorization"
+    format: "Bearer {api_key}"
+    configuration:
+      api_key:
+        type: "environment_variable"
+        name: "OPENAI_API_KEY"
+        required: true
+        description: "OpenAI API key from platform.openai.com"
+
+  models:
+    gpt-4:
+      id: "gpt-4"
+      name: "GPT-4"
+      context_length: 8192
+      max_output_tokens: 4096
+      supports_tools: true
+      supports_streaming: true
+      cost_per_input_token: 0.00003
+      cost_per_output_token: 0.00006
+      
+    gpt-4-turbo:
+      id: "gpt-4-turbo"
+      name: "GPT-4 Turbo"
+      context_length: 128000
+      max_output_tokens: 4096
+      supports_tools: true
+      supports_streaming: true
+      cost_per_input_token: 0.00001
+      cost_per_output_token: 0.00003
+      
+    gpt-3.5-turbo:
+      id: "gpt-3.5-turbo"
+      name: "GPT-3.5 Turbo"
+      context_length: 16384
+      max_output_tokens: 4096
+      supports_tools: true
+      supports_streaming: true
+      cost_per_input_token: 0.0000005
+      cost_per_output_token: 0.0000015
+
+  api_endpoints:
+    chat_completions:
+      url: "/chat/completions"
+      method: "POST"
+      description: "Generate chat completions"
+      
+    models:
+      url: "/models"
+      method: "GET"
+      description: "List available models"
+
+  request_format:
+    description: "OpenAI chat completions API format"
+    properties:
+      model:
+        type: "string"
+        required: true
+        description: "Model identifier"
+        
+      messages:
+        type: "array"
+        required: true
+        description: "Array of message objects"
+        items:
+          type: "object"
+          properties:
+            role:
+              type: "string"
+              enum: ["system", "user", "assistant", "tool"]
+            content:
+              type: "string"
+              description: "Message content"
+            name:
+              type: "string"
+              description: "Optional name"
+              
+      temperature:
+        type: "number"
+        minimum: 0
+        maximum: 2
+        description: "Sampling temperature"
+        
+      max_tokens:
+        type: "integer"
+        minimum: 1
+        description: "Maximum tokens in response"
+        
+      stream:
+        type: "boolean"
+        description: "Enable streaming response"
+        
+      tools:
+        type: "array"
+        description: "Available function tools"
+        items:
+          type: "object"
+          properties:
+            type:
+              type: "string"
+              enum: ["function"]
+            function:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                description:
+                  type: "string"
+                parameters:
+                  type: "object"
+
+  response_format:
+    description: "OpenAI API response format"
+    properties:
+      id:
+        type: "string"
+        description: "Response identifier"
+        
+      object:
+        type: "string"
+        description: "Object type"
+        
+      created:
+        type: "integer"
+        description: "Unix timestamp"
+        
+      model:
+        type: "string"
+        description: "Model used for generation"
+        
+      choices:
+        type: "array"
+        description: "Response choices"
+        items:
+          type: "object"
+          properties:
+            index:
+              type: "integer"
+            message:
+              type: "object"
+              properties:
+                role:
+                  type: "string"
+                content:
+                  type: "string"
+                tool_calls:
+                  type: "array"
+            finish_reason:
+              type: "string"
+              enum: ["stop", "length", "tool_calls", "content_filter"]
+              
+      usage:
+        type: "object"
+        properties:
+          prompt_tokens:
+            type: "integer"
+          completion_tokens:
+            type: "integer"
+          total_tokens:
+            type: "integer"
+
+  error_handling:
+    description: "OpenAI-specific error handling and mapping"
+    error_codes:
+      401:
+        type: "AuthenticationError"
+        message: "Invalid API key"
+        
+      429:
+        type: "RateLimitError"
+        message: "Rate limit exceeded"
+        
+      400:
+        type: "InvalidRequestError" 
+        message: "Bad request parameters"
+        
+      500:
+        type: "ServiceUnavailableError"
+        message: "OpenAI service error"
+
+  rate_limits:
+    description: "OpenAI API rate limiting"
+    limits:
+      gpt-4:
+        requests_per_minute: 10000
+        tokens_per_minute: 300000
+        
+      gpt-4-turbo:
+        requests_per_minute: 10000
+        tokens_per_minute: 2000000
+        
+      gpt-3.5-turbo:
+        requests_per_minute: 10000
+        tokens_per_minute: 2000000
+
+  configuration:
+    description: "Provider configuration options"
+    properties:
+      api_key:
+        type: "string"
+        required: true
+        description: "OpenAI API key"
+        
+      base_url:
+        type: "string"
+        required: false
+        default: "https://api.openai.com/v1"
+        description: "API base URL"
+        
+      organization:
+        type: "string"
+        required: false
+        description: "OpenAI organization ID"
+        
+      default_model:
+        type: "string"
+        required: false
+        default: "gpt-4"
+        description: "Default model for requests"
+        
+      timeout_seconds:
+        type: "integer"
+        required: false
+        default: 60
+        description: "Request timeout"
+
+examples:
+  basic_completion:
+    description: "Simple completion request"
+    request:
+      model: "gpt-4"
+      messages:
+        - role: "user"
+          content: "Hello, world!"
+      temperature: 0.7
+      max_tokens: 150
+      
+  function_calling:
+    description: "Function calling example"
+    request:
+      model: "gpt-4"
+      messages:
+        - role: "user"
+          content: "What's the weather in New York?"
+      tools:
+        - type: "function"
+          function:
+            name: "get_weather"
+            description: "Get current weather"
+            parameters:
+              type: "object"
+              properties:
+                location:
+                  type: "string"
+              required: ["location"]
+
+compliance:
+  standards:
+    - "OpenAI API v1 compatibility"
+    - "OAuth 2.0 Bearer token authentication"
+    - "JSON API format"
+  
+  privacy:
+    - "Data sent to OpenAI servers"
+    - "Subject to OpenAI privacy policy"
+    - "Logs requests for abuse monitoring"
+  
+  security:
+    - "HTTPS only connections"
+    - "API key-based authentication"
+    - "Rate limiting enforcement"
+
+changelog:
+  v1.0:
+    - "Initial OpenAI provider specification"
+    - "Support for GPT-4, GPT-4 Turbo, GPT-3.5 Turbo"
+    - "Function calling capability"
+    - "Streaming response support"

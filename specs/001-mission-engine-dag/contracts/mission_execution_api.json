@@ -1,0 +1,560 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Mission Engine API",
+    "description": "DAG-based mission execution API for RustChain",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/missions/execute": {
+      "post": {
+        "summary": "Execute a mission",
+        "description": "Execute a complete mission with DAG dependency resolution",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mission executed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissionResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid mission definition",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Policy violation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolicyViolation"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Execution failure",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecutionError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/missions/validate": {
+      "post": {
+        "summary": "Validate mission definition",
+        "description": "Validate mission structure, dependencies, and policies",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Mission"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mission is valid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Mission is invalid",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/steps/execute": {
+      "post": {
+        "summary": "Execute individual step",
+        "description": "Execute a single mission step with context",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StepExecutionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Step executed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StepResult"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid step definition",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Step execution timeout",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TimeoutError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audit/events": {
+      "get": {
+        "summary": "Retrieve audit events",
+        "description": "Get audit trail for mission execution",
+        "parameters": [
+          {
+            "name": "mission_id",
+            "in": "query",
+            "description": "Mission ID to filter events",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "description": "Start time for event range",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "description": "End time for event range",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audit events retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditEventList"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Mission": {
+        "type": "object",
+        "required": ["version", "name", "steps"],
+        "properties": {
+          "version": {
+            "type": "string",
+            "description": "Mission schema version"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable mission name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Optional mission description"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MissionStep"
+            },
+            "minItems": 1
+          },
+          "config": {
+            "$ref": "#/components/schemas/MissionConfig"
+          }
+        }
+      },
+      "MissionStep": {
+        "type": "object",
+        "required": ["id", "name", "step_type", "parameters"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique step identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable step name"
+          },
+          "step_type": {
+            "type": "string",
+            "enum": [
+              "create_file", "edit_file", "delete_file", "copy_file", "move_file",
+              "read_file", "list_directory", "file_search", "parse_json", "parse_yaml",
+              "parse_xml", "validate_schema", "csv_process", "compile_code", "run_tests",
+              "format_code", "lint_code", "extract_functions", "generate_docs",
+              "git_commit", "git_branch", "git_merge", "git_status", "git_diff",
+              "process_start", "process_kill", "monitor_resources", "service_health",
+              "compress", "sql_query", "redis_set", "redis_get", "db_backup",
+              "db_migrate", "websocket_connect", "ftp_upload", "ftp_download",
+              "ssh_execute", "ping_host", "generate_embedding", "similarity_search",
+              "model_inference", "command", "http", "noop", "llm", "tool",
+              "rag_query", "rag_add", "chain", "agent"
+            ]
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Step IDs this step depends on"
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Step-specific timeout override"
+          },
+          "continue_on_error": {
+            "type": "boolean",
+            "description": "Whether to continue if this step fails"
+          },
+          "parameters": {
+            "type": "object",
+            "description": "Step-specific parameters"
+          }
+        }
+      },
+      "MissionConfig": {
+        "type": "object",
+        "properties": {
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Default timeout for all steps"
+          },
+          "fail_fast": {
+            "type": "boolean",
+            "default": true,
+            "description": "Stop execution on first failure"
+          },
+          "parallel_limit": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum concurrent step executions"
+          }
+        }
+      },
+      "MissionResult": {
+        "type": "object",
+        "required": ["mission_id", "overall_status", "start_time", "end_time", "step_results"],
+        "properties": {
+          "mission_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "overall_status": {
+            "type": "string",
+            "enum": ["Success", "Partial", "Failed"]
+          },
+          "start_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "total_duration_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "steps_completed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "steps_failed": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "steps_skipped": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "step_results": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/StepResult"
+            }
+          }
+        }
+      },
+      "StepResult": {
+        "type": "object",
+        "required": ["step_id", "status", "duration_ms"],
+        "properties": {
+          "step_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Completed", "Failed", "Skipped"]
+          },
+          "output": {
+            "type": "object",
+            "description": "Step output data"
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message for failed steps"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "StepExecutionRequest": {
+        "type": "object",
+        "required": ["step", "context"],
+        "properties": {
+          "step": {
+            "$ref": "#/components/schemas/MissionStep"
+          },
+          "context": {
+            "$ref": "#/components/schemas/ExecutionContext"
+          }
+        }
+      },
+      "ExecutionContext": {
+        "type": "object",
+        "properties": {
+          "variables": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "step_outputs": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "ValidationResult": {
+        "type": "object",
+        "required": ["valid", "execution_order"],
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          },
+          "execution_order": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AuditEventList": {
+        "type": "object",
+        "required": ["events", "total_count"],
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditEvent"
+            }
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "integrity_verified": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AuditEvent": {
+        "type": "object",
+        "required": ["event_id", "timestamp", "event_type", "actor"],
+        "properties": {
+          "event_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "event_type": {
+            "type": "string",
+            "enum": ["mission_start", "mission_complete", "step_start", "step_complete", "validation_failure", "policy_violation"]
+          },
+          "actor": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object"
+          },
+          "hash": {
+            "type": "string"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "object"
+          }
+        }
+      },
+      "PolicyViolation": {
+        "type": "object",
+        "required": ["violation_type", "policy", "message"],
+        "properties": {
+          "violation_type": {
+            "type": "string"
+          },
+          "policy": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "step_id": {
+            "type": "string"
+          }
+        }
+      },
+      "ExecutionError": {
+        "type": "object",
+        "required": ["error_type", "message"],
+        "properties": {
+          "error_type": {
+            "type": "string",
+            "enum": ["timeout", "dependency_failure", "resource_exhaustion", "security_violation"]
+          },
+          "message": {
+            "type": "string"
+          },
+          "step_id": {
+            "type": "string"
+          },
+          "context": {
+            "type": "object"
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "required": ["validation_errors"],
+        "properties": {
+          "validation_errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TimeoutError": {
+        "type": "object",
+        "required": ["message", "timeout_seconds"],
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "timeout_seconds": {
+            "type": "integer"
+          },
+          "step_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

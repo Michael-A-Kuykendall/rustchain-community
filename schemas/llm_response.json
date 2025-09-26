@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rustchain.dev/schemas/llm_response.json",
+  "title": "LLMResponse",
+  "description": "Universal response format from RustChain LLM providers",
+  "type": "object",
+  "properties": {
+    "content": {
+      "type": "string",
+      "description": "Generated text content"
+    },
+    "role": {
+      "$ref": "#/$defs/MessageRole",
+      "description": "Always 'assistant' for LLM responses"
+    },
+    "model": {
+      "type": "string",
+      "description": "Actual model used for generation",
+      "minLength": 1
+    },
+    "usage": {
+      "$ref": "#/$defs/TokenUsage"
+    },
+    "tool_calls": {
+      "type": "array",
+      "description": "Tools called by the assistant",
+      "items": {
+        "$ref": "#/$defs/ToolCall"
+      }
+    },
+    "finish_reason": {
+      "$ref": "#/$defs/FinishReason"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Provider-specific response metadata",
+      "additionalProperties": true
+    }
+  },
+  "required": ["content", "role", "model", "usage", "finish_reason"],
+  "additionalProperties": false,
+  
+  "$defs": {
+    "MessageRole": {
+      "type": "string",
+      "description": "Role of the message sender",
+      "enum": ["system", "user", "assistant", "tool"],
+      "const": "assistant"
+    },
+    
+    "TokenUsage": {
+      "type": "object",
+      "description": "Token usage statistics",
+      "properties": {
+        "prompt_tokens": {
+          "type": "integer",
+          "description": "Tokens used in the prompt",
+          "minimum": 0
+        },
+        "completion_tokens": {
+          "type": "integer", 
+          "description": "Tokens generated in the response",
+          "minimum": 0
+        },
+        "total_tokens": {
+          "type": "integer",
+          "description": "Total tokens used (prompt + completion)",
+          "minimum": 0
+        }
+      },
+      "required": ["prompt_tokens", "completion_tokens", "total_tokens"],
+      "additionalProperties": false
+    },
+    
+    "FinishReason": {
+      "type": "string",
+      "description": "Reason why generation stopped",
+      "enum": ["stop", "length", "tool_calls", "content_filter", "error"]
+    },
+    
+    "ToolCall": {
+      "type": "object",
+      "description": "A specific tool invocation",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for this tool call",
+          "minLength": 1
+        },
+        "function": {
+          "$ref": "#/$defs/FunctionCall"
+        }
+      },
+      "required": ["id", "function"],
+      "additionalProperties": false
+    },
+    
+    "FunctionCall": {
+      "type": "object",
+      "description": "Function call details",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Function name to call",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9_]*$"
+        },
+        "arguments": {
+          "type": "string",
+          "description": "JSON string of function arguments",
+          "minLength": 1
+        }
+      },
+      "required": ["name", "arguments"],
+      "additionalProperties": false
+    }
+  }
+}

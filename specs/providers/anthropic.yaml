@@ -1,0 +1,283 @@
+---
+apiVersion: specify.dev/v1
+kind: ProviderSpecification
+metadata:
+  name: Anthropic LLM Provider
+  version: "1.0"
+  description: |
+    Anthropic Claude API provider implementation for RustChain, supporting
+    Claude 3 model family with high-context capabilities.
+  
+  tags:
+    - anthropic
+    - claude
+    - cloud-llm
+    - high-context
+  
+  provider_info:
+    name: "Anthropic"
+    type: "cloud"
+    base_url: "https://api.anthropic.com/v1"
+    authentication: "api_key_header"
+
+spec:
+  overview: |
+    The Anthropic provider integrates RustChain with Claude models through
+    the Anthropic API. Known for high-quality responses, constitutional AI
+    training, and exceptional long-context capabilities.
+
+  capabilities:
+    streaming: false
+    tools: false
+    multimodal: false
+    embeddings: false
+    fine_tuning: false
+
+  authentication:
+    method: "api_key_header"
+    header: "x-api-key"
+    format: "{api_key}"
+    configuration:
+      api_key:
+        type: "environment_variable"
+        name: "ANTHROPIC_API_KEY"
+        required: true
+        description: "Anthropic API key from console.anthropic.com"
+
+  models:
+    claude-3-opus:
+      id: "claude-3-opus-20240229"
+      name: "Claude 3 Opus"
+      context_length: 200000
+      max_output_tokens: 4096
+      supports_tools: false
+      supports_streaming: false
+      cost_per_input_token: 0.000015
+      cost_per_output_token: 0.000075
+      
+    claude-3-sonnet:
+      id: "claude-3-sonnet-20240229"
+      name: "Claude 3 Sonnet"
+      context_length: 200000
+      max_output_tokens: 4096
+      supports_tools: false
+      supports_streaming: false
+      cost_per_input_token: 0.000003
+      cost_per_output_token: 0.000015
+      
+    claude-3-haiku:
+      id: "claude-3-haiku-20240307"
+      name: "Claude 3 Haiku"
+      context_length: 200000
+      max_output_tokens: 4096
+      supports_tools: false
+      supports_streaming: false
+      cost_per_input_token: 0.00000025
+      cost_per_output_token: 0.00000125
+
+  api_endpoints:
+    messages:
+      url: "/messages"
+      method: "POST"
+      description: "Create message with Claude"
+
+  request_format:
+    description: "Anthropic messages API format"
+    properties:
+      model:
+        type: "string"
+        required: true
+        description: "Claude model identifier"
+        
+      max_tokens:
+        type: "integer"
+        required: true
+        minimum: 1
+        maximum: 4096
+        description: "Maximum tokens in response"
+        
+      messages:
+        type: "array"
+        required: true
+        description: "Array of message objects"
+        items:
+          type: "object"
+          properties:
+            role:
+              type: "string"
+              enum: ["user", "assistant"]
+            content:
+              type: "string"
+              description: "Message content"
+              
+      system:
+        type: "string"
+        required: false
+        description: "System message/instructions"
+        
+      temperature:
+        type: "number"
+        minimum: 0
+        maximum: 1
+        description: "Sampling temperature"
+
+  response_format:
+    description: "Anthropic API response format"
+    properties:
+      id:
+        type: "string"
+        description: "Response identifier"
+        
+      type:
+        type: "string"
+        description: "Response type (always 'message')"
+        
+      role:
+        type: "string"
+        description: "Response role (always 'assistant')"
+        
+      content:
+        type: "array"
+        description: "Response content blocks"
+        items:
+          type: "object"
+          properties:
+            type:
+              type: "string"
+              enum: ["text"]
+            text:
+              type: "string"
+              
+      model:
+        type: "string"
+        description: "Model used for generation"
+        
+      stop_reason:
+        type: "string"
+        enum: ["end_turn", "max_tokens", "stop_sequence"]
+        
+      stop_sequence:
+        type: "string"
+        description: "Stop sequence that ended generation"
+        
+      usage:
+        type: "object"
+        properties:
+          input_tokens:
+            type: "integer"
+          output_tokens:
+            type: "integer"
+
+  error_handling:
+    description: "Anthropic-specific error handling"
+    error_codes:
+      400:
+        type: "InvalidRequestError"
+        message: "Invalid request format"
+        
+      401:
+        type: "AuthenticationError"
+        message: "Invalid API key"
+        
+      403:
+        type: "PermissionError"
+        message: "Access denied"
+        
+      429:
+        type: "RateLimitError"
+        message: "Rate limit exceeded"
+        
+      500:
+        type: "ServiceUnavailableError"
+        message: "Anthropic service error"
+
+  rate_limits:
+    description: "Anthropic API rate limiting"
+    limits:
+      claude-3-opus:
+        requests_per_minute: 1000
+        tokens_per_minute: 80000
+        
+      claude-3-sonnet:
+        requests_per_minute: 1000
+        tokens_per_minute: 80000
+        
+      claude-3-haiku:
+        requests_per_minute: 1000
+        tokens_per_minute: 100000
+
+  configuration:
+    description: "Provider configuration options"
+    properties:
+      api_key:
+        type: "string"
+        required: true
+        description: "Anthropic API key"
+        
+      base_url:
+        type: "string"
+        required: false
+        default: "https://api.anthropic.com/v1"
+        description: "API base URL"
+        
+      default_model:
+        type: "string"
+        required: false
+        default: "claude-3-sonnet-20240229"
+        description: "Default Claude model"
+        
+      timeout_seconds:
+        type: "integer"
+        required: false
+        default: 60
+        description: "Request timeout"
+        
+      anthropic_version:
+        type: "string"
+        required: false
+        default: "2023-06-01"
+        description: "API version header"
+
+examples:
+  basic_completion:
+    description: "Simple completion with Claude"
+    request:
+      model: "claude-3-sonnet-20240229"
+      max_tokens: 1024
+      messages:
+        - role: "user"
+          content: "Hello, Claude!"
+      temperature: 0.7
+      
+  system_message:
+    description: "Using system instructions"
+    request:
+      model: "claude-3-opus-20240229"
+      max_tokens: 1024
+      system: "You are a helpful assistant that always responds in haiku format."
+      messages:
+        - role: "user"
+          content: "Tell me about artificial intelligence"
+
+compliance:
+  standards:
+    - "Anthropic API compatibility"
+    - "Custom header authentication"
+    - "JSON API format"
+  
+  privacy:
+    - "Data sent to Anthropic servers"
+    - "Subject to Anthropic privacy policy"
+    - "Constitutional AI safety measures"
+  
+  security:
+    - "HTTPS only connections"
+    - "API key-based authentication"
+    - "Built-in safety filtering"
+
+changelog:
+  v1.0:
+    - "Initial Anthropic provider specification"
+    - "Support for Claude 3 model family"
+    - "System message support"
+    - "High-context capabilities"

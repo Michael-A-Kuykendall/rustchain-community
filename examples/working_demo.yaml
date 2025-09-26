@@ -1,0 +1,38 @@
+version: "1.0"
+name: "working_demo"
+description: "A comprehensive demo showing RustChain functionality"
+steps:
+  - id: "create_greeting"
+    name: "Create greeting file"
+    step_type: "create_file"
+    parameters:
+      path: "greeting.txt"
+      content: "Hello from RustChain!"
+  
+  - id: "list_directory"
+    name: "List current directory"
+    step_type: "command"
+    depends_on: ["create_greeting"]
+    parameters:
+      command: "dir"
+      args: []
+  
+  - id: "test_http"
+    name: "Test HTTP request"
+    step_type: "http"
+    depends_on: ["list_directory"]
+    parameters:
+      url: "https://httpbin.org/get"
+      method: "GET"
+  
+  - id: "noop_final"
+    name: "Final no-op step"
+    step_type: "noop"
+    depends_on: ["test_http"]
+    parameters:
+      message: "Mission completed successfully!"
+
+config:
+  max_parallel_steps: 2
+  timeout_seconds: 60
+  fail_fast: true

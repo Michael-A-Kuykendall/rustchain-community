@@ -1,0 +1,83 @@
+name: "Smart Data Processing Pipeline"
+description: "Demonstrates RustChain's data processing capabilities with CSV analysis"
+version: "1.0"
+
+steps:
+  - id: "create_sample_data"
+    name: "Generate Sample CSV Data"
+    step_type: "create_file"
+    parameters:
+      path: "sales_data.csv"
+      content: |
+        date,product,sales,region
+        2024-01-01,Widget A,1500,North
+        2024-01-01,Widget B,2300,South  
+        2024-01-02,Widget A,1750,North
+        2024-01-02,Widget B,2100,South
+        2024-01-03,Widget A,1900,North
+        2024-01-03,Widget B,2450,South
+        2024-01-04,Widget A,1650,North
+        2024-01-04,Widget B,2200,South
+
+  - id: "load_csv_data"
+    name: "Load and Parse CSV Data"
+    step_type: "tool"
+    parameters:
+      tool: "csv_loader"
+      parameters:
+        file_path: "sales_data.csv"
+        delimiter: ","
+        has_headers: true
+    depends_on: ["create_sample_data"]
+    timeout_seconds: 30
+
+  - id: "create_analysis_report" 
+    name: "Generate Analysis Report"
+    step_type: "create_file"
+    parameters:
+      path: "analysis_report.md"
+      content: |
+        # Sales Data Analysis Report
+        
+        ## Data Processing Pipeline Results
+        
+        **Generated**: {{ timestamp }}
+        **Source**: sales_data.csv
+        **Processing Method**: RustChain CSV Loader
+        
+        ## Key Metrics
+        - Total Records Processed: 8 sales entries
+        - Date Range: 2024-01-01 to 2024-01-04
+        - Products: Widget A, Widget B
+        - Regions: North, South
+        
+        ## Technical Details  
+        ✅ **Memory Safe**: Rust guarantees prevent data corruption
+        ✅ **High Performance**: Native speed with zero-copy parsing
+        ✅ **Type Safety**: Compile-time validation of data structures
+        ✅ **Concurrent Processing**: Async operations for scalability
+        
+        ## Next Steps
+        This data is now ready for:
+        - Machine learning analysis
+        - Real-time dashboard updates
+        - Integration with external APIs
+        - Advanced statistical processing
+        
+        *Powered by RustChain Community Edition*
+    depends_on: ["load_csv_data"]
+    timeout_seconds: 15
+
+  - id: "cleanup_temp_files"
+    name: "Clean Up Temporary Files"
+    step_type: "command" 
+    parameters:
+      command: "echo"
+      args: ["📊 Data processing pipeline completed! Check analysis_report.md for results"]
+    depends_on: ["create_analysis_report"]
+    timeout_seconds: 10
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 120
+  fail_fast: true

@@ -1,0 +1,52 @@
+{
+  "id": "hello_world_001",
+  "name": "Hello World Mission",
+  "description": "A simple introductory mission that demonstrates basic RustChain functionality",
+  "version": "1.0.0",
+  "steps": [
+    {
+      "id": "greet",
+      "name": "Say Hello",
+      "step_type": "Tool",
+      "config": {
+        "tool": "echo",
+        "args": ["Hello, RustChain World!"]
+      },
+      "dependencies": [],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    },
+    {
+      "id": "show_date",
+      "name": "Show Current Date",
+      "step_type": "Tool",
+      "config": {
+        "tool": "date",
+        "args": []
+      },
+      "dependencies": ["greet"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    },
+    {
+      "id": "list_files",
+      "name": "List Current Directory",
+      "step_type": "Tool",
+      "config": {
+        "tool": "ls",
+        "args": ["-la"]
+      },
+      "dependencies": ["show_date"],
+      "timeout": 30,
+      "retry_count": 1,
+      "on_failure": "continue"
+    }
+  ],
+  "metadata": {
+    "category": "tutorial",
+    "difficulty": "beginner",
+    "estimated_duration": "1 minute"
+  }
+}

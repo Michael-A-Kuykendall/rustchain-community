@@ -1,0 +1,317 @@
+---
+apiVersion: specify.dev/v1
+kind: ProviderSpecification
+metadata:
+  name: Shimmy LLM Provider
+  version: "1.0"
+  description: |
+    Shimmy provider implementation for RustChain, enabling privacy-first local
+    AI inference with optimized CPU performance and air-gapped operation.
+  
+  tags:
+    - shimmy
+    - local-llm
+    - privacy-first
+    - cpu-optimized
+    - air-gapped
+  
+  provider_info:
+    name: "Shimmy"
+    type: "local"
+    base_url: "http://localhost:11435"
+    authentication: "none"
+
+spec:
+  overview: |
+    The Shimmy provider enables privacy-first local language model inference
+    through the Shimmy runtime. Designed for air-gapped environments with
+    optimized CPU inference and minimal resource requirements.
+
+  capabilities:
+    streaming: false
+    tools: false
+    multimodal: false
+    embeddings: false
+    fine_tuning: false
+
+  authentication:
+    method: "none"
+    description: "No authentication required for local Shimmy instance"
+
+  models:
+    phi3-mini:
+      id: "phi3-mini"
+      name: "Phi-3 Mini"
+      context_length: 4096
+      max_output_tokens: 2048
+      supports_tools: false
+      supports_streaming: false
+      cost_per_input_token: 0.0
+      cost_per_output_token: 0.0
+      size_mb: 2300
+      cpu_optimized: true
+      
+    starcoder2-3b:
+      id: "starcoder2-3b"
+      name: "StarCoder2 3B"
+      context_length: 8192
+      max_output_tokens: 4096
+      supports_tools: false
+      supports_streaming: false
+      cost_per_input_token: 0.0
+      cost_per_output_token: 0.0
+      size_mb: 1700
+      cpu_optimized: true
+      
+    qwen2-0.5b:
+      id: "qwen2-0.5b"
+      name: "Qwen2 0.5B"
+      context_length: 4096
+      max_output_tokens: 2048
+      supports_tools: false
+      supports_streaming: false
+      cost_per_input_token: 0.0
+      cost_per_output_token: 0.0
+      size_mb: 500
+      cpu_optimized: true
+
+  api_endpoints:
+    generate:
+      url: "/generate"
+      method: "POST"
+      description: "Generate text completion"
+      
+    chat:
+      url: "/chat"
+      method: "POST"
+      description: "Generate chat completion"
+      
+    models:
+      url: "/models"
+      method: "GET"
+      description: "List available models"
+
+  request_format:
+    description: "Shimmy API format"
+    properties:
+      model:
+        type: "string"
+        required: true
+        description: "Model identifier"
+        
+      prompt:
+        type: "string"
+        required: false
+        description: "Text prompt for generation"
+        
+      messages:
+        type: "array"
+        required: false
+        description: "Chat messages (alternative to prompt)"
+        items:
+          type: "object"
+          properties:
+            role:
+              type: "string"
+              enum: ["system", "user", "assistant"]
+            content:
+              type: "string"
+              
+      max_tokens:
+        type: "integer"
+        required: false
+        default: 256
+        minimum: 1
+        maximum: 4096
+        description: "Maximum tokens to generate"
+        
+      temperature:
+        type: "number"
+        required: false
+        default: 0.7
+        minimum: 0.0
+        maximum: 2.0
+        description: "Sampling temperature"
+        
+      top_p:
+        type: "number"
+        required: false
+        default: 0.9
+        minimum: 0.0
+        maximum: 1.0
+        description: "Nucleus sampling parameter"
+        
+      top_k:
+        type: "integer"
+        required: false
+        default: 40
+        minimum: 1
+        description: "Top-k sampling parameter"
+
+  response_format:
+    description: "Shimmy API response format"
+    properties:
+      text:
+        type: "string"
+        description: "Generated text content"
+        
+      tokens_used:
+        type: "integer"
+        description: "Number of tokens consumed"
+        
+      model:
+        type: "string"
+        description: "Model used for generation"
+        
+      finish_reason:
+        type: "string"
+        enum: ["stop", "length", "error"]
+        description: "Reason generation stopped"
+        
+      generation_time_ms:
+        type: "integer"
+        description: "Generation time in milliseconds"
+        
+      tokens_per_second:
+        type: "number"
+        description: "Inference speed metric"
+
+  error_handling:
+    description: "Shimmy-specific error handling"
+    error_codes:
+      404:
+        type: "ModelNotFoundError"
+        message: "Model not available"
+        
+      400:
+        type: "InvalidRequestError"
+        message: "Invalid request parameters"
+        
+      500:
+        type: "ServiceUnavailableError"
+        message: "Shimmy inference error"
+        
+      connection_refused:
+        type: "NetworkError"
+        message: "Shimmy service not running"
+
+  configuration:
+    description: "Provider configuration options"
+    properties:
+      base_url:
+        type: "string"
+        required: false
+        default: "http://localhost:11435"
+        description: "Shimmy server URL"
+        
+      default_model:
+        type: "string"
+        required: false
+        default: "phi3-mini"
+        description: "Default model for requests"
+        
+      timeout_seconds:
+        type: "integer"
+        required: false
+        default: 120
+        description: "Request timeout"
+        
+      cpu_threads:
+        type: "integer"
+        required: false
+        description: "Number of CPU threads for inference"
+
+examples:
+  basic_completion:
+    description: "Simple text completion"
+    request:
+      model: "phi3-mini"
+      prompt: "The benefits of renewable energy include"
+      max_tokens: 100
+      temperature: 0.7
+      
+  chat_completion:
+    description: "Chat-style completion"
+    request:
+      model: "phi3-mini"
+      messages:
+        - role: "system"
+          content: "You are a helpful coding assistant."
+        - role: "user"
+          content: "How do I create a Python function?"
+      max_tokens: 200
+      temperature: 0.5
+
+  code_generation:
+    description: "Code generation with StarCoder"
+    request:
+      model: "starcoder2-3b"
+      prompt: "# Python function to calculate fibonacci numbers\ndef fibonacci("
+      max_tokens: 150
+      temperature: 0.2
+      top_p: 0.95
+
+compliance:
+  standards:
+    - "Custom HTTP API"
+    - "Local inference only"
+    - "No authentication required"
+  
+  privacy:
+    - "Complete air-gapped operation"
+    - "No external network dependencies"
+    - "All processing local to machine"
+    - "No data logging or telemetry"
+  
+  security:
+    - "Local network access only"
+    - "No external API calls"
+    - "User-controlled inference"
+    - "No model management requirements"
+
+performance:
+  description: "CPU-optimized inference characteristics"
+  optimization:
+    - "Quantized models for reduced memory usage"
+    - "CPU instruction optimizations (SIMD)"
+    - "Memory-efficient attention mechanisms"
+    - "Fast startup and inference times"
+  
+  resource_requirements:
+    minimum_ram: "2GB"
+    recommended_ram: "4GB"
+    cpu_cores: "2+"
+    disk_space: "3GB for all models"
+  
+  benchmarks:
+    phi3_mini:
+      tokens_per_second: "20-40 (4-core CPU)"
+      memory_usage: "1.5GB"
+      startup_time: "2-3 seconds"
+    
+    qwen2_0_5b:
+      tokens_per_second: "30-60 (4-core CPU)"
+      memory_usage: "800MB"
+      startup_time: "1-2 seconds"
+
+deployment:
+  description: "Shimmy deployment options"
+  methods:
+    standalone:
+      description: "Single binary deployment"
+      requirements: ["Shimmy binary", "Model files"]
+      
+    docker:
+      description: "Container deployment"
+      image: "shimmy/inference:latest"
+      
+    embedded:
+      description: "Embedded in applications"
+      integration: "Rust library or C bindings"
+
+changelog:
+  v1.0:
+    - "Initial Shimmy provider specification"
+    - "Privacy-first local inference"
+    - "CPU-optimized model support"
+    - "Air-gapped operation capability"
