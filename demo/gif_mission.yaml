@@ -1,0 +1,33 @@
+version: '1.0'
+name: build_chat_cli
+description: "Build working AI chat CLI tool"
+
+steps:
+  - id: create_tool
+    step_type: create_file
+    parameters:
+      path: "chat_tool.py"
+      content: |
+        #!/usr/bin/env python3
+        import sys
+        def main():
+            print("🤖 RustChain AI Chat")
+            print("Type a message:")
+            message = input("> ")
+            responses = {
+                "hello": "Hello! I'm powered by RustChain!",
+                "rust": "Rust makes me blazing fast! ⚡",
+                "demo": "This tool was built by RustChain in seconds!"
+            }
+            for key in responses:
+                if key.lower() in message.lower():
+                    print(f"AI: {responses[key]}")
+                    return
+            print(f"AI: You said '{message}' - RustChain built me instantly!")
+        if __name__ == "__main__": main()
+
+  - id: make_executable
+    step_type: command
+    parameters:
+      command: "chmod +x chat_tool.py"
+    depends_on: [create_tool]

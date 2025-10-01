@@ -1,0 +1,58 @@
+version: '1.0'
+name: simple_shimmy_demo
+description: "Simple RustChain + Shimmy demo"
+
+steps:
+  - id: create_chat
+    name: "Create AI Chat Tool"
+    step_type: create_file
+    parameters:
+      path: "chat_with_shimmy.py"
+      content: |
+        """RustChain + Shimmy Demo - Two Rust ecosystems working together"""
+        import requests
+        import json
+        
+        def main():
+            print("RustChain + Shimmy AI Demo")
+            print("=" * 30)
+            print("Built by RustChain mission system")
+            print("Powered by Shimmy inference engine")
+            print()
+            
+            # Test if shimmy is available
+            try:
+                health = requests.get("http://localhost:11435/health", timeout=2)
+                if health.status_code != 200:
+                    print("Shimmy not available - install from github.com/Michael-A-Kuykendall/shimmy")
+                    return
+            except:
+                print("Shimmy not running - install and start shimmy first")
+                print("Get it at: github.com/Michael-A-Kuykendall/shimmy")
+                return
+            
+            print("Connected to Shimmy!")
+            
+            # Simple chat
+            message = input("Ask AI: ")
+            payload = {
+                "model": "llama3.2:1b", 
+                "messages": [{"role": "user", "content": message}],
+                "max_tokens": 60
+            }
+            
+            try:
+                resp = requests.post("http://localhost:11435/v1/chat/completions", 
+                                   json=payload, timeout=15)
+                if resp.status_code == 200:
+                    ai_response = resp.json()["choices"][0]["message"]["content"]
+                    print(f"AI: {ai_response}")
+                else:
+                    print(f"Error: {resp.status_code}")
+            except Exception as e:
+                print(f"Connection error: {e}")
+            
+            print("\nDemo complete! RustChain orchestrated this interaction.")
+        
+        if __name__ == "__main__":
+            main()

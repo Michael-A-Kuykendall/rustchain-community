@@ -1,0 +1,18 @@
+PUNCH Quality Report: Code Quality Analysis - rustchain-community
+Generated: 2025-09-20 21:46:27
+
+SUMMARY
+=======
+Total Components: 2500
+Average Score: 77.3
+Median Score: 77.8
+Total Issues: 2341
+
+GRADE DISTRIBUTION
+==================
+C+: 2139 (85.6%)
+D+: 24 (1.0%)
+C: 154 (6.2%)
+D: 16 (0.6%)
+F: 10 (0.4%)
+B: 157 (6.3%)

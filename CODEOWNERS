@@ -1,0 +1,28 @@
+# Code Owners
+# This file defines who is responsible for code in this repository.
+
+# Global owners
+* @Michael-A-Kuykendall
+
+# Core systems
+/src/core/ @Michael-A-Kuykendall
+/src/engine/ @Michael-A-Kuykendall
+/src/security/ @Michael-A-Kuykendall
+
+# CLI and user interface
+/src/cli/ @Michael-A-Kuykendall
+/src/bin/ @Michael-A-Kuykendall
+
+# Infrastructure and configuration
+/.github/ @Michael-A-Kuykendall
+/Cargo.toml @Michael-A-Kuykendall
+/Dockerfile @Michael-A-Kuykendall
+
+# Documentation
+/docs/ @Michael-A-Kuykendall
+/README.md @Michael-A-Kuykendall
+/CONTRIBUTING.md @Michael-A-Kuykendall
+
+# Compliance and standards
+/compliance/ @Michael-A-Kuykendall
+/src/smt/ @Michael-A-Kuykendall

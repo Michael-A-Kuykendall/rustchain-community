@@ -1,0 +1,101 @@
+version: '1.0'
+name: build_ai_chat_tool
+description: "Build a working AI chat CLI tool in real-time"
+
+steps:
+  - id: create_main
+    step_type: create_file
+    parameters:
+      path: "ai_chat.py"
+      content: |
+        #!/usr/bin/env python3
+        import json
+        import sys
+        import requests
+        
+        def chat_with_ai(message):
+            # Simulate AI response (replace with real API call)
+            responses = {
+                "hello": "🤖 Hello! I'm your AI assistant built by RustChain!",
+                "how are you": "⚡ I'm running at lightning speed thanks to Rust!",
+                "what can you do": "🔧 I can analyze data, write code, and solve problems!",
+                "goodbye": "👋 Thanks for using RustChain! Build more AI tools!"
+            }
+            
+            message_lower = message.lower()
+            for key in responses:
+                if key in message_lower:
+                    return responses[key]
+            
+            return f"🤖 You said: '{message}' - I'm powered by RustChain's AI orchestration!"
+        
+        def main():
+            print("🦀 RustChain AI Chat Tool")
+            print("========================")
+            print("Type messages (or 'quit' to exit)")
+            print()
+            
+            while True:
+                try:
+                    user_input = input("You: ").strip()
+                    if user_input.lower() in ['quit', 'exit', 'q']:
+                        print("🤖 AI: Goodbye! Thanks for using RustChain!")
+                        break
+                    
+                    if user_input:
+                        response = chat_with_ai(user_input)
+                        print(f"🤖 AI: {response}")
+                        print()
+                        
+                except KeyboardInterrupt:
+                    print("\n🤖 AI: Goodbye!")
+                    break
+                except EOFError:
+                    break
+        
+        if __name__ == "__main__":
+            main()
+
+  - id: make_executable
+    step_type: command
+    parameters:
+      command: "chmod +x ai_chat.py"
+    depends_on: [create_main]
+
+  - id: create_demo_script
+    step_type: create_file
+    parameters:
+      path: "demo_ai_tool.sh"
+      content: |
+        #!/bin/bash
+        echo "🚀 Demonstrating AI Tool built by RustChain..."
+        echo "=============================================="
+        echo ""
+        echo "🔧 Tool created: ai_chat.py"
+        echo "⚡ Status: Ready to run"
+        echo ""
+        echo "💬 Demo conversation:"
+        echo ""
+        
+        # Simulate interactive demo
+        echo "You: hello"
+        python3 ai_chat.py <<< "hello" | tail -1
+        echo ""
+        echo "You: what can you do"  
+        python3 ai_chat.py <<< "what can you do" | tail -1
+        echo ""
+        echo "You: how are you"
+        python3 ai_chat.py <<< "how are you" | tail -1
+        echo ""
+        echo "You: quit"
+        python3 ai_chat.py <<< "quit" | tail -1
+        echo ""
+        echo "✨ AI tool working perfectly!"
+        echo "🦀 Built with RustChain workflow orchestration"
+    depends_on: [make_executable]
+
+  - id: make_demo_executable
+    step_type: command
+    parameters:
+      command: "chmod +x demo_ai_tool.sh"
+    depends_on: [create_demo_script]

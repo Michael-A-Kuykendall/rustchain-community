@@ -1,0 +1,1216 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "RustChain Security & Compliance API",
+    "description": "Enterprise-grade security and compliance system providing authentication, authorization, audit trails, and multi-framework compliance management",
+    "version": "1.0.0",
+    "contact": {
+      "name": "RustChain Security Team",
+      "email": "security@rustchain.dev"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.rustchain.ai/v1/security",
+      "description": "Production API"
+    },
+    {
+      "url": "https://staging.rustchain.ai/v1/security", 
+      "description": "Staging environment"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    },
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Authenticate user credentials",
+        "description": "Authenticate user with various credential types including MFA support",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Refresh authentication token",
+        "description": "Refresh expired access token using refresh token",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token refreshed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid refresh token"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Logout and invalidate session",
+        "description": "Invalidate current session and revoke tokens",
+        "tags": ["Authentication"],
+        "security": [{"BearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "Logout successful"
+          },
+          "401": {
+            "description": "Invalid or expired token"
+          }
+        }
+      }
+    },
+    "/auth/mfa/setup": {
+      "post": {
+        "summary": "Setup multi-factor authentication",
+        "description": "Initialize MFA setup for user account",
+        "tags": ["Authentication", "MFA"],
+        "security": [{"BearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MfaSetupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "MFA setup initiated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MfaSetupResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/authorize": {
+      "post": {
+        "summary": "Check authorization for resource access",
+        "description": "Verify if user has permission to perform action on resource",
+        "tags": ["Authorization"],
+        "security": [{"BearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorizationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authorization decision",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles": {
+      "get": {
+        "summary": "List all roles",
+        "description": "Retrieve all roles with their permissions",
+        "tags": ["Role Management"],
+        "security": [{"BearerAuth": []}],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {"type": "integer", "default": 1}
+          },
+          {
+            "name": "limit",
+            "in": "query", 
+            "schema": {"type": "integer", "default": 50}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of roles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoleListResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new role",
+        "description": "Create a new role with specified permissions",
+        "tags": ["Role Management"],
+        "security": [{"BearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Role created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audit/events": {
+      "get": {
+        "summary": "Query audit events",
+        "description": "Search and filter audit trail events",
+        "tags": ["Audit"],
+        "security": [{"BearerAuth": []}],
+        "parameters": [
+          {
+            "name": "start_time",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "format": "date-time"}
+          },
+          {
+            "name": "end_time", 
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "format": "date-time"}
+          },
+          {
+            "name": "user_id",
+            "in": "query",
+            "schema": {"type": "string"}
+          },
+          {
+            "name": "event_type",
+            "in": "query",
+            "schema": {"type": "string"}
+          },
+          {
+            "name": "min_risk_score",
+            "in": "query",
+            "schema": {"type": "integer", "minimum": 0, "maximum": 100}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audit events matching criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditEventListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/audit/verify": {
+      "post": {
+        "summary": "Verify audit trail integrity",
+        "description": "Verify cryptographic integrity of audit trail",
+        "tags": ["Audit"],
+        "security": [{"BearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditVerificationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Integrity verification result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditVerificationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/frameworks": {
+      "get": {
+        "summary": "List supported compliance frameworks",
+        "description": "Get all supported compliance frameworks and their status",
+        "tags": ["Compliance"],
+        "security": [{"BearerAuth": []}],
+        "responses": {
+          "200": {
+            "description": "List of compliance frameworks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComplianceFrameworkListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/reports/{framework}": {
+      "get": {
+        "summary": "Generate compliance report",
+        "description": "Generate comprehensive compliance report for specified framework",
+        "tags": ["Compliance"],
+        "security": [{"BearerAuth": []}],
+        "parameters": [
+          {
+            "name": "framework",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["GDPR", "SOX", "SOC2", "ISO27001", "NIST"]
+            }
+          },
+          {
+            "name": "include_evidence",
+            "in": "query",
+            "schema": {"type": "boolean", "default": false}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Compliance report",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComplianceReport"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/compliance/gap-analysis": {
+      "post": {
+        "summary": "Perform compliance gap analysis",
+        "description": "Analyze compliance gaps and provide remediation recommendations",
+        "tags": ["Compliance"],
+        "security": [{"BearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GapAnalysisRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Gap analysis results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GapAnalysisResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threats/detect": {
+      "post": {
+        "summary": "Perform threat detection analysis",
+        "description": "Analyze activity patterns for potential security threats",
+        "tags": ["Threat Detection"],
+        "security": [{"BearerAuth": []}],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ThreatDetectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Threat analysis results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThreatDetectionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/threats/incidents": {
+      "get": {
+        "summary": "List security incidents",
+        "description": "Retrieve list of detected security incidents",
+        "tags": ["Threat Detection"],
+        "security": [{"BearerAuth": []}],
+        "parameters": [
+          {
+            "name": "severity",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["Low", "Medium", "High", "Critical"]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string", 
+              "enum": ["Open", "InProgress", "Resolved", "Closed"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of security incidents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecurityIncidentListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/data-subjects/{id}": {
+      "delete": {
+        "summary": "Process right to be forgotten request",
+        "description": "Process GDPR Article 17 right to erasure request",
+        "tags": ["Privacy"],
+        "security": [{"BearerAuth": []}],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataErasureRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Erasure request processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataErasureResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/privacy/consent/{user_id}": {
+      "get": {
+        "summary": "Get user consent status",
+        "description": "Retrieve current consent status for user",
+        "tags": ["Privacy"],
+        "security": [{"BearerAuth": []}],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User consent status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentStatus"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user consent",
+        "description": "Update consent preferences for user",
+        "tags": ["Privacy"],
+        "security": [{"BearerAuth": []}],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "string"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsentUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Consent updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsentStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics/security": {
+      "get": {
+        "summary": "Get security metrics",
+        "description": "Retrieve security metrics and KPIs",
+        "tags": ["Metrics"],
+        "security": [{"BearerAuth": []}],
+        "parameters": [
+          {
+            "name": "timeframe",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["1h", "24h", "7d", "30d"],
+              "default": "24h"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Security metrics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecurityMetrics"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "LoginRequest": {
+        "type": "object",
+        "required": ["credential_type"],
+        "properties": {
+          "credential_type": {
+            "type": "string",
+            "enum": ["username_password", "api_key", "oauth2", "saml"]
+          },
+          "username": {"type": "string"},
+          "password": {"type": "string"},
+          "mfa_code": {"type": "string"},
+          "api_key": {"type": "string"},
+          "api_secret": {"type": "string"},
+          "oauth_token": {"type": "string"},
+          "oauth_provider": {"type": "string"},
+          "saml_assertion": {"type": "string"},
+          "remember_me": {"type": "boolean", "default": false}
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "required": ["access_token", "token_type", "expires_in"],
+        "properties": {
+          "access_token": {"type": "string"},
+          "refresh_token": {"type": "string"},
+          "token_type": {"type": "string", "default": "Bearer"},
+          "expires_in": {"type": "integer"},
+          "scope": {"type": "string"},
+          "user_id": {"type": "string"},
+          "session_id": {"type": "string"},
+          "mfa_required": {"type": "boolean"},
+          "permissions": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "RefreshRequest": {
+        "type": "object",
+        "required": ["refresh_token"],
+        "properties": {
+          "refresh_token": {"type": "string"}
+        }
+      },
+      "MfaSetupRequest": {
+        "type": "object",
+        "required": ["method"],
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": ["totp", "sms", "email"]
+          },
+          "phone_number": {"type": "string"},
+          "email": {"type": "string"}
+        }
+      },
+      "MfaSetupResponse": {
+        "type": "object",
+        "properties": {
+          "setup_key": {"type": "string"},
+          "qr_code": {"type": "string"},
+          "backup_codes": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "AuthorizationRequest": {
+        "type": "object",
+        "required": ["resource", "action"],
+        "properties": {
+          "resource": {"type": "string"},
+          "action": {"type": "string"},
+          "context": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          }
+        }
+      },
+      "AuthorizationResponse": {
+        "type": "object",
+        "required": ["authorized"],
+        "properties": {
+          "authorized": {"type": "boolean"},
+          "reason": {"type": "string"},
+          "required_permissions": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "Role": {
+        "type": "object",
+        "required": ["id", "name", "permissions"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "permissions": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/Permission"}
+          },
+          "parent_roles": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "created_at": {"type": "string", "format": "date-time"},
+          "updated_at": {"type": "string", "format": "date-time"}
+        }
+      },
+      "Permission": {
+        "type": "object",
+        "required": ["resource", "action"],
+        "properties": {
+          "resource": {"type": "string"},
+          "action": {"type": "string"},
+          "conditions": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "CreateRoleRequest": {
+        "type": "object",
+        "required": ["name", "permissions"],
+        "properties": {
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "permissions": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/Permission"}
+          },
+          "parent_roles": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "RoleListResponse": {
+        "type": "object",
+        "required": ["roles", "total", "page", "limit"],
+        "properties": {
+          "roles": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/Role"}
+          },
+          "total": {"type": "integer"},
+          "page": {"type": "integer"},
+          "limit": {"type": "integer"}
+        }
+      },
+      "AuditEntry": {
+        "type": "object",
+        "required": ["id", "timestamp", "event_type", "outcome"],
+        "properties": {
+          "id": {"type": "string"},
+          "timestamp": {"type": "string", "format": "date-time"},
+          "event_type": {"type": "string"},
+          "user_id": {"type": "string"},
+          "session_id": {"type": "string"},
+          "tenant_id": {"type": "string"},
+          "resource": {"type": "string"},
+          "action": {"type": "string"},
+          "outcome": {
+            "type": "string",
+            "enum": ["Success", "Failure", "Warning", "Information"]
+          },
+          "risk_score": {"type": "integer", "minimum": 0, "maximum": 100},
+          "ip_address": {"type": "string"},
+          "user_agent": {"type": "string"},
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          },
+          "cryptographic_hash": {"type": "string"},
+          "digital_signature": {"type": "string"}
+        }
+      },
+      "AuditEventListResponse": {
+        "type": "object",
+        "required": ["events", "total"],
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/AuditEntry"}
+          },
+          "total": {"type": "integer"},
+          "has_more": {"type": "boolean"}
+        }
+      },
+      "AuditVerificationRequest": {
+        "type": "object",
+        "required": ["start_position", "end_position"],
+        "properties": {
+          "start_position": {"type": "integer", "minimum": 0},
+          "end_position": {"type": "integer", "minimum": 0}
+        }
+      },
+      "AuditVerificationResponse": {
+        "type": "object",
+        "required": ["valid", "chain_length"],
+        "properties": {
+          "valid": {"type": "boolean"},
+          "chain_length": {"type": "integer"},
+          "verification_timestamp": {"type": "string", "format": "date-time"},
+          "invalid_entries": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "verification_signature": {"type": "string"}
+        }
+      },
+      "ComplianceFramework": {
+        "type": "object",
+        "required": ["name", "version", "status"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": ["GDPR", "SOX", "SOC2", "ISO27001", "NIST"]
+          },
+          "version": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["Active", "Inactive", "Pending"]
+          },
+          "coverage_percentage": {"type": "number", "minimum": 0, "maximum": 100},
+          "last_assessment": {"type": "string", "format": "date-time"}
+        }
+      },
+      "ComplianceFrameworkListResponse": {
+        "type": "object",
+        "required": ["frameworks"],
+        "properties": {
+          "frameworks": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ComplianceFramework"}
+          }
+        }
+      },
+      "ComplianceReport": {
+        "type": "object",
+        "required": ["framework", "overall_score", "assessment_date"],
+        "properties": {
+          "framework": {"type": "string"},
+          "overall_score": {"type": "number", "minimum": 0, "maximum": 1},
+          "assessment_date": {"type": "string", "format": "date-time"},
+          "control_assessments": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ControlAssessment"}
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ComplianceRecommendation"}
+          },
+          "evidence_summary": {"$ref": "#/components/schemas/EvidenceSummary"}
+        }
+      },
+      "ControlAssessment": {
+        "type": "object",
+        "required": ["control_id", "status", "score"],
+        "properties": {
+          "control_id": {"type": "string"},
+          "control_name": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["Compliant", "NonCompliant", "PartiallyCompliant", "NotApplicable"]
+          },
+          "score": {"type": "number", "minimum": 0, "maximum": 1},
+          "evidence_count": {"type": "integer"},
+          "last_tested": {"type": "string", "format": "date-time"}
+        }
+      },
+      "ComplianceRecommendation": {
+        "type": "object",
+        "required": ["priority", "description"],
+        "properties": {
+          "priority": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High", "Critical"]
+          },
+          "description": {"type": "string"},
+          "control_id": {"type": "string"},
+          "estimated_effort": {"type": "string"},
+          "due_date": {"type": "string", "format": "date"}
+        }
+      },
+      "EvidenceSummary": {
+        "type": "object",
+        "properties": {
+          "total_evidence_items": {"type": "integer"},
+          "automated_collection_percentage": {"type": "number"},
+          "evidence_by_type": {
+            "type": "object",
+            "additionalProperties": {"type": "integer"}
+          }
+        }
+      },
+      "GapAnalysisRequest": {
+        "type": "object",
+        "required": ["frameworks"],
+        "properties": {
+          "frameworks": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "target_maturity_level": {
+            "type": "string",
+            "enum": ["Basic", "Intermediate", "Advanced", "Expert"]
+          }
+        }
+      },
+      "GapAnalysisResponse": {
+        "type": "object",
+        "required": ["gaps", "recommendations"],
+        "properties": {
+          "gaps": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ComplianceGap"}
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ComplianceRecommendation"}
+          },
+          "estimated_remediation_time": {"type": "string"},
+          "cost_estimate": {"type": "string"}
+        }
+      },
+      "ComplianceGap": {
+        "type": "object",
+        "required": ["framework", "control_id", "gap_type", "severity"],
+        "properties": {
+          "framework": {"type": "string"},
+          "control_id": {"type": "string"},
+          "control_name": {"type": "string"},
+          "gap_type": {
+            "type": "string",
+            "enum": ["Missing", "Incomplete", "Ineffective", "Outdated"]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High", "Critical"]
+          },
+          "description": {"type": "string"}
+        }
+      },
+      "ThreatDetectionRequest": {
+        "type": "object",
+        "required": ["analysis_type"],
+        "properties": {
+          "analysis_type": {
+            "type": "string",
+            "enum": ["UserBehavior", "NetworkTraffic", "SystemActivity", "DataAccess"]
+          },
+          "user_id": {"type": "string"},
+          "time_window": {"type": "string"},
+          "include_context": {"type": "boolean", "default": true}
+        }
+      },
+      "ThreatDetectionResponse": {
+        "type": "object",
+        "required": ["threats_detected", "risk_score"],
+        "properties": {
+          "threats_detected": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ThreatEvent"}
+          },
+          "risk_score": {"type": "integer", "minimum": 0, "maximum": 100},
+          "analysis_timestamp": {"type": "string", "format": "date-time"},
+          "behavioral_baseline": {"type": "object"},
+          "anomalies": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/Anomaly"}
+          }
+        }
+      },
+      "ThreatEvent": {
+        "type": "object",
+        "required": ["threat_type", "severity", "confidence"],
+        "properties": {
+          "threat_type": {"type": "string"},
+          "severity": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High", "Critical"]
+          },
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "description": {"type": "string"},
+          "indicators": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "recommended_actions": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "mitre_tactics": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "Anomaly": {
+        "type": "object",
+        "required": ["type", "score"],
+        "properties": {
+          "type": {"type": "string"},
+          "score": {"type": "number", "minimum": 0, "maximum": 1},
+          "description": {"type": "string"},
+          "baseline_value": {"type": "number"},
+          "observed_value": {"type": "number"},
+          "deviation": {"type": "number"}
+        }
+      },
+      "SecurityIncident": {
+        "type": "object",
+        "required": ["id", "title", "severity", "status", "created_at"],
+        "properties": {
+          "id": {"type": "string"},
+          "title": {"type": "string"},
+          "description": {"type": "string"},
+          "severity": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High", "Critical"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Open", "InProgress", "Resolved", "Closed"]
+          },
+          "assigned_to": {"type": "string"},
+          "created_at": {"type": "string", "format": "date-time"},
+          "updated_at": {"type": "string", "format": "date-time"},
+          "threat_events": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ThreatEvent"}
+          },
+          "response_actions": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "SecurityIncidentListResponse": {
+        "type": "object",
+        "required": ["incidents", "total"],
+        "properties": {
+          "incidents": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/SecurityIncident"}
+          },
+          "total": {"type": "integer"},
+          "open_incidents": {"type": "integer"},
+          "critical_incidents": {"type": "integer"}
+        }
+      },
+      "DataErasureRequest": {
+        "type": "object",
+        "required": ["erasure_method", "legal_basis"],
+        "properties": {
+          "erasure_method": {
+            "type": "string",
+            "enum": ["CryptographicErasure", "PhysicalDeletion"]
+          },
+          "legal_basis": {"type": "string"},
+          "data_categories": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "verification_required": {"type": "boolean", "default": true}
+        }
+      },
+      "DataErasureResponse": {
+        "type": "object",
+        "required": ["erasure_id", "status", "timestamp"],
+        "properties": {
+          "erasure_id": {"type": "string"},
+          "status": {
+            "type": "string",
+            "enum": ["Completed", "InProgress", "Failed"]
+          },
+          "timestamp": {"type": "string", "format": "date-time"},
+          "verification_hash": {"type": "string"},
+          "affected_data_count": {"type": "integer"},
+          "proof_of_erasure": {"type": "string"}
+        }
+      },
+      "ConsentStatus": {
+        "type": "object",
+        "required": ["user_id", "consents"],
+        "properties": {
+          "user_id": {"type": "string"},
+          "consents": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ConsentItem"}
+          },
+          "last_updated": {"type": "string", "format": "date-time"}
+        }
+      },
+      "ConsentItem": {
+        "type": "object",
+        "required": ["purpose", "granted", "timestamp"],
+        "properties": {
+          "purpose": {"type": "string"},
+          "granted": {"type": "boolean"},
+          "timestamp": {"type": "string", "format": "date-time"},
+          "legal_basis": {"type": "string"},
+          "expiry_date": {"type": "string", "format": "date"}
+        }
+      },
+      "ConsentUpdateRequest": {
+        "type": "object",
+        "required": ["consents"],
+        "properties": {
+          "consents": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ConsentUpdate"}
+          }
+        }
+      },
+      "ConsentUpdate": {
+        "type": "object",
+        "required": ["purpose", "granted"],
+        "properties": {
+          "purpose": {"type": "string"},
+          "granted": {"type": "boolean"},
+          "legal_basis": {"type": "string"}
+        }
+      },
+      "SecurityMetrics": {
+        "type": "object",
+        "required": ["timeframe", "authentication_events", "threats_detected"],
+        "properties": {
+          "timeframe": {"type": "string"},
+          "authentication_events": {"type": "integer"},
+          "authentication_failures": {"type": "integer"},
+          "authorization_denials": {"type": "integer"},
+          "threats_detected": {"type": "integer"},
+          "security_incidents": {"type": "integer"},
+          "active_sessions": {"type": "integer"},
+          "compliance_score": {"type": "number", "minimum": 0, "maximum": 1},
+          "mean_time_to_detection": {"type": "string"},
+          "mean_time_to_response": {"type": "string"}
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": {"type": "string"},
+          "message": {"type": "string"},
+          "code": {"type": "integer"},
+          "details": {"type": "object"},
+          "request_id": {"type": "string"},
+          "timestamp": {"type": "string", "format": "date-time"}
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "User authentication and session management"
+    },
+    {
+      "name": "Authorization", 
+      "description": "Access control and permission management"
+    },
+    {
+      "name": "Role Management",
+      "description": "Role and permission administration"
+    },
+    {
+      "name": "Audit",
+      "description": "Audit trail and integrity verification"
+    },
+    {
+      "name": "Compliance",
+      "description": "Compliance framework management and reporting"
+    },
+    {
+      "name": "Threat Detection",
+      "description": "Security threat detection and incident management"
+    },
+    {
+      "name": "Privacy",
+      "description": "Privacy and data protection management"
+    },
+    {
+      "name": "Metrics",
+      "description": "Security metrics and monitoring"
+    }
+  ]
+}
