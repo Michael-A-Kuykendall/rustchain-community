@@ -1,0 +1,33 @@
+version: "1.0"
+name: "Hello World Mission"
+description: "A simple introductory mission that demonstrates basic RustChain functionality"
+steps:
+  - id: "greet"
+    name: "Say Hello"
+    step_type: "command"
+    parameters:
+      command: "echo"
+      args: ["Hello, RustChain World!"]
+    timeout_seconds: 30
+  
+  - id: "show_date"
+    name: "Show Current Date"
+    step_type: "command"
+    depends_on: ["greet"]
+    parameters:
+      command: "date"
+      args: []
+    timeout_seconds: 30
+  
+  - id: "create_log"
+    name: "Create completion log"
+    step_type: "create_file"
+    depends_on: ["show_date"]
+    parameters:
+      path: "hello_world_log.txt"
+      content: "Hello World mission completed successfully!"
+
+config:
+  max_parallel_steps: 1
+  timeout_seconds: 120
+  fail_fast: true
