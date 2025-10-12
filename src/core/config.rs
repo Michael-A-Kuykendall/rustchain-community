@@ -1,6 +1,5 @@
 use std::collections::HashMap;
-use once_cell::sync::Lazy;
-use std::sync::Mutex;
+use std::sync::OnceLock;
 use crate::core::error::RustChainError;
 
 #[derive(Clone, Debug)]
@@ -10,14 +9,15 @@ pub struct RustChainConfig {
     pub feature_flags: HashMap<String, bool>,
 }
 
-static CONFIG: Lazy<Mutex<Option<RustChainConfig>>> = Lazy::new(|| Mutex::new(None));
+static CONFIG: OnceLock<RustChainConfig> = OnceLock::new();
 
-pub fn load_config(config: RustChainConfig) {
-    let mut global = CONFIG.lock().unwrap();
-    *global = Some(config);
+pub fn load_config(config: RustChainConfig) -> Result<(), RustChainError> {
+    CONFIG.set(config)
+        .map_err(|_| RustChainError::Config("Config already loaded".into()))
 }
 
 pub fn get_config() -> Result<RustChainConfig, RustChainError> {
-    let global = CONFIG.lock().unwrap();
-    global.clone().ok_or_else(|| RustChainError::Config("Config not loaded".into()))
+    CONFIG.get()
+        .cloned()
+        .ok_or_else(|| RustChainError::Config("Config not loaded".into()))
 }

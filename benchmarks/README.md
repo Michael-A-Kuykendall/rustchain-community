@@ -1,6 +1,8 @@
 # 🏆 **RustChain Performance Benchmarks**
 
-**Proof that RustChain delivers 10-40x performance improvements over Python AI frameworks.**
+**RustChain performance testing suite and methodology.**
+
+⚠️ **IMPORTANT**: Performance claims require comparative testing against actual alternative frameworks under identical conditions. This suite measures RustChain performance only.
 
 ## 🚀 **Quick Benchmark Run**
 

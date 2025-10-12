@@ -91,9 +91,26 @@ impl MissionExecutor {
     
     fn execute_command_step(&self, step: &MissionStep) -> Result<()> {
         if let Some(command) = self.get_command(step) {
-            let output = Command::new("sh")
-                .arg("-c")
-                .arg(&command)
+            // SECURITY: Parse command safely - no shell injection
+            let parts: Vec<&str> = command.trim().split_whitespace().collect();
+            if parts.is_empty() {
+                return Err(RustChainError::Tool(ToolError::InvalidParameters { 
+                    tool_name: "command".to_string(),
+                    details: "Empty command parameter".to_string()
+                }));
+            }
+            
+            // SECURITY: Allowlist of safe commands only
+            let allowed_commands = ["cargo", "rustc", "git", "echo", "ls", "pwd", "cat"];
+            if !allowed_commands.contains(&parts[0]) {
+                return Err(RustChainError::Tool(ToolError::ExecutionFailed { 
+                    tool_name: "command".to_string(),
+                    reason: format!("Command '{}' not in allowlist", parts[0])
+                }));
+            }
+            
+            let output = Command::new(parts[0])
+                .args(&parts[1..])
                 .output()?;
             
             if output.status.success() {

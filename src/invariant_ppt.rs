@@ -1,5 +1,4 @@
-use once_cell::sync::Lazy;
-use std::sync::Mutex;
+use std::sync::RwLock;
 use std::time::{Duration, Instant};
 
 #[derive(Clone, Debug)]
@@ -18,8 +17,15 @@ pub struct TestMetrics {
     pub metamorphic_failures: u64,
 }
 
-static INVARIANT_LOG: Lazy<Mutex<Vec<InvariantRecord>>> = Lazy::new(|| Mutex::new(Vec::new()));
-static METRICS: Lazy<Mutex<TestMetrics>> = Lazy::new(|| Mutex::new(TestMetrics::default()));
+static INVARIANT_LOG: RwLock<Vec<InvariantRecord>> = RwLock::new(Vec::new());
+static METRICS: RwLock<TestMetrics> = RwLock::new(TestMetrics {
+    started_at: None,
+    elapsed: None,
+    invariants_logged: 0,
+    properties_run: 0,
+    metamorphic_runs: 0,
+    metamorphic_failures: 0,
+});
 
 #[macro_export]
 macro_rules! assert_invariant {
@@ -36,36 +42,36 @@ macro_rules! assert_invariant {
 }
 
 pub fn log_invariant(msg: &str, scope: Option<&str>) {
-    if let Ok(mut log) = INVARIANT_LOG.lock() {
+    if let Ok(mut log) = INVARIANT_LOG.write() {
         log.push(InvariantRecord {
             msg: msg.to_string(),
             scope: scope.map(|s| s.to_string()),
         });
     } else {
-        // Mutex is poisoned - log error but don't panic
-        eprintln!("WARNING: INVARIANT_LOG mutex is poisoned, skipping log entry: {}", msg);
+        // RwLock is poisoned - log error but don't panic
+        eprintln!("WARNING: INVARIANT_LOG rwlock is poisoned, skipping log entry: {}", msg);
     }
 }
 
 pub fn clear_invariant_log() {
-    if let Ok(mut log) = INVARIANT_LOG.lock() {
+    if let Ok(mut log) = INVARIANT_LOG.write() {
         log.clear();
     } else {
-        eprintln!("WARNING: INVARIANT_LOG mutex is poisoned, cannot clear log");
+        eprintln!("WARNING: INVARIANT_LOG rwlock is poisoned, cannot clear log");
     }
 }
 
 pub fn get_invariant_log() -> Vec<InvariantRecord> {
-    INVARIANT_LOG.lock()
+    INVARIANT_LOG.read()
         .map(|log| log.clone())
         .unwrap_or_else(|_| {
-            eprintln!("WARNING: INVARIANT_LOG mutex is poisoned, returning empty log");
+            eprintln!("WARNING: INVARIANT_LOG rwlock is poisoned, returning empty log");
             Vec::new()
         })
 }
 
 pub fn start_metrics() {
-    if let Ok(mut m) = METRICS.lock() {
+    if let Ok(mut m) = METRICS.write() {
         m.started_at = Some(Instant::now());
         m.elapsed = None;
         m.invariants_logged = 0;
@@ -73,12 +79,12 @@ pub fn start_metrics() {
         m.metamorphic_runs = 0;
         m.metamorphic_failures = 0;
     } else {
-        eprintln!("WARNING: METRICS mutex is poisoned, cannot start metrics");
+        eprintln!("WARNING: METRICS rwlock is poisoned, cannot start metrics");
     }
 }
 
 pub fn finish_metrics() -> TestMetrics {
-    METRICS.lock()
+    METRICS.write()
         .map(|mut m| {
             if let Some(start) = m.started_at {
                 m.elapsed = Some(start.elapsed());
@@ -86,52 +92,52 @@ pub fn finish_metrics() -> TestMetrics {
             m.clone()
         })
         .unwrap_or_else(|_| {
-            eprintln!("WARNING: METRICS mutex is poisoned, returning default metrics");
+            eprintln!("WARNING: METRICS rwlock is poisoned, returning default metrics");
             TestMetrics::default()
         })
 }
 
 pub fn snapshot_metrics() -> TestMetrics {
-    METRICS.lock()
+    METRICS.read()
         .map(|m| m.clone())
         .unwrap_or_else(|_| {
-            eprintln!("WARNING: METRICS mutex is poisoned, returning default metrics");
+            eprintln!("WARNING: METRICS rwlock is poisoned, returning default metrics");
             TestMetrics::default()
         })
 }
 
 pub fn reset_metrics() {
-    if let Ok(mut m) = METRICS.lock() {
+    if let Ok(mut m) = METRICS.write() {
         *m = TestMetrics::default();
     } else {
-        eprintln!("WARNING: METRICS mutex is poisoned, cannot reset metrics");
+        eprintln!("WARNING: METRICS rwlock is poisoned, cannot reset metrics");
     }
 }
 
 pub fn inc_invariants() {
-    if let Ok(mut m) = METRICS.lock() {
+    if let Ok(mut m) = METRICS.write() {
         m.invariants_logged += 1;
     } else {
-        eprintln!("WARNING: METRICS mutex is poisoned, cannot increment invariants");
+        eprintln!("WARNING: METRICS rwlock is poisoned, cannot increment invariants");
     }
 }
 
 pub(crate) fn inc_properties() {
-    if let Ok(mut m) = METRICS.lock() {
+    if let Ok(mut m) = METRICS.write() {
         m.properties_run += 1;
     } else {
-        eprintln!("WARNING: METRICS mutex is poisoned, cannot increment properties");
+        eprintln!("WARNING: METRICS rwlock is poisoned, cannot increment properties");
     }
 }
 
 pub(crate) fn inc_metamorphic(run_ok: bool) {
-    if let Ok(mut m) = METRICS.lock() {
+    if let Ok(mut m) = METRICS.write() {
         m.metamorphic_runs += 1;
         if !run_ok {
             m.metamorphic_failures += 1;
         }
     } else {
-        eprintln!("WARNING: METRICS mutex is poisoned, cannot increment metamorphic");
+        eprintln!("WARNING: METRICS rwlock is poisoned, cannot increment metamorphic");
     }
 }
 

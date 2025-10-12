@@ -1,8 +1,8 @@
 #!/usr/bin/env cargo script
 
-//! Simple RustChain Performance Benchmark
+//! RustChain Performance Benchmark
 //! 
-//! Demonstrates RustChain's speed advantages over typical Python AI frameworks
+//! Tests RustChain performance against documented baselines
 //! 
 //! Usage: cargo run --bin simple_benchmark
 
@@ -12,50 +12,60 @@ use std::process::Command;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("🚀 RustChain Performance Benchmark");
     println!("=====================================\n");
+    
+    println!("⚠️  WARNING: This benchmark only measures RustChain performance.");
+    println!("   Comparisons to other frameworks require separate testing.\n");
 
     // Test 1: Mission Parsing Speed
     println!("📊 Test 1: Mission Parsing Speed");
-    let parsing_times = benchmark_mission_parsing(10)?;
-    let avg_parsing = parsing_times.iter().sum::<u128>() / parsing_times.len() as u128;
-    println!("   RustChain Average: {}ms", avg_parsing);
-    println!("   LangChain Typical: 45-120ms");
-    println!("   Advantage: {}x faster\n", 45 / avg_parsing.max(1));
+    let parsing_times = benchmark_mission_parsing(5)?;
+    if parsing_times.is_empty() {
+        println!("   ❌ No successful parsing tests completed");
+    } else {
+        let avg_parsing = parsing_times.iter().sum::<u128>() / parsing_times.len() as u128;
+        println!("   RustChain Average: {}ms", avg_parsing);
+        println!("   Note: Comparison requires testing other frameworks separately\n");
+    }
 
     // Test 2: File Operations Speed  
     println!("📁 Test 2: File Operations Speed");
-    let file_times = benchmark_file_operations(50)?;
-    let avg_file = file_times.iter().sum::<u128>() / file_times.len() as u128;
-    println!("   RustChain Average: {}ms", avg_file);
-    println!("   Python Typical: 15-45ms");
-    println!("   Advantage: {}x faster\n", 15 / avg_file.max(1));
+    let file_times = benchmark_file_operations(5)?;
+    if file_times.is_empty() {
+        println!("   ❌ No successful file operation tests completed");
+    } else {
+        let avg_file = file_times.iter().sum::<u128>() / file_times.len() as u128;
+        println!("   RustChain Average: {}ms", avg_file);
+        println!("   Note: Comparison requires testing other frameworks separately\n");
+    }
 
     // Test 3: Memory Usage (Static Analysis)
     println!("🧠 Test 3: Memory Usage Analysis");
-    println!("   RustChain Binary Size: ~8-15MB");
-    println!("   Python + Dependencies: ~200-500MB");
-    println!("   Memory at Runtime: ~5-10MB vs ~50-200MB");
-    println!("   Advantage: Significantly less memory usage\n");
+    println!("   RustChain Binary Size: Limited to what's measured");
+    println!("   Note: Memory comparisons require actual testing of alternatives\n");
 
     // Test 4: Startup Time
     println!("⚡ Test 4: Startup Time");
     let startup_times = benchmark_startup_time(5)?;
-    let avg_startup = startup_times.iter().sum::<u128>() / startup_times.len() as u128;
-    println!("   RustChain Average: {}ms", avg_startup);
-    println!("   Python Import Time: 2000-5000ms");
-    println!("   Advantage: {}x faster startup\n", 2000 / avg_startup.max(1));
+    if startup_times.is_empty() {
+        println!("   ❌ No successful startup tests completed");
+    } else {
+        let avg_startup = startup_times.iter().sum::<u128>() / startup_times.len() as u128;
+        println!("   RustChain Average: {}ms", avg_startup);
+        println!("   Note: Comparison requires testing other frameworks separately\n");
+    }
 
-    // Summary Report
+    // Honest Summary Report
     println!("📈 PERFORMANCE SUMMARY");
     println!("======================");
-    println!("✅ Mission parsing: {}x faster than typical Python", 45 / avg_parsing.max(1));
-    println!("✅ File operations: {}x faster than Python", 15 / avg_file.max(1));
-    println!("✅ Memory usage: 90%+ more efficient");
-    println!("✅ Startup time: {}x faster than Python imports", 2000 / avg_startup.max(1));
+    println!("📊 RustChain Performance Measured (Internal Testing Only)");
+    println!("⚠️  Performance claims relative to other frameworks require");
+    println!("   independent benchmarking of those frameworks");
     println!();
-    println!("🎯 CONCLUSION: RustChain provides significant performance improvements");
-    println!("   across all key metrics while using significantly less memory.");
-    println!();
-    println!("💡 This is why enterprises choose Rust for production AI workloads!");
+    println!("🔍 For legitimate comparisons, please:");
+    println!("   1. Test equivalent workflows in target frameworks");
+    println!("   2. Use identical hardware and conditions");
+    println!("   3. Document methodology and limitations");
+    println!("   4. Provide reproducible benchmark suites");
 
     Ok(())
 }
