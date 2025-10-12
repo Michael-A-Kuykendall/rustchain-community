@@ -102,7 +102,15 @@ impl SMTSolver for ContextLiteSMTSolver {
         };
         
         // Execute HTTP request to ContextLite SMT API
-        let rt = tokio::runtime::Runtime::new()?;
+        // FIXME: This should be refactored to use async traits
+        let rt = tokio::runtime::Handle::try_current()
+            .map_err(|_| crate::core::error::RustChainError::Execution(
+                crate::core::error::ExecutionError::step_failed(
+                    "contextlite_smt",
+                    "runtime_error", 
+                    "No tokio runtime available".to_string()
+                )
+            ))?;
         rt.block_on(async {
             let start_time = std::time::Instant::now();
             

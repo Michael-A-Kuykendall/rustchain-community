@@ -20,16 +20,17 @@ RustChain is a workflow execution framework written in Rust that can execute mul
 
 ## Installation
 
+⚠️ **Development Status**: This project is currently in development and not yet published to crates.io.
+
+To build from source:
+
 ```bash
-cargo install rustchain-community
+git clone https://github.com/Michael-A-Kuykendall/rustchain-community
+cd rustchain-community
+cargo build --release
 ```
 
-Or add to your `Cargo.toml`:
-
-```toml
-[dependencies]
-rustchain-community = "1.0"
-```
+The binary will be available at `target/release/rustchain`.
 
 ## Quick Start
 
@@ -62,14 +63,18 @@ rustchain run workflow.yaml
 
 ## Supported Formats
 
-RustChain can read and write workflows in these formats:
+⚠️ **Development Status**: Transpilation features are currently in development.
 
-- GitHub Actions
-- Apache Airflow
-- Jenkins
-- Kubernetes
-- Terraform
-- Bash scripts
+RustChain aims to support workflows in these formats:
+
+- GitHub Actions (partial support)
+- Apache Airflow (in development)
+- Jenkins (in development)
+- Kubernetes (in development)
+- Terraform (in development)
+- Bash scripts (basic support)
+
+See [examples/](examples/) for current capabilities.
 
 ## Contributing
 
